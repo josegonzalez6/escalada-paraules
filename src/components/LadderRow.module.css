@@ -1,0 +1,81 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.lengthBadge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.lockedWord {
+  display: flex;
+  gap: 4px;
+}
+
+.box {
+  width: 44px;
+  height: 44px;
+  border: 2px solid #6366f1;
+  border-radius: 8px;
+  background: #eef2ff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #6366f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inputWrapper {
+  flex: 1;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: lowercase;
+  border: 2px solid #cbd5e1;
+  border-radius: 10px;
+  background: white;
+  color: #1a1a2e;
+  outline: none;
+  transition: border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.input:focus {
+  border-color: #6366f1;
+}
+
+.correct .input {
+  border-color: #22c55e;
+  background: #f0fdf4;
+}
+
+.error .input {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+
+.errorText {
+  width: 100%;
+  margin-left: calc(28px + 0.75rem);
+  font-size: 0.75rem;
+  color: #ef4444;
+  margin-top: -0.25rem;
+}

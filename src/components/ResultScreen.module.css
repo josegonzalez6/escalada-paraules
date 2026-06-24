@@ -1,0 +1,143 @@
+.container {
+  padding: 1.5rem 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.titleOk { color: #22c55e; }
+.titleFail { color: #ef4444; }
+
+.section {}
+
+.sectionTitle {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+}
+
+.errorItem {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.errorStep { font-size: 0.7rem; color: #94a3b8; }
+.errorWord { font-size: 1rem; font-weight: 700; color: #ef4444; }
+.errorReason { font-size: 0.8rem; color: #64748b; }
+
+.solution {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.solutionStep {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+}
+
+.solutionLen {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #6366f1;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.solutionWord {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #1a1a2e;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.statItem {
+  background: white;
+  border-radius: 10px;
+  padding: 0.75rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid #e2e8f0;
+}
+
+.statVal {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #6366f1;
+}
+
+.statLbl {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  text-align: center;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.btnPrimary {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  transition: background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btnPrimary:active { background: #4f46e5; }
+
+.btnSecondary {
+  width: 100%;
+  padding: 0.875rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: transparent;
+  color: #64748b;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  transition: border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btnSecondary:active { border-color: #94a3b8; }

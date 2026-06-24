@@ -1,0 +1,67 @@
+.panel {
+  background: #1e293b;
+  color: #94a3b8;
+  border-radius: 10px;
+  padding: 1rem;
+  font-size: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label { color: #f59e0b; font-weight: 700; font-size: 0.75rem; }
+.info { }
+
+.solution {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.word {
+  background: #334155;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 700;
+  color: #e2e8f0;
+  font-size: 0.85rem;
+}
+
+.testRow {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.testInput {
+  flex: 1;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 0.85rem;
+}
+
+.testBtn {
+  padding: 0.4rem 0.75rem;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.testResult { color: #e2e8f0; }
+
+.regenBtn {
+  padding: 0.4rem 0.75rem;
+  background: #334155;
+  color: #e2e8f0;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  align-self: flex-start;
+}

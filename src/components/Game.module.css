@@ -1,0 +1,112 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1rem 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #6366f1;
+  letter-spacing: -0.02em;
+}
+
+.langBtn {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  color: #64748b;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.timerWrapper {
+  padding: 0.75rem 1rem 0;
+}
+
+.board {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  flex: 1;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.validateBtn {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.validateBtn:disabled {
+  opacity: 0.5;
+}
+
+.validateBtn:not(:disabled):active {
+  background: #4f46e5;
+}
+
+.newBtn {
+  width: 100%;
+  padding: 0.875rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: transparent;
+  color: #64748b;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.newBtn:active {
+  border-color: #94a3b8;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  gap: 0.5rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.errorMsg {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ef4444;
+}
+
+.errorDetail {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
