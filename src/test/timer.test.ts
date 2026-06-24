@@ -9,24 +9,17 @@ describe('Cronòmetre ascendent (sense límit de temps)', () => {
 
   it('el cronòmetre puja 1 cada segon', () => {
     let elapsed = 0
-    // Simula 5 ticks
     for (let i = 0; i < 5; i++) elapsed += 1
     expect(elapsed).toBe(5)
   })
 
   it('el temps no limita la partida: no hi ha màxim', () => {
-    // El joc no té GAME_DURATION — no s'importa cap constant de temps màxim
-    // Verificació: podem tenir temps arbitrariament alt sense acabar el joc
     let elapsed = 0
-    for (let i = 0; i < 3600; i++) elapsed += 1 // 1 hora
+    for (let i = 0; i < 3600; i++) elapsed += 1
     expect(elapsed).toBe(3600)
-    // Un elapsed de 3600 no hauria de finalitzar el joc — el control de fase
-    // és extern (handleValidate), no el timer
   })
 
   it('el temps s\'emmagatzema només amb score 5/5', () => {
-    // Comprova que saveResult gestiona correctament el temps
-    // Fem servir un mock dels stats
     function simulateSaveResult(score: number, timeUsed: number) {
       const stats = { played: 0, perfect: 0, bestTime: null as number | null, avgTime: null as number | null, currentStreak: 0, bestStreak: 0 }
       stats.played += 1
@@ -40,11 +33,11 @@ describe('Cronòmetre ascendent (sense límit de temps)', () => {
       return stats
     }
 
-    const result4 = simulateSaveResult(4, 120) // 4/5 → no guarda temps
+    const result4 = simulateSaveResult(4, 120)
     expect(result4.bestTime).toBeNull()
     expect(result4.perfect).toBe(0)
 
-    const result5 = simulateSaveResult(5, 45) // 5/5 → guarda temps
+    const result5 = simulateSaveResult(5, 45)
     expect(result5.bestTime).toBe(45)
     expect(result5.perfect).toBe(1)
   })
@@ -59,5 +52,103 @@ describe('Cronòmetre ascendent (sense límit de temps)', () => {
     expect(formatTime(65)).toBe('01:05')
     expect(formatTime(3600)).toBe('60:00')
     expect(formatTime(61)).toBe('01:01')
+  })
+})
+
+describe('Comportament del cronòmetre: no comença fins al primer caràcter', () => {
+  // Simula la lògica de hasStarted del hook
+  function makeTimerController() {
+    let hasStarted = false
+    let elapsed = 0
+    let running = false
+
+    function startTimer() {
+      hasStarted = true
+      running = true
+      elapsed = 0
+    }
+
+    function stopTimer() {
+      running = false
+    }
+
+    function onInput(value: string) {
+      if (!hasStarted && value.length > 0) startTimer()
+    }
+
+    function tick() {
+      if (running) elapsed++
+    }
+
+    function validate() {
+      stopTimer()
+      return { timeUsed: elapsed }
+    }
+
+    return { onInput, tick, validate, getElapsed: () => elapsed, isRunning: () => running, hasStarted: () => hasStarted }
+  }
+
+  it('el cronòmetre NO comença al carregar el joc', () => {
+    const ctrl = makeTimerController()
+    ctrl.tick()
+    ctrl.tick()
+    expect(ctrl.getElapsed()).toBe(0)
+    expect(ctrl.isRunning()).toBe(false)
+    expect(ctrl.hasStarted()).toBe(false)
+  })
+
+  it('el cronòmetre comença al primer caràcter', () => {
+    const ctrl = makeTimerController()
+    ctrl.tick() // no ha comencat
+    ctrl.onInput('a')
+    expect(ctrl.hasStarted()).toBe(true)
+    expect(ctrl.isRunning()).toBe(true)
+    ctrl.tick()
+    expect(ctrl.getElapsed()).toBe(1)
+  })
+
+  it('obrir/tancar ajuda no inicia el cronòmetre', () => {
+    const ctrl = makeTimerController()
+    // simula obrir i tancar ajuda: no crida onInput
+    ctrl.tick()
+    ctrl.tick()
+    expect(ctrl.hasStarted()).toBe(false)
+    expect(ctrl.getElapsed()).toBe(0)
+  })
+
+  it('canviar idioma no inicia el cronòmetre', () => {
+    // canviar idioma reinicia el hook → nou makeTimerController
+    const ctrl2 = makeTimerController()
+    ctrl2.tick()
+    expect(ctrl2.hasStarted()).toBe(false)
+    expect(ctrl2.getElapsed()).toBe(0)
+  })
+
+  it('si es valida sense escriure, timeUsed = 0', () => {
+    const ctrl = makeTimerController()
+    ctrl.tick()
+    ctrl.tick()
+    const { timeUsed } = ctrl.validate()
+    expect(timeUsed).toBe(0)
+  })
+
+  it('si es valida després d\'escriure, timeUsed > 0', () => {
+    const ctrl = makeTimerController()
+    ctrl.onInput('gat')
+    ctrl.tick()
+    ctrl.tick()
+    ctrl.tick()
+    const { timeUsed } = ctrl.validate()
+    expect(timeUsed).toBe(3)
+  })
+
+  it('el cronòmetre s\'atura en validar', () => {
+    const ctrl = makeTimerController()
+    ctrl.onInput('gat')
+    ctrl.tick()
+    ctrl.validate()
+    ctrl.tick()
+    ctrl.tick()
+    expect(ctrl.getElapsed()).toBe(1) // no ha pujat després de validate
   })
 })

@@ -44,7 +44,8 @@ function normalize(word) {
 
 function getLetterCounts(norm) {
   const counts = {}
-  for (const c of norm) counts[c] = (counts[c] ?? 0) + 1
+  const processed = norm.replace(/l·l/g, '\x01')  // l·l → digraph
+  for (const c of processed) counts[c] = (counts[c] ?? 0) + 1
   return counts
 }
 
@@ -55,13 +56,55 @@ function canBeFormed(candCounts, baseCounts) {
   return true
 }
 
-function shuffle(arr) {
+// Mulberry32 deterministic PRNG — seed com a string
+function seededRandom(seed) {
+  let h = [...seed].reduce((a, c) => Math.imul(a ^ c.charCodeAt(0), 0x9e3779b9) >>> 0, 0x12345678)
+  return function () {
+    h ^= h >>> 15; h = Math.imul(h, 0x2c1b3c6d); h ^= h >>> 12
+    h = Math.imul(h, 0x297a2d39); h ^= h >>> 15
+    return (h >>> 0) / 0x100000000
+  }
+}
+
+function shuffle(arr, rng = Math.random) {
   const a = [...arr]
   for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(rng() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]]
   }
   return a
+}
+
+// Puntuació de qualitat: varietat de lletres, equilibri vocal/consonant, solucions
+function scoreGameQuality(game) {
+  const norm = normalize(game.baseWord)
+  const unique = new Set(norm).size
+  const letterVariety = unique / norm.length  // 0..1
+
+  const vowels = 'aeiouàèéíïòóúüáéíóú'
+  const vowelCount = [...norm].filter(c => vowels.includes(c)).length
+  const vowelRatio = vowelCount / norm.length
+  // Ideal ~0.4: penalitza extrems
+  const vowelScore = 1 - Math.abs(vowelRatio - 0.4) * 2
+
+  // Penalitza si hi ha ≥3 de la mateixa lletra
+  const counts = getLetterCounts(norm)
+  const maxRepeat = Math.max(...Object.values(counts))
+  const repeatPenalty = maxRepeat >= 3 ? 0.5 : 1.0
+
+  // Solucions per longitud
+  let solScore = 0
+  for (const len of SOLUTION_LENGTHS) {
+    const n = (game.solutions[String(len)] ?? []).length
+    solScore += Math.min(n / 5, 1)  // màx 1 per longitud (5 total)
+  }
+  solScore /= SOLUTION_LENGTHS.length  // 0..1
+
+  return (letterVariety * 0.3 + Math.max(0, vowelScore) * 0.2 + repeatPenalty * 0.2 + solScore * 0.3)
+}
+
+function filterGoodGames(games) {
+  return games.filter(g => scoreGameQuality(g) >= 0.45)
 }
 
 function processLang(lang) {
@@ -111,17 +154,18 @@ function processLang(lang) {
     }
   }
 
-  // Barreja bases per tenir varietat
-  shuffle(baseCandidates)
+  // Barreja determinista per tenir varietat consistent
+  const rng = seededRandom(`escalada-games-2026-${lang}`)
+  const shuffledCandidates = shuffle(baseCandidates, rng)
 
-  console.log(`   Bases candidates (${MIN_BASE_LEN}-${MAX_BASE_LEN} lletres): ${baseCandidates.length}`)
+  console.log(`   Bases candidates (${MIN_BASE_LEN}-${MAX_BASE_LEN} lletres): ${shuffledCandidates.length}`)
   console.log(`\n🔍 Generant partides (màx ${MAX_GAMES})...`)
 
   const games = []
   let processed = 0
-  const total = baseCandidates.length
+  const total = shuffledCandidates.length
 
-  for (const base of baseCandidates) {
+  for (const base of shuffledCandidates) {
     if (games.length >= MAX_GAMES) break
     processed++
 
@@ -165,9 +209,18 @@ function processLang(lang) {
     return
   }
 
+  // Filtra per qualitat
+  const goodGames = filterGoodGames(games)
+  console.log(`\n   Filtre qualitat: ${games.length} → ${goodGames.length} partides bones`)
+
+  const finalGames = goodGames.length >= 100 ? goodGames : games
+  if (goodGames.length < 100) {
+    console.warn(`   ⚠️  Poques partides bones (${goodGames.length}), usant totes (${games.length})`)
+  }
+
   fs.mkdirSync(path.dirname(outPath), { recursive: true })
-  fs.writeFileSync(outPath, JSON.stringify(games, null, 2), 'utf8')
-  console.log(`\n✅ Generades ${games.length} partides → ${outPath}`)
+  fs.writeFileSync(outPath, JSON.stringify(finalGames, null, 2), 'utf8')
+  console.log(`✅ Generades ${finalGames.length} partides → ${outPath}`)
 }
 
 const langs = langArg ? [langArg] : ['ca', 'es']

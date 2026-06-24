@@ -24,6 +24,7 @@ export function useGame(lang: Language, archiveDateKey?: string) {
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const elapsedRef = useRef(0)
+  const hasStartedRef = useRef(false)
   const inputsRef = useRef<GameInputs>([...EMPTY_INPUTS])
   const gameRef = useRef<GameEntry | null>(null)
   const dictRef = useRef<DictionaryIndex>({ lookupMap: new Map(), originalSet: new Set() })
@@ -47,13 +48,16 @@ export function useGame(lang: Language, archiveDateKey?: string) {
     inputsRef.current = fresh
     gameRef.current = chosenGame
     dictRef.current = dict
+    hasStartedRef.current = false
+    stopTimer()
+    elapsedRef.current = 0
+    setElapsed(0)
     setGame(chosenGame)
     setInputs(fresh)
     setValidationResult(null)
     setTimeUsed(0)
     setPhase('playing')
-    startTimer()
-  }, [startTimer])
+  }, [stopTimer])
 
   useEffect(() => {
     const targetDateKey = archiveDateKey ?? getMadridDateStr()
@@ -103,6 +107,10 @@ export function useGame(lang: Language, archiveDateKey?: string) {
 
   const handleInput = useCallback((index: number, value: string) => {
     if (phase !== 'playing') return
+    if (!hasStartedRef.current && value.length > 0) {
+      hasStartedRef.current = true
+      startTimer()
+    }
     const expectedLen = 3 + index
     const normalized = normalizeWord(value).slice(0, expectedLen)
     setInputs(prev => {
@@ -111,7 +119,7 @@ export function useGame(lang: Language, archiveDateKey?: string) {
       inputsRef.current = next
       return next
     })
-  }, [phase])
+  }, [phase, startTimer])
 
   const handleValidate = useCallback(() => {
     if (phase !== 'playing' || !gameRef.current) return

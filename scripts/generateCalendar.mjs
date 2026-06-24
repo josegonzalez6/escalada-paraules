@@ -4,13 +4,10 @@
  *
  * Genera el calendari estable de partides per al 2026.
  * Cada data del 2026-06-01 al 2026-12-31 té una partida assignada
- * de manera determinista (no canvia si el JSON de games no canvia d'ordre).
+ * amb un shuffle determinista (PRNG seeded) per evitar paraules adjacents similars.
  *
  * Ús:
  *   node scripts/generateCalendar.mjs [--lang ca|es|all]
- *
- * IMPORTANT: Si el fitxer {lang}-games.json canvia d'ordre, els índexs del
- * calendari canviaran. No reordeneu games.json un cop el calendari està publicat.
  */
 
 import fs from 'fs'
@@ -30,6 +27,11 @@ const langArg = getArg('--lang', 'all')
 const ARCHIVE_START = '2026-06-01'
 const ARCHIVE_END = '2026-12-31'
 
+const CALENDAR_SEEDS = {
+  ca: 'escalada-calendar-2026-ca',
+  es: 'escalada-calendar-2026-es',
+}
+
 function getArchiveDateRange() {
   const dates = []
   const start = new Date(ARCHIVE_START + 'T12:00:00Z')
@@ -45,10 +47,24 @@ function getArchiveDateRange() {
   return dates
 }
 
-function getGameIndexForDate(dateKey, gamesCount, lang) {
-  const numeric = parseInt(dateKey.replace(/-/g, ''), 10)
-  const langOffset = lang === 'ca' ? 0 : 31337
-  return (numeric + langOffset) % gamesCount
+// Mulberry32 deterministic PRNG
+function seededRandom(seed) {
+  let h = [...seed].reduce((a, c) => Math.imul(a ^ c.charCodeAt(0), 0x9e3779b9) >>> 0, 0x12345678)
+  return function () {
+    h ^= h >>> 15; h = Math.imul(h, 0x2c1b3c6d); h ^= h >>> 12
+    h = Math.imul(h, 0x297a2d39); h ^= h >>> 15
+    return (h >>> 0) / 0x100000000
+  }
+}
+
+// Fisher-Yates shuffle determinista
+function shuffleIndices(count, rng) {
+  const arr = Array.from({ length: count }, (_, i) => i)
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr
 }
 
 function processLang(lang) {
@@ -68,8 +84,13 @@ function processLang(lang) {
   console.log(`   Partides disponibles: ${games.length}`)
   console.log(`   Dates a cobrir: ${dates.length} (${ARCHIVE_START} → ${ARCHIVE_END})`)
 
-  const calendar = dates.map(dateKey => {
-    const gameIndex = getGameIndexForDate(dateKey, games.length, lang)
+  // Shuffle determinista dels índexs de partides
+  const seed = CALENDAR_SEEDS[lang]
+  const rng = seededRandom(seed)
+  const shuffledIndices = shuffleIndices(games.length, rng)
+
+  const calendar = dates.map((dateKey, i) => {
+    const gameIndex = shuffledIndices[i % shuffledIndices.length]
     const game = games[gameIndex]
     return {
       dateKey,

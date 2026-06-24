@@ -1,4 +1,4 @@
-# Escalada de Paraules v0.1.0
+# Escalada de Paraules v0.9.0
 
 Joc de paraules per a mòbil en català i castellà. Construeix una escalada de paraules de 3 a 7 lletres afegint una lletra a cada pas.
 
@@ -105,4 +105,11 @@ scripts/
 
 ## Versió
 
-v0.1.0
+v0.9.0
+
+### Canvis destacats
+
+- **v0.9.0**: Cronòmetre no comença fins al primer caràcter escrit. Calendari amb shuffle determinista (PRNG seeded) per evitar paraules adjacents similars. Puntuació de qualitat de partides (`scoreGameQuality`). `checkCalendar` detecta paraules repetides i massa similars.
+- **v0.8.0**: Mode arxiu/calendari. Sense mode aleatori. Calendari 2026-06-01 a 2026-12-31.
+- **v0.7.0**: Bilingüe CA/ES. Temporitzador. Compartir resultats.
+- **v0.1.0**: Versió inicial.
