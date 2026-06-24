@@ -32,8 +32,8 @@ interface Props {
 export function Game({ lang, archiveDateKey, todayKey, onChangeLang, onOpenArchive, onBackToToday, devMode }: Props) {
   const {
     phase, elapsed, timeUsed, inputs, game, validationResult, loading, error,
-    gameCount, dictionary, dateKey,
-    handleInput, handleValidate, handleNewGame, baseCounts,
+    gameCount, dictionary, dateKey, gameStarted,
+    handleInput, handleValidate, handleNewGame, handleStart, baseCounts,
   } = useGame(lang, archiveDateKey)
 
   const tr = useT(lang)
@@ -56,9 +56,15 @@ export function Game({ lang, archiveDateKey, todayKey, onChangeLang, onOpenArchi
     if (game && phase === 'playing') {
       setActiveRow(0)
       setClickedCol(null)
-      hiddenInputRef.current?.focus()
     }
   }, [game]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Quan comença la partida, posa focus a la primera casella
+  useEffect(() => {
+    if (gameStarted) {
+      hiddenInputRef.current?.focus()
+    }
+  }, [gameStarted])
 
   // Resultat guardat per a aquesta data (avui o arxiu)
   const savedDaily = loadDailyResultForDate(lang, dateKey)
@@ -112,6 +118,10 @@ export function Game({ lang, archiveDateKey, todayKey, onChangeLang, onOpenArchi
     setActiveRow(rowIndex)
     setClickedCol(col)
     hiddenInputRef.current?.focus()
+  }
+
+  function handleStartGame() {
+    handleStart()
   }
 
   function handleResetToday() {
@@ -256,7 +266,7 @@ export function Game({ lang, archiveDateKey, todayKey, onChangeLang, onOpenArchi
             <p className={styles.hint}>{tr.hint}</p>
           </div>
 
-          <div className={styles.board}>
+          <div className={gameStarted ? styles.board : `${styles.board} ${styles.boardDisabled}`}>
             {([0, 1, 2, 3, 4] as const).map(i => {
               const len = 3 + i
               return (
@@ -267,23 +277,34 @@ export function Game({ lang, archiveDateKey, todayKey, onChangeLang, onOpenArchi
                   baseCounts={baseCounts}
                   status={validationResult ? (errorMap[len] ? 'error' : 'correct') : 'neutral'}
                   errorText={errorMap[len]}
-                  isActive={activeRow === i}
-                  activeCursorCol={activeRow === i ? clickedCol : null}
+                  isActive={gameStarted && activeRow === i}
+                  activeCursorCol={gameStarted && activeRow === i ? clickedCol : null}
                   onRowClick={() => handleRowClick(i)}
                   onCellClick={(col) => handleCellClick(i, col)}
                 />
               )
             })}
 
-            <div className={styles.actions}>
-              <button
-                className={styles.validateBtn}
-                onClick={handleValidate}
-                disabled={phase !== 'playing'}
-              >
-                {tr.validate}
-              </button>
-            </div>
+            {!gameStarted ? (
+              <div className={styles.actions}>
+                <button
+                  className={styles.startBtn}
+                  onClick={handleStartGame}
+                >
+                  {tr.startGame}
+                </button>
+              </div>
+            ) : (
+              <div className={styles.actions}>
+                <button
+                  className={styles.validateBtn}
+                  onClick={handleValidate}
+                  disabled={phase !== 'playing'}
+                >
+                  {tr.validate}
+                </button>
+              </div>
+            )}
 
             {devMode && game && (
               <>
@@ -316,7 +337,7 @@ export function Game({ lang, archiveDateKey, todayKey, onChangeLang, onOpenArchi
             defaultValue=""
             aria-hidden="true"
             tabIndex={-1}
-            disabled={showHelp}
+            disabled={showHelp || !gameStarted}
             onInput={(e) => {
               const target = e.target as HTMLInputElement
               const val = target.value

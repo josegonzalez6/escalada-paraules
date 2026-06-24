@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest'
 
-// Tests del model de cronòmetre ascendent (sense compte enrere)
 describe('Cronòmetre ascendent (sense límit de temps)', () => {
   it('el cronòmetre comença a 0', () => {
     let elapsed = 0
@@ -55,15 +54,15 @@ describe('Cronòmetre ascendent (sense límit de temps)', () => {
   })
 })
 
-describe('Comportament del cronòmetre: no comença fins al primer caràcter', () => {
-  // Simula la lògica de hasStarted del hook
-  function makeTimerController() {
-    let hasStarted = false
+describe('Botó COMENÇAR/COMENZAR: control explícit d\'inici de partida', () => {
+  // Simula la lògica del hook useGame amb gameStarted
+  function makeGameController() {
+    let gameStarted = false
     let elapsed = 0
     let running = false
+    const inputs = ['', '', '', '', '']
 
     function startTimer() {
-      hasStarted = true
       running = true
       elapsed = 0
     }
@@ -72,83 +71,160 @@ describe('Comportament del cronòmetre: no comença fins al primer caràcter', (
       running = false
     }
 
-    function onInput(value: string) {
-      if (!hasStarted && value.length > 0) startTimer()
+    function handleStart() {
+      if (gameStarted) return
+      gameStarted = true
+      startTimer()
+    }
+
+    function handleInput(index: number, value: string) {
+      if (!gameStarted) return  // bloquejat fins que no es prem COMEÇAR
+      inputs[index] = value
     }
 
     function tick() {
       if (running) elapsed++
     }
 
-    function validate() {
+    function handleValidate() {
       stopTimer()
       return { timeUsed: elapsed }
     }
 
-    return { onInput, tick, validate, getElapsed: () => elapsed, isRunning: () => running, hasStarted: () => hasStarted }
+    return {
+      handleStart,
+      handleInput,
+      tick,
+      handleValidate,
+      getElapsed: () => elapsed,
+      isRunning: () => running,
+      isGameStarted: () => gameStarted,
+      getInputs: () => [...inputs],
+    }
   }
 
-  it('el cronòmetre NO comença al carregar el joc', () => {
-    const ctrl = makeTimerController()
+  it('en entrar a una partida nova, gameStarted és false', () => {
+    const ctrl = makeGameController()
+    expect(ctrl.isGameStarted()).toBe(false)
+  })
+
+  it('en entrar a una partida nova, elapsedSeconds és 0', () => {
+    const ctrl = makeGameController()
     ctrl.tick()
     ctrl.tick()
     expect(ctrl.getElapsed()).toBe(0)
-    expect(ctrl.isRunning()).toBe(false)
-    expect(ctrl.hasStarted()).toBe(false)
   })
 
-  it('el cronòmetre comença al primer caràcter', () => {
-    const ctrl = makeTimerController()
-    ctrl.tick() // no ha comencat
-    ctrl.onInput('a')
-    expect(ctrl.hasStarted()).toBe(true)
+  it('el cronòmetre NO comença fins que es prem COMEÇAR/COMENZAR', () => {
+    const ctrl = makeGameController()
+    ctrl.tick()
+    ctrl.tick()
+    expect(ctrl.isRunning()).toBe(false)
+    expect(ctrl.getElapsed()).toBe(0)
+  })
+
+  it('escriure abans de COMEÇAR no modifica inputs', () => {
+    const ctrl = makeGameController()
+    ctrl.handleInput(0, 'gat')
+    expect(ctrl.getInputs()[0]).toBe('')
+  })
+
+  it('tancar instruccions no inicia el cronòmetre', () => {
+    const ctrl = makeGameController()
+    // tancar instruccions no crida handleStart
+    ctrl.tick()
+    expect(ctrl.isGameStarted()).toBe(false)
+    expect(ctrl.getElapsed()).toBe(0)
+  })
+
+  it('canviar idioma no inicia el cronòmetre', () => {
+    // canviar idioma reinicia el hook → nou controller
+    const ctrl2 = makeGameController()
+    ctrl2.tick()
+    expect(ctrl2.isGameStarted()).toBe(false)
+    expect(ctrl2.getElapsed()).toBe(0)
+  })
+
+  it('prémer COMEÇAR inicia el cronòmetre', () => {
+    const ctrl = makeGameController()
+    ctrl.handleStart()
+    expect(ctrl.isGameStarted()).toBe(true)
     expect(ctrl.isRunning()).toBe(true)
     ctrl.tick()
     expect(ctrl.getElapsed()).toBe(1)
   })
 
-  it('obrir/tancar ajuda no inicia el cronòmetre', () => {
-    const ctrl = makeTimerController()
-    // simula obrir i tancar ajuda: no crida onInput
-    ctrl.tick()
-    ctrl.tick()
-    expect(ctrl.hasStarted()).toBe(false)
-    expect(ctrl.getElapsed()).toBe(0)
+  it('prémer COMEÇAR activa l\'escala (gameStarted = true)', () => {
+    const ctrl = makeGameController()
+    expect(ctrl.isGameStarted()).toBe(false)
+    ctrl.handleStart()
+    expect(ctrl.isGameStarted()).toBe(true)
   })
 
-  it('canviar idioma no inicia el cronòmetre', () => {
-    // canviar idioma reinicia el hook → nou makeTimerController
-    const ctrl2 = makeTimerController()
-    ctrl2.tick()
-    expect(ctrl2.hasStarted()).toBe(false)
-    expect(ctrl2.getElapsed()).toBe(0)
+  it('després de COMEÇAR es pot escriure', () => {
+    const ctrl = makeGameController()
+    ctrl.handleStart()
+    ctrl.handleInput(0, 'gat')
+    expect(ctrl.getInputs()[0]).toBe('gat')
   })
 
-  it('si es valida sense escriure, timeUsed = 0', () => {
-    const ctrl = makeTimerController()
+  it('si es valida sense prémer COMEÇAR, timeUsed = 0', () => {
+    const ctrl = makeGameController()
     ctrl.tick()
     ctrl.tick()
-    const { timeUsed } = ctrl.validate()
+    const { timeUsed } = ctrl.handleValidate()
     expect(timeUsed).toBe(0)
   })
 
-  it('si es valida després d\'escriure, timeUsed > 0', () => {
-    const ctrl = makeTimerController()
-    ctrl.onInput('gat')
+  it('si es valida després de COMEÇAR, timeUsed > 0', () => {
+    const ctrl = makeGameController()
+    ctrl.handleStart()
     ctrl.tick()
     ctrl.tick()
     ctrl.tick()
-    const { timeUsed } = ctrl.validate()
+    const { timeUsed } = ctrl.handleValidate()
     expect(timeUsed).toBe(3)
   })
 
   it('el cronòmetre s\'atura en validar', () => {
-    const ctrl = makeTimerController()
-    ctrl.onInput('gat')
+    const ctrl = makeGameController()
+    ctrl.handleStart()
     ctrl.tick()
-    ctrl.validate()
+    ctrl.handleValidate()
     ctrl.tick()
     ctrl.tick()
-    expect(ctrl.getElapsed()).toBe(1) // no ha pujat després de validate
+    expect(ctrl.getElapsed()).toBe(1)
+  })
+
+  it('prémer COMEÇAR dues vegades no reinicia el cronòmetre', () => {
+    const ctrl = makeGameController()
+    ctrl.handleStart()
+    ctrl.tick()
+    ctrl.tick()
+    ctrl.handleStart()  // segon cop: ignorat
+    expect(ctrl.getElapsed()).toBe(2)
+  })
+})
+
+describe('Textos del botó d\'inici per idioma', () => {
+  const translations = {
+    ca: { startGame: 'COMENÇAR', startGameHint: 'Prem COMENÇAR per iniciar la partida.' },
+    es: { startGame: 'COMENZAR', startGameHint: 'Pulsa COMENZAR para iniciar la partida.' },
+  }
+
+  it('en català el botó diu COMENÇAR', () => {
+    expect(translations.ca.startGame).toBe('COMENÇAR')
+  })
+
+  it('en castellà el botó diu COMENZAR', () => {
+    expect(translations.es.startGame).toBe('COMENZAR')
+  })
+
+  it('missatge de hint en català és correcte', () => {
+    expect(translations.ca.startGameHint).toContain('COMENÇAR')
+  })
+
+  it('missatge de hint en castellà és correcte', () => {
+    expect(translations.es.startGameHint).toContain('COMENZAR')
   })
 })

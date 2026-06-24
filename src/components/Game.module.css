@@ -221,3 +221,31 @@
   -webkit-tap-highlight-color: transparent;
   flex-shrink: 0;
 }
+
+.boardDisabled {
+  opacity: 0.35;
+  filter: blur(1px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.startBtn {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s, transform 0.1s;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+}
+
+.startBtn:active {
+  background: #4f46e5;
+  transform: scale(0.98);
+}

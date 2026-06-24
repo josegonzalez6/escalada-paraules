@@ -22,9 +22,10 @@ export function useGame(lang: Language, archiveDateKey?: string) {
   const [error, setError] = useState<string | null>(null)
   const [dateKey, setDateKey] = useState<string>(archiveDateKey ?? getMadridDateStr())
 
+  const [gameStarted, setGameStarted] = useState(false)
+
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const elapsedRef = useRef(0)
-  const hasStartedRef = useRef(false)
   const inputsRef = useRef<GameInputs>([...EMPTY_INPUTS])
   const gameRef = useRef<GameEntry | null>(null)
   const dictRef = useRef<DictionaryIndex>({ lookupMap: new Map(), originalSet: new Set() })
@@ -48,10 +49,10 @@ export function useGame(lang: Language, archiveDateKey?: string) {
     inputsRef.current = fresh
     gameRef.current = chosenGame
     dictRef.current = dict
-    hasStartedRef.current = false
     stopTimer()
     elapsedRef.current = 0
     setElapsed(0)
+    setGameStarted(false)
     setGame(chosenGame)
     setInputs(fresh)
     setValidationResult(null)
@@ -105,12 +106,14 @@ export function useGame(lang: Language, archiveDateKey?: string) {
     return () => { cancelled = true; stopTimer() }
   }, [lang, archiveDateKey]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const handleStart = useCallback(() => {
+    if (gameStarted) return
+    setGameStarted(true)
+    startTimer()
+  }, [gameStarted, startTimer])
+
   const handleInput = useCallback((index: number, value: string) => {
-    if (phase !== 'playing') return
-    if (!hasStartedRef.current && value.length > 0) {
-      hasStartedRef.current = true
-      startTimer()
-    }
+    if (phase !== 'playing' || !gameStarted) return
     const expectedLen = 3 + index
     const normalized = normalizeWord(value).slice(0, expectedLen)
     setInputs(prev => {
@@ -119,7 +122,7 @@ export function useGame(lang: Language, archiveDateKey?: string) {
       inputsRef.current = next
       return next
     })
-  }, [phase, startTimer])
+  }, [phase, gameStarted])
 
   const handleValidate = useCallback(() => {
     if (phase !== 'playing' || !gameRef.current) return
@@ -162,7 +165,7 @@ export function useGame(lang: Language, archiveDateKey?: string) {
   return {
     phase, elapsed, timeUsed, inputs, game, validationResult,
     loading, error, gameCount: games.length, dictionary, dateKey,
-    savedResult,
-    handleInput, handleValidate, handleNewGame, baseCounts,
+    savedResult, gameStarted,
+    handleInput, handleValidate, handleNewGame, handleStart, baseCounts,
   }
 }

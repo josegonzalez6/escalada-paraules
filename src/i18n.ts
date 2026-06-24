@@ -15,6 +15,8 @@ const translations = {
 
     // Game board
     availableLetters: "Lletres disponibles",
+    startGame: "COMENÇAR",
+    startGameHint: "Prem COMENÇAR per iniciar la partida.",
     validate: "Validar",
     hint: "Forma paraules de 3, 4, 5, 6 i 7 lletres.",
     loading: "Carregant...",
@@ -72,6 +74,8 @@ const translations = {
 
     // Game board
     availableLetters: "Letras disponibles",
+    startGame: "COMENZAR",
+    startGameHint: "Pulsa COMENZAR para iniciar la partida.",
     validate: "Validar",
     hint: "Forma palabras de 3, 4, 5, 6 y 7 letras.",
     loading: "Cargando...",
