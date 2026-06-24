@@ -1,43 +1,21 @@
-.wrapper {
+.timer {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  width: 100%;
-}
-
-.bar {
-  flex: 1;
-  height: 8px;
-  background: #e2e8f0;
-  border-radius: 99px;
-  overflow: hidden;
-}
-
-.fill {
-  height: 100%;
-  background: #6366f1;
-  border-radius: 99px;
-  transition: width 1s linear, background 0.3s;
-}
-
-.urgent .fill {
-  background: #ef4444;
-  animation: pulse 0.5s ease-in-out infinite alternate;
-}
-
-@keyframes pulse {
-  from { opacity: 1; }
-  to { opacity: 0.6; }
+  gap: 0.5rem;
 }
 
 .label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #64748b;
-  min-width: 2.5rem;
-  text-align: right;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.urgentLabel {
-  color: #ef4444;
+.time {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #475569;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.03em;
 }

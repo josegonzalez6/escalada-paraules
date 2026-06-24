@@ -8,13 +8,14 @@ const DEV_MODE = false
 const RULES = {
   ca: {
     title: "L'Escalada",
-    subtitle: 'Forma paraules de 3 a 7 lletres amb les lletres disponibles.',
+    subtitle: "Forma una escala de paraules de 3 a 7 lletres usant les lletres d'una paraula base. No hi ha límit de temps, però si completes l'escala es guardarà el teu temps.",
     rules: [
+      'Usa les lletres disponibles per formar paraules de 3, 4, 5, 6 i 7 lletres.',
       'Pots reordenar les lletres lliurement.',
       "No pots usar una lletra més vegades de les que apareix.",
       'Cada paraula és independent de les altres.',
-      'Tens 60 segons.',
-      'El joc valida quan prems "Validar" o s\'acaba el temps.',
+      'No hi ha límit de temps — prem «Validar» quan vulguis.',
+      "Si completes l'escala (5/5), es guarda el teu temps.",
     ],
     chooseLang: 'Tria idioma',
     chooseMode: 'Tria mode de joc',
@@ -27,13 +28,14 @@ const RULES = {
   },
   es: {
     title: 'La Escalada',
-    subtitle: 'Forma palabras de 3 a 7 letras con las letras disponibles.',
+    subtitle: 'Forma una escalera de palabras de 3 a 7 letras usando las letras de una palabra base. Sin límite de tiempo. Si completas la escalera se guardará tu tiempo.',
     rules: [
+      'Usa las letras disponibles para formar palabras de 3, 4, 5, 6 y 7 letras.',
       'Puedes reordenar las letras libremente.',
       'No puedes usar una letra más veces de las que aparece.',
       'Cada palabra es independiente de las demás.',
-      'Tienes 60 segundos.',
-      'El juego valida cuando pulsas "Validar" o se acaba el tiempo.',
+      'Sin límite de tiempo — pulsa «Validar» cuando quieras.',
+      'Si completas la escalera (5/5), se guarda tu tiempo.',
     ],
     chooseLang: 'Elige idioma',
     chooseMode: 'Elige modo de juego',

@@ -12,26 +12,24 @@ import { reasonText } from '../utils/validate'
 import { formatDateDisplay } from '../utils/daily'
 import styles from './Game.module.css'
 
-const TOTAL_TIME = 60
-
 const T = {
   ca: {
     validate: 'Validar escalada',
     new: 'Nova partida aleatòria',
-    daily: 'Paraula del dia',
     lang: 'Inici',
     loading: 'Carregant...',
     error: 'Error en carregar les dades.',
     baseLabel: 'Lletres disponibles',
+    hint: 'Forma paraules de 3, 4, 5, 6 i 7 lletres. No hi ha límit de temps.',
   },
   es: {
     validate: 'Validar escalada',
     new: 'Partida aleatoria',
-    daily: 'Palabra del día',
     lang: 'Inicio',
     loading: 'Cargando...',
     error: 'Error al cargar los datos.',
     baseLabel: 'Letras disponibles',
+    hint: 'Forma palabras de 3, 4, 5, 6 y 7 letras. Sin límite de tiempo.',
   },
 }
 
@@ -44,14 +42,13 @@ interface Props {
 
 export function Game({ lang, mode, onChangeLang, devMode }: Props) {
   const {
-    phase, timeLeft, timeUsed, inputs, game, validationResult, loading, error,
+    phase, elapsed, timeUsed, inputs, game, validationResult, loading, error,
     gameCount, dictionary, handleInput, handleValidate, handleNewGame,
   } = useGame(lang, mode)
 
   const t = T[lang]
   const rowRefs = useRef<(WordBoxRowHandle | null)[]>([null, null, null, null, null])
 
-  // Auto-avanç al camp següent quan el camp actual s'omple
   useEffect(() => {
     if (phase !== 'playing') return
     for (let i = 0; i < 5; i++) {
@@ -63,19 +60,13 @@ export function Game({ lang, mode, onChangeLang, devMode }: Props) {
     }
   }, [inputs, phase])
 
-  if (loading) {
-    return <div className={styles.center}><p>{t.loading}</p></div>
-  }
-
-  if (error) {
-    return (
-      <div className={styles.center}>
-        <p className={styles.errorMsg}>{t.error}</p>
-        <p className={styles.errorDetail}>{error}</p>
-      </div>
-    )
-  }
-
+  if (loading) return <div className={styles.center}><p>{t.loading}</p></div>
+  if (error) return (
+    <div className={styles.center}>
+      <p className={styles.errorMsg}>{t.error}</p>
+      <p className={styles.errorDetail}>{error}</p>
+    </div>
+  )
   if (!game) return null
 
   const errorMap: Record<number, string> = {}
@@ -116,8 +107,10 @@ export function Game({ lang, mode, onChangeLang, devMode }: Props) {
           </div>
 
           <div className={styles.timerWrapper}>
-            <Timer seconds={timeLeft} total={TOTAL_TIME} />
+            <Timer seconds={elapsed} />
           </div>
+
+          <p className={styles.hint}>{t.hint}</p>
 
           <div className={styles.board}>
             {([0, 1, 2, 3, 4] as const).map(i => {

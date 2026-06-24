@@ -1,21 +1,20 @@
 import styles from './Timer.module.css'
 
 interface Props {
-  seconds: number
-  total: number
+  seconds: number  // temps elapsed (ascendent)
 }
 
-export function Timer({ seconds, total }: Props) {
-  const pct = (seconds / total) * 100
-  const urgent = seconds <= 10
+function pad(n: number): string {
+  return String(n).padStart(2, '0')
+}
+
+export function Timer({ seconds }: Props) {
+  const mins = Math.floor(seconds / 60)
+  const secs = seconds % 60
   return (
-    <div className={styles.wrapper}>
-      <div className={`${styles.bar} ${urgent ? styles.urgent : ''}`}>
-        <div className={styles.fill} style={{ width: `${pct}%` }} />
-      </div>
-      <span className={`${styles.label} ${urgent ? styles.urgentLabel : ''}`}>
-        {seconds}s
-      </span>
+    <div className={styles.timer}>
+      <span className={styles.label}>Temps</span>
+      <span className={styles.time}>{pad(mins)}:{pad(secs)}</span>
     </div>
   )
 }

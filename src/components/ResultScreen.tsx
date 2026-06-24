@@ -33,6 +33,7 @@ const T = {
     perfect_lbl: '5/5',
     pct: 'Encert',
     best: 'Millor temps',
+    avg: 'Temps mitjà',
     streak: 'Ratxa',
     best_streak: 'Millor ratxa',
     seconds: 's',
@@ -55,6 +56,7 @@ const T = {
     perfect_lbl: '5/5',
     pct: 'Acierto',
     best: 'Mejor tiempo',
+    avg: 'Tiempo medio',
     streak: 'Racha',
     best_streak: 'Mejor racha',
     seconds: 's',
@@ -62,6 +64,12 @@ const T = {
 }
 
 const LENGTHS = [3, 4, 5, 6, 7] as const
+
+function fmtTime(seconds: number): string {
+  const m = Math.floor(seconds / 60)
+  const s = seconds % 60
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+}
 
 export function ResultScreen({ result, lang, mode, stats, timeUsed, onNewGame, onChangeLang }: Props) {
   const t = T[lang]
@@ -107,7 +115,7 @@ export function ResultScreen({ result, lang, mode, stats, timeUsed, onNewGame, o
         {isPerfect && (
           <p className={styles.timeRow}>
             <span className={styles.timeLabel}>{t.time_used}</span>
-            <strong className={styles.timeValue}>{timeUsed}{t.seconds}</strong>
+            <strong className={styles.timeValue}>{fmtTime(timeUsed)}</strong>
           </p>
         )}
       </div>
@@ -154,7 +162,8 @@ export function ResultScreen({ result, lang, mode, stats, timeUsed, onNewGame, o
         <div className={styles.statItem}><span className={styles.statVal}>{stats.played}</span><span className={styles.statLbl}>{t.played}</span></div>
         <div className={styles.statItem}><span className={styles.statVal}>{stats.perfect}</span><span className={styles.statLbl}>{t.perfect_lbl}</span></div>
         <div className={styles.statItem}><span className={styles.statVal}>{pct}%</span><span className={styles.statLbl}>{t.pct}</span></div>
-        <div className={styles.statItem}><span className={styles.statVal}>{stats.bestTime !== null ? `${stats.bestTime}${t.seconds}` : '—'}</span><span className={styles.statLbl}>{t.best}</span></div>
+        <div className={styles.statItem}><span className={styles.statVal}>{stats.bestTime !== null ? fmtTime(stats.bestTime) : '—'}</span><span className={styles.statLbl}>{t.best}</span></div>
+        <div className={styles.statItem}><span className={styles.statVal}>{stats.avgTime !== null ? fmtTime(stats.avgTime) : '—'}</span><span className={styles.statLbl}>{t.avg}</span></div>
         <div className={styles.statItem}><span className={styles.statVal}>{stats.currentStreak}</span><span className={styles.statLbl}>{t.streak}</span></div>
         <div className={styles.statItem}><span className={styles.statVal}>{stats.bestStreak}</span><span className={styles.statLbl}>{t.best_streak}</span></div>
       </div>

@@ -1,44 +1,47 @@
-import type { Stats, Language } from '../types'
+import type { Language, Stats } from '../types'
 
-function key(lang: Language) { return `escalada_stats_${lang}` }
+const KEY = (lang: string) => `escalada-stats-${lang}`
 
-const defaultStats: Stats = {
-  played: 0,
-  perfect: 0,
-  bestTime: null,
-  currentStreak: 0,
-  bestStreak: 0,
+function migrate(raw: Record<string, unknown>): Stats {
+  return {
+    played: Number(raw.played ?? 0),
+    perfect: Number(raw.perfect ?? raw.won ?? 0),
+    bestTime: raw.bestTime != null ? Number(raw.bestTime) : null,
+    avgTime: raw.avgTime != null ? Number(raw.avgTime) : null,
+    currentStreak: Number(raw.currentStreak ?? 0),
+    bestStreak: Number(raw.bestStreak ?? 0),
+  }
 }
 
 export function loadStats(lang: Language): Stats {
   try {
-    const raw = localStorage.getItem(key(lang))
-    if (!raw) return { ...defaultStats }
-    // Migra stats antigues que tenien 'won' en lloc de 'perfect'
-    const parsed = JSON.parse(raw) as Record<string, unknown>
-    return {
-      played: (parsed.played as number) ?? 0,
-      perfect: (parsed.perfect as number) ?? (parsed.won as number) ?? 0,
-      bestTime: (parsed.bestTime as number | null) ?? null,
-      currentStreak: (parsed.currentStreak as number) ?? 0,
-      bestStreak: (parsed.bestStreak as number) ?? 0,
-    }
+    const raw = JSON.parse(localStorage.getItem(KEY(lang)) ?? '{}')
+    return migrate(raw)
   } catch {
-    return { ...defaultStats }
+    return { played: 0, perfect: 0, bestTime: null, avgTime: null, currentStreak: 0, bestStreak: 0 }
   }
 }
 
 export function saveResult(lang: Language, score: number, timeUsed: number): Stats {
-  const stats = loadStats(lang)
-  stats.played++
+  const s = loadStats(lang)
+  const rawKey = KEY(lang)
+  let totalPerfectTime = 0
+  try {
+    const raw = JSON.parse(localStorage.getItem(rawKey) ?? '{}')
+    totalPerfectTime = Number(raw._totalPerfectTime ?? 0)
+  } catch { /* */ }
+
+  s.played += 1
   if (score === 5) {
-    stats.perfect++
-    stats.currentStreak++
-    if (stats.currentStreak > stats.bestStreak) stats.bestStreak = stats.currentStreak
-    if (stats.bestTime === null || timeUsed < stats.bestTime) stats.bestTime = timeUsed
+    s.perfect += 1
+    totalPerfectTime += timeUsed
+    if (s.bestTime === null || timeUsed < s.bestTime) s.bestTime = timeUsed
+    s.avgTime = Math.round(totalPerfectTime / s.perfect)
+    s.currentStreak += 1
+    if (s.currentStreak > s.bestStreak) s.bestStreak = s.currentStreak
   } else {
-    stats.currentStreak = 0
+    s.currentStreak = 0
   }
-  localStorage.setItem(key(lang), JSON.stringify(stats))
-  return stats
+  localStorage.setItem(rawKey, JSON.stringify({ ...s, _totalPerfectTime: totalPerfectTime }))
+  return s
 }

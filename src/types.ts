@@ -42,6 +42,7 @@ export interface Stats {
   played: number
   perfect: number        // partides amb 5/5
   bestTime: number | null // només per 5/5
+  avgTime: number | null  // temps mitjà de partides perfectes
   currentStreak: number  // ratxa de 5/5 consecutius
   bestStreak: number
 }

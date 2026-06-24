@@ -1,42 +1,57 @@
-// Script Node.js per precomputar partides vàlides des dels diccionaris.
-// Executa amb: node scripts/generateGames.mjs
-//
-// Format de sortida (ca-games.json / es-games.json):
-// [{
-//   baseWord: "caminants",          <- paraula base de 8-10 lletres (NO és la resposta de 7)
-//   baseLetters: ["c","a","m",...], <- lletres disponibles (desordenades)
-//   solutions: {
-//     "3": ["nas","cam",...],
-//     "4": ["cama","cims",...],
-//     "5": ["canta",...],
-//     "6": ["camins",...],
-//     "7": ["cantina",...]
-//   }
-// }]
-//
-// La paraula base de 8-10 lletres NO s'inclou automàticament com a solució.
-// Totes les solucions han de ser paraules de 3-7 lletres formables amb les
-// lletres de la base, sense superar la freqüència de cap lletra.
+#!/usr/bin/env node
+/**
+ * generateGames.mjs
+ *
+ * Genera partides per al joc "Escalada de Paraules".
+ * Cada partida té una paraula base (8-14 lletres) i solucions de 3-7 lletres.
+ *
+ * Ús:
+ *   node scripts/generateGames.mjs [--lang ca|es] [--max-games N] [--max-sol N]
+ *
+ * Exemples:
+ *   node scripts/generateGames.mjs --lang ca --max-games 200 --max-sol 30
+ */
 
-import { readFileSync, writeFileSync, mkdirSync } from 'fs'
-import { join, dirname } from 'path'
+import fs from 'fs'
+import path from 'path'
 import { fileURLToPath } from 'url'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const root = join(__dirname, '..')
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-const MAX_GAMES = 500
-const MAX_SOLUTIONS_PER_LEN = 10
+// --- Paràmetres ---
+const args = process.argv.slice(2)
+function getArg(flag, defaultVal) {
+  const i = args.indexOf(flag)
+  return i >= 0 ? args[i + 1] : defaultVal
+}
+
+const langArg = getArg('--lang', null)
+const MAX_GAMES = parseInt(getArg('--max-games', '500'), 10)
+const MAX_SOLUTIONS_PER_LENGTH = parseInt(getArg('--max-sol', '50'), 10)
 const MIN_BASE_LEN = 8
 const MAX_BASE_LEN = 14
+const SOLUTION_LENGTHS = [3, 4, 5, 6, 7]
 
+// --- Normalització ---
 function normalize(word) {
-  return word
-    .toLowerCase()
+  return word.toLowerCase()
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
     .replace(/·/g, 'l')
     .replace(/[^a-z]/g, '')
+}
+
+function getLetterCounts(norm) {
+  const counts = {}
+  for (const c of norm) counts[c] = (counts[c] ?? 0) + 1
+  return counts
+}
+
+function canBeFormed(candCounts, baseCounts) {
+  for (const [c, n] of Object.entries(candCounts)) {
+    if ((baseCounts[c] ?? 0) < n) return false
+  }
+  return true
 }
 
 function shuffle(arr) {
@@ -48,104 +63,114 @@ function shuffle(arr) {
   return a
 }
 
-function loadDict(lang) {
-  const path = join(root, 'public', 'dictionaries', `${lang}.txt`)
-  const raw = readFileSync(path, 'utf-8')
-  const byLen = {}
-  for (let i = 3; i <= MAX_BASE_LEN; i++) byLen[i] = new Set()
+function processLang(lang) {
+  const dictPath = path.join(__dirname, `../public/dictionaries/${lang}.txt`)
+  const outPath = path.join(__dirname, `../public/generated/${lang}-games.json`)
 
-  for (const line of raw.split('\n')) {
-    const w = normalize(line.trim())
-    if (w.length >= 3 && w.length <= MAX_BASE_LEN && byLen[w.length]) {
-      byLen[w.length].add(w)
+  console.log(`\n📖 Carregant diccionari: ${dictPath}`)
+  if (!fs.existsSync(dictPath)) {
+    console.error(`Error: No existeix ${dictPath}`)
+    return
+  }
+
+  const rawWords = fs.readFileSync(dictPath, 'utf8')
+    .split('\n')
+    .map(l => l.trim())
+    .filter(Boolean)
+
+  console.log(`   Paraules al diccionari: ${rawWords.length}`)
+
+  // Precomputa counts normalitzats per a cada paraula
+  const wordData = rawWords.map(w => ({
+    original: w,
+    norm: normalize(w),
+    counts: null,
+  })).filter(d => d.norm.length >= 3 && d.norm.length <= MAX_BASE_LEN)
+
+  // Filtra per longitud: candidates base (8-14) i solucions (3-7)
+  const byLen = {}
+  for (const d of wordData) {
+    const len = d.norm.length
+    if (!byLen[len]) byLen[len] = []
+    byLen[len].push(d)
+  }
+
+  // Precomputa counts per a les solucions (3-7)
+  for (const len of SOLUTION_LENGTHS) {
+    for (const d of (byLen[len] ?? [])) {
+      d.counts = getLetterCounts(d.norm)
     }
   }
-  return byLen
-}
 
-function getLetterCounts(word) {
-  const counts = {}
-  for (const c of word) counts[c] = (counts[c] || 0) + 1
-  return counts
-}
-
-function canBeFormedFromBase(candidate, baseCounts) {
-  const candCounts = getLetterCounts(candidate)
-  for (const [c, n] of Object.entries(candCounts)) {
-    if ((baseCounts[c] || 0) < n) return false
-  }
-  return true
-}
-
-function buildGames(byLen) {
-  const games = []
-
-  // Candidats a paraula base: paraules de 8-10 lletres
   const baseCandidates = []
   for (let len = MIN_BASE_LEN; len <= MAX_BASE_LEN; len++) {
-    if (byLen[len]) baseCandidates.push(...byLen[len])
+    for (const d of (byLen[len] ?? [])) {
+      d.counts = getLetterCounts(d.norm)
+      baseCandidates.push(d)
+    }
   }
 
-  for (const baseWord of baseCandidates) {
+  // Barreja bases per tenir varietat
+  shuffle(baseCandidates)
+
+  console.log(`   Bases candidates (${MIN_BASE_LEN}-${MAX_BASE_LEN} lletres): ${baseCandidates.length}`)
+  console.log(`\n🔍 Generant partides (màx ${MAX_GAMES})...`)
+
+  const games = []
+  let processed = 0
+  const total = baseCandidates.length
+
+  for (const base of baseCandidates) {
     if (games.length >= MAX_GAMES) break
+    processed++
 
-    const baseCounts = getLetterCounts(baseWord)
-    const solutions = { '3': [], '4': [], '5': [], '6': [], '7': [] }
+    if (processed % 500 === 0 || processed === total) {
+      const pct = Math.round((processed / total) * 100)
+      process.stdout.write(`\r   Processades: ${processed}/${total} (${pct}%) | Partides: ${games.length}`)
+    }
 
-    for (let len = 3; len <= 7; len++) {
-      const key = String(len)
-      if (!byLen[len]) continue
-      for (const word of byLen[len]) {
-        if (solutions[key].length >= MAX_SOLUTIONS_PER_LEN) break
-        if (canBeFormedFromBase(word, baseCounts)) {
-          solutions[key].push(word)
+    const solutions = {}
+    let allLengthsFound = true
+
+    for (const len of SOLUTION_LENGTHS) {
+      const matching = []
+      for (const cand of (byLen[len] ?? [])) {
+        if (cand.norm === base.norm) continue
+        if (canBeFormed(cand.counts, base.counts)) {
+          matching.push(cand.original)
+          if (matching.length >= MAX_SOLUTIONS_PER_LENGTH) break
         }
       }
+      if (matching.length === 0) {
+        allLengthsFound = false
+        break
+      }
+      solutions[String(len)] = matching
     }
 
-    const allLengthsCovered = [3, 4, 5, 6, 7].every(
-      len => solutions[String(len)].length > 0
-    )
+    if (!allLengthsFound) continue
 
-    if (allLengthsCovered) {
-      // Desordenem les lletres de la base per no revelar la paraula
-      const baseLetters = shuffle(baseWord.split(''))
-      games.push({ baseWord, baseLetters, solutions })
-    }
+    games.push({
+      baseWord: base.original,
+      baseLetters: shuffle(base.original.split('')),
+      solutions,
+    })
   }
 
-  return games
+  process.stdout.write('\n')
+
+  if (games.length === 0) {
+    console.error('\n❌ No s\'han pogut generar partides. Comprova el diccionari.')
+    return
+  }
+
+  fs.mkdirSync(path.dirname(outPath), { recursive: true })
+  fs.writeFileSync(outPath, JSON.stringify(games, null, 2), 'utf8')
+  console.log(`\n✅ Generades ${games.length} partides → ${outPath}`)
 }
 
-for (const lang of ['ca', 'es']) {
-  console.log(`\nProcessant ${lang}...`)
-  try {
-    const byLen = loadDict(lang)
-    let total = 0
-    for (let i = 3; i <= MAX_BASE_LEN; i++) {
-      const n = byLen[i]?.size ?? 0
-      if (n > 0) console.log(`    ${i} lletres: ${n}`)
-      total += n
-    }
-    console.log(`  Total paraules: ${total}`)
-
-    const games = buildGames(byLen)
-    console.log(`  Partides vàlides: ${games.length}`)
-
-    if (games.length === 0) {
-      console.log(`  ⚠️  Cap partida generada. Cal un diccionari amb paraules de 8-10 lletres.`)
-      console.log(`  ⚠️  Consulta README.md → "Diccionaris complets".`)
-    }
-
-    const outDir = join(root, 'public', 'generated')
-    mkdirSync(outDir, { recursive: true })
-    writeFileSync(
-      join(outDir, `${lang}-games.json`),
-      JSON.stringify(games, null, 2)
-    )
-    console.log(`  Guardat a public/generated/${lang}-games.json`)
-  } catch (e) {
-    console.error(`  Error: ${e.message}`)
-  }
+const langs = langArg ? [langArg] : ['ca', 'es']
+for (const lang of langs) {
+  processLang(lang)
 }
 console.log('\nFet!')

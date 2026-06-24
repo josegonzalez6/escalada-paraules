@@ -1,97 +1,145 @@
-// Script per netejar i normalitzar un fitxer de diccionari extern.
-// Executa amb: node scripts/prepareDictionary.mjs <input> <output>
-//
-// Exemple:
-//   node scripts/prepareDictionary.mjs ~/Downloads/ca_raw.txt public/dictionaries/ca.txt
-//
-// El fitxer d'entrada pot tenir:
-//   - Una paraula per línia (format simple)
-//   - Format Hunspell (.dic): primera línia = nombre de paraules, la resta "paraula/flags"
-//   - Línies buides o comentaris (#) — s'ignoren
-//
-// El fitxer de sortida:
-//   - Una paraula per línia
-//   - Minúscules, sense accents (normalitzat per comparació)
-//   - Sense duplicats
-//   - Ordenat alfabèticament
-//   - Longitud 3-10 (3-7 per a respostes, 8-10 per a bases de partida)
-//
-// NOTA SOBRE ACCENTS:
-//   El joc normalitza TOTA la entrada eliminant accents. Per tant, "café" i "cafe"
-//   es tracten com la mateixa paraula. Pots incloure les formes accentuades i
-//   el sistema les normalitzarà automàticament.
+#!/usr/bin/env node
+/**
+ * prepareDictionary.mjs
+ *
+ * Neteja un fitxer de diccionari brut i el converteix a un fitxer .txt
+ * amb una paraula vàlida per línia (minúscules, sense duplicats, 3-14 lletres).
+ *
+ * Ús:
+ *   node scripts/prepareDictionary.mjs <input> <output> [--lang ca|es]
+ *
+ * Exemples:
+ *   node scripts/prepareDictionary.mjs raw/ca-hunspell.dic public/dictionaries/ca.txt --lang ca
+ *   node scripts/prepareDictionary.mjs raw/es-hunspell.dic public/dictionaries/es.txt --lang es
+ *
+ * El fitxer d'entrada pot ser:
+ *   - Format Hunspell .dic (primera línia = count, la resta "paraula/FLAGS")
+ *   - Una llista plana (una paraula per línia)
+ *   - Un fitxer .txt genèric
+ *
+ * Filtres aplicats:
+ *   - Minúscules
+ *   - Mantén accents (à, è, é, í, ï, ó, ò, ú, ü), ñ, ç, l·l
+ *   - Elimina guions, punts, comes, apòstrofs, dígits
+ *   - Elimina noms propis (comencen per majúscula al fitxer original)
+ *   - Elimina abreviatures (contenen punt)
+ *   - Filtra longituds: 3-14 lletres (normalitzades, sense accents)
+ *   - Elimina duplicats
+ *   - Ordena alfabèticament
+ */
 
-import { readFileSync, writeFileSync } from 'fs'
-import { join } from 'path'
+import fs from 'fs'
+import path from 'path'
+import readline from 'readline'
 
 const args = process.argv.slice(2)
-if (args.length < 2) {
-  console.error('Ús: node scripts/prepareDictionary.mjs <input> <output>')
-  console.error('Exemple: node scripts/prepareDictionary.mjs ~/Downloads/ca_raw.txt public/dictionaries/ca.txt')
+const inputFile = args[0]
+const outputFile = args[1]
+const langFlag = args.indexOf('--lang')
+const lang = langFlag >= 0 ? args[langFlag + 1] : 'ca'
+
+if (!inputFile || !outputFile) {
+  console.error('Ús: node scripts/prepareDictionary.mjs <input> <output> [--lang ca|es]')
   process.exit(1)
 }
 
-const [inputPath, outputPath] = args
-
-function normalize(word) {
-  return word
-    .toLowerCase()
+// Normalitza per comptar lletres (treu accents però manté l·l com ll)
+function normalizeForCount(word) {
+  return word.toLowerCase()
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/·/g, 'l')   // l·l catalan -> ll
+    .replace(/[̀-ͯ]/g, '') // treu diacrítics
+    .replace(/·/g, 'l')              // l·l → ll
     .replace(/[^a-z]/g, '')
 }
 
-function processLine(line) {
-  // Ignora comentaris i línies buides
-  const trimmed = line.trim()
-  if (!trimmed || trimmed.startsWith('#')) return null
-
-  // Format Hunspell: "paraula/FLAGS" → agafa la paraula
-  const slashIdx = trimmed.indexOf('/')
-  const raw = slashIdx >= 0 ? trimmed.slice(0, slashIdx) : trimmed
-
-  return normalize(raw)
+// Comprova si la paraula original sembla un nom propi
+function looksProper(rawLine) {
+  const trimmed = rawLine.split('/')[0].trim()
+  return trimmed.length > 0 && trimmed[0] === trimmed[0].toUpperCase() && trimmed[0] !== trimmed[0].toLowerCase()
 }
 
-console.log(`Llegint: ${inputPath}`)
-let raw
-try {
-  raw = readFileSync(inputPath, 'utf-8')
-} catch {
-  // Prova path relatiu des de root
-  raw = readFileSync(join(process.cwd(), inputPath), 'utf-8')
+// Comprova si és una abreviatura (conté punt, guió, digit, espai)
+function looksAbbreviation(word) {
+  return /[.0-9\-\s_']/.test(word)
 }
 
-const lines = raw.split('\n')
-console.log(`Línies totals: ${lines.length}`)
+async function processFile(inputPath, outputPath) {
+  const seen = new Set()
+  const results = []
+  let totalLines = 0
+  let skippedProper = 0
+  let skippedLength = 0
+  let skippedAbbr = 0
+  let skippedDup = 0
+  let isFirstLine = true
 
-const words = new Set()
-let skippedTooShort = 0
-let skippedTooLong = 0
-let skippedEmpty = 0
+  const rl = readline.createInterface({
+    input: fs.createReadStream(inputPath, { encoding: 'utf8' }),
+    crlfDelay: Infinity,
+  })
 
-for (const line of lines) {
-  const w = processLine(line)
-  if (!w) { skippedEmpty++; continue }
-  if (w.length < 3) { skippedTooShort++; continue }
-  if (w.length > 10) { skippedTooLong++; continue }
-  words.add(w)
+  for await (const rawLine of rl) {
+    totalLines++
+
+    // Hunspell: primera línia sol ser el count
+    if (isFirstLine) {
+      isFirstLine = false
+      if (/^\d+$/.test(rawLine.trim())) continue
+    }
+
+    // Detectar noms propis (comencen per majúscula)
+    if (looksProper(rawLine)) {
+      skippedProper++
+      continue
+    }
+
+    // Treure part de flags hunspell (paraula/FLAGS → paraula)
+    const word = rawLine.split('/')[0].trim().toLowerCase()
+
+    if (!word) continue
+
+    // Abreviatures
+    if (looksAbbreviation(word)) {
+      skippedAbbr++
+      continue
+    }
+
+    // Neteja bàsica: treu caràcters no vàlids però manté accents i caràcters especials
+    // Manté: a-z, àèéíïóòúü, ñ, ç, ·
+    const cleaned = word.replace(/[^a-zàèéíïóòúüñç·]/gi, '').toLowerCase()
+    if (!cleaned) continue
+
+    // Filtre de longitud (normalitzada)
+    const normalized = normalizeForCount(cleaned)
+    if (normalized.length < 3 || normalized.length > 14) {
+      skippedLength++
+      continue
+    }
+
+    // Duplicats
+    if (seen.has(cleaned)) {
+      skippedDup++
+      continue
+    }
+    seen.add(cleaned)
+    results.push(cleaned)
+  }
+
+  results.sort((a, b) => a.localeCompare(b, lang))
+  fs.writeFileSync(outputPath, results.join('\n') + '\n', 'utf8')
+
+  console.log(`\n✅ Processament completat:`)
+  console.log(`   Línies llegides:     ${totalLines}`)
+  console.log(`   Paraules vàlides:    ${results.length}`)
+  console.log(`   Noms propis saltats: ${skippedProper}`)
+  console.log(`   Abrev. saltades:     ${skippedAbbr}`)
+  console.log(`   Longitud fora rang:  ${skippedLength}`)
+  console.log(`   Duplicats eliminats: ${skippedDup}`)
+  console.log(`   → Desat a: ${outputPath}`)
 }
 
-const sorted = [...words].sort()
-
-writeFileSync(outputPath, sorted.join('\n') + '\n', 'utf-8')
-
-console.log(`\nResultat guardat a: ${outputPath}`)
-console.log(`Paraules úniques: ${sorted.length}`)
-console.log(`  3 lletres: ${sorted.filter(w => w.length === 3).length}`)
-console.log(`  4 lletres: ${sorted.filter(w => w.length === 4).length}`)
-console.log(`  5 lletres: ${sorted.filter(w => w.length === 5).length}`)
-console.log(`  6 lletres: ${sorted.filter(w => w.length === 6).length}`)
-console.log(`  7 lletres: ${sorted.filter(w => w.length === 7).length}`)
-console.log(`  8 lletres: ${sorted.filter(w => w.length === 8).length}`)
-console.log(`  9 lletres: ${sorted.filter(w => w.length === 9).length}`)
-console.log(` 10 lletres: ${sorted.filter(w => w.length === 10).length}`)
-console.log(`Saltats: ${skippedTooShort} curts, ${skippedTooLong} llargs, ${skippedEmpty} buits`)
-console.log('\nAra executa: npm run generate:games')
+console.log(`🔧 Preparant diccionari [${lang}]: ${inputFile} → ${outputFile}`)
+processFile(inputFile, outputFile).catch(err => {
+  console.error('Error:', err.message)
+  process.exit(1)
+})
