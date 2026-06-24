@@ -1,0 +1,5 @@
+# Paraules base preferides per al català
+# Format: una paraula per línia (han d'existir al diccionari ca.txt)
+# Paraules d'aquí reben un bonus de qualitat i apareixen amb més freqüència
+# Han de tenir 8-14 lletres i permetre completar l'escala 3-7.
+# Afegeix aquí substantius, adjectius i formes familiars.

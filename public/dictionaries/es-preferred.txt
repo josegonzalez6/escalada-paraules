@@ -1,0 +1,5 @@
+# Palabras base preferidas para el castellano
+# Formato: una palabra por línea (deben existir en el diccionario es.txt)
+# Las palabras aquí reciben un bonus de calidad y aparecen con más frecuencia.
+# Deben tener 8-14 letras y permitir completar la escalera 3-7.
+# Añade aquí sustantivos, adjetivos y formas familiares.

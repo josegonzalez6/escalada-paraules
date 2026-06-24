@@ -68,7 +68,9 @@ export function Game({ lang, archiveDateKey, todayKey, onChangeLang, onOpenArchi
 
   // Resultat guardat per a aquesta data (avui o arxiu)
   const savedDaily = loadDailyResultForDate(lang, dateKey)
-  const showSavedResult = savedDaily !== null
+  // Només mostrar resultat guardat si no acabem de validar ara mateix (phase !== 'finished')
+  // Si phase==='finished', el resultat live té solutions reals; el guardat en tindria null.
+  const showSavedResult = savedDaily !== null && phase !== 'finished'
 
   // Compte enrere fins a la propera escalada (només per avui)
   useEffect(() => {
@@ -212,7 +214,7 @@ export function Game({ lang, archiveDateKey, todayKey, onChangeLang, onOpenArchi
           score={savedDaily.score}
           timeUsed={savedDaily.timeUsed}
           errors={savedErrors}
-          solutions={null}
+          solutions={game?.solutions ?? null}
           validationErrors={savedDaily.validationErrors ?? []}
           userInputs={savedDaily.inputs ? [...savedDaily.inputs] : ['', '', '', '', '']}
           lang={lang}

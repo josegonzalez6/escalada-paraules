@@ -75,8 +75,27 @@ function shuffle(arr, rng = Math.random) {
   return a
 }
 
-// Puntuació de qualitat: varietat de lletres, equilibri vocal/consonant, solucions
-function scoreGameQuality(game) {
+// Heurística per detectar formes verbals evidents (penalitza, no prohibeix)
+function looksLikeVerbForm(word, lang) {
+  const w = normalize(word)
+  if (lang === 'ca') {
+    return /(?:àvem|àveu|éssim|éssiu|aríem|aríeu|eríem|eríeu|iríem|iríeu|àssim|àssiu|avessis|essessin|essin|ssin)$/.test(w)
+  }
+  if (lang === 'es') {
+    return /(?:ábamos|aríamos|eríamos|iríamos|aseis|ieseis|aríais|eríais|iríais|ábais|éramos|asteis|arían|erían|irían)$/.test(w)
+  }
+  return false
+}
+
+// Longitud ideal 9-12: ni massa curta ni massa llarga
+function baseLengthScore(len) {
+  if (len >= 9 && len <= 12) return 1.0
+  if (len === 8 || len === 13) return 0.7
+  return 0.4  // 14 lletres
+}
+
+// Puntuació de qualitat: varietat de lletres, equilibri vocal/consonant, solucions, longitud
+function scoreGameQuality(game, lang = 'ca') {
   const norm = normalize(game.baseWord)
   const unique = new Set(norm).size
   const letterVariety = unique / norm.length  // 0..1
@@ -84,27 +103,57 @@ function scoreGameQuality(game) {
   const vowels = 'aeiouàèéíïòóúüáéíóú'
   const vowelCount = [...norm].filter(c => vowels.includes(c)).length
   const vowelRatio = vowelCount / norm.length
-  // Ideal ~0.4: penalitza extrems
-  const vowelScore = 1 - Math.abs(vowelRatio - 0.4) * 2
+  const vowelScore = 1 - Math.abs(vowelRatio - 0.4) * 2  // ideal 0.4, penalitza extrems
 
   // Penalitza si hi ha ≥3 de la mateixa lletra
   const counts = getLetterCounts(norm)
   const maxRepeat = Math.max(...Object.values(counts))
-  const repeatPenalty = maxRepeat >= 3 ? 0.5 : 1.0
+  const repeatPenalty = maxRepeat >= 4 ? 0.3 : maxRepeat === 3 ? 0.7 : 1.0
 
-  // Solucions per longitud
+  // Solucions per longitud — preferim ≥3 per longitud
   let solScore = 0
   for (const len of SOLUTION_LENGTHS) {
     const n = (game.solutions[String(len)] ?? []).length
-    solScore += Math.min(n / 5, 1)  // màx 1 per longitud (5 total)
+    solScore += Math.min(n / 3, 1)  // mínim 3 solucions per nota màxima
   }
   solScore /= SOLUTION_LENGTHS.length  // 0..1
 
-  return (letterVariety * 0.3 + Math.max(0, vowelScore) * 0.2 + repeatPenalty * 0.2 + solScore * 0.3)
+  // Longitud ideal 9-12
+  const lenScore = baseLengthScore(norm.length)
+
+  // Penalització lleu per formes verbals evidents
+  const verbPenalty = looksLikeVerbForm(game.baseWord, lang) ? 0.6 : 1.0
+
+  const raw = (
+    letterVariety * 0.30 +
+    Math.max(0, vowelScore) * 0.15 +
+    repeatPenalty * 0.15 +
+    solScore * 0.25 +
+    lenScore * 0.15
+  )
+  return raw * verbPenalty
 }
 
-function filterGoodGames(games) {
-  return games.filter(g => scoreGameQuality(g) >= 0.45)
+function loadPreferredWords(lang) {
+  const prefPath = path.join(__dirname, `../public/dictionaries/${lang}-preferred.txt`)
+  if (!fs.existsSync(prefPath)) return new Set()
+  const words = fs.readFileSync(prefPath, 'utf8')
+    .split('\n')
+    .map(l => l.trim().toLowerCase())
+    .filter(l => l && !l.startsWith('#'))
+  console.log(`   Paraules preferides [${lang}]: ${words.length}`)
+  return new Set(words)
+}
+
+function filterGoodGames(games, lang, preferredWords = new Set()) {
+  const scored = games.map(g => {
+    let s = scoreGameQuality(g, lang)
+    // Bonus per paraula preferida (+15%)
+    if (preferredWords.has(g.baseWord.toLowerCase())) s = Math.min(1, s * 1.15)
+    return { g, s }
+  })
+  for (const { g, s } of scored) g._quality = s
+  return scored.filter(({ s }) => s >= 0.40).map(({ g }) => g)
 }
 
 function processLang(lang) {
@@ -209,18 +258,34 @@ function processLang(lang) {
     return
   }
 
-  // Filtra per qualitat
-  const goodGames = filterGoodGames(games)
-  console.log(`\n   Filtre qualitat: ${games.length} → ${goodGames.length} partides bones`)
+  // Filtra i puntua per qualitat (amb paraules preferides)
+  const preferredWords = loadPreferredWords(lang)
+  const goodGames = filterGoodGames(games, lang, preferredWords)
+  const preferredSelected = goodGames.filter(g => preferredWords.has(g.baseWord.toLowerCase())).length
+  if (preferredSelected > 0) console.log(`   Preferred seleccionades: ${preferredSelected}`)
+  const verbLike = goodGames.filter(g => looksLikeVerbForm(g.baseWord, lang)).length
+  const highQ = goodGames.filter(g => (g._quality ?? 0) >= 0.65).length
+  const midQ = goodGames.filter(g => (g._quality ?? 0) >= 0.50 && (g._quality ?? 0) < 0.65).length
+  const lowQ = goodGames.filter(g => (g._quality ?? 0) < 0.50).length
+  const avgQ = goodGames.length > 0
+    ? (goodGames.reduce((s, g) => s + (g._quality ?? 0), 0) / goodGames.length).toFixed(3)
+    : '—'
 
-  const finalGames = goodGames.length >= 100 ? goodGames : games
-  if (goodGames.length < 100) {
+  console.log(`\n   Filtre qualitat: ${games.length} → ${goodGames.length} partides bones`)
+  console.log(`   Alta qualitat (≥0.65): ${highQ} | Mitjana (0.50-0.65): ${midQ} | Baixa (<0.50): ${lowQ}`)
+  console.log(`   Forma verbal detectada: ${verbLike} | Qualitat mitjana: ${avgQ}`)
+
+  const finalGames = goodGames.length >= 200 ? goodGames : games
+  if (goodGames.length < 200) {
     console.warn(`   ⚠️  Poques partides bones (${goodGames.length}), usant totes (${games.length})`)
   }
 
+  // Neteja la propietat interna _quality abans de guardar
+  const output = finalGames.map(({ _quality: _q, ...rest }) => rest)
+
   fs.mkdirSync(path.dirname(outPath), { recursive: true })
-  fs.writeFileSync(outPath, JSON.stringify(finalGames, null, 2), 'utf8')
-  console.log(`✅ Generades ${finalGames.length} partides → ${outPath}`)
+  fs.writeFileSync(outPath, JSON.stringify(output, null, 2), 'utf8')
+  console.log(`✅ Generades ${output.length} partides → ${outPath}`)
 }
 
 const langs = langArg ? [langArg] : ['ca', 'es']

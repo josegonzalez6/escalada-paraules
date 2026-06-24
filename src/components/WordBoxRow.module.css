@@ -66,12 +66,14 @@
   border-color: #22c55e !important;
   background: #f0fdf4 !important;
   color: #166534 !important;
+  outline: none !important;
 }
 
 .boxError {
   border-color: #ef4444 !important;
   background: #fef2f2 !important;
   color: #991b1b !important;
+  outline: none !important;
 }
 
 .rowActive {

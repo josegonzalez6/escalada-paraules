@@ -70,3 +70,64 @@ describe('WordBoxRow — no té animació de blinking', () => {
     expect(true).toBe(true)
   })
 })
+
+describe('WordBoxRow — prioritat visual: resultat sobre cursor', () => {
+  // Replica la lògica de showCursor i isCursorReplace del component
+  function computeCellClasses(opts: {
+    status: 'neutral' | 'correct' | 'error'
+    isActive: boolean
+    char: string
+    col: number
+    cursorCol: number
+  }) {
+    const { status, isActive, char, col, cursorCol } = opts
+    const showCursor = isActive && status === 'neutral'
+    const isCursorReplace = showCursor && col === cursorCol && !!char
+    const isCursorCell = showCursor && col === cursorCol && !char
+    return {
+      boxError: status === 'error',
+      boxCorrect: status === 'correct',
+      boxCursorReplace: isCursorReplace,
+      boxActive: isCursorCell,
+    }
+  }
+
+  it('una cel·la error no té mai classe cursor (evita ambre sobre vermell)', () => {
+    const classes = computeCellClasses({ status: 'error', isActive: true, char: 'A', col: 2, cursorCol: 2 })
+    expect(classes.boxError).toBe(true)
+    expect(classes.boxCursorReplace).toBe(false)
+  })
+
+  it('una cel·la correcta no té mai classe cursor', () => {
+    const classes = computeCellClasses({ status: 'correct', isActive: true, char: 'G', col: 0, cursorCol: 0 })
+    expect(classes.boxCorrect).toBe(true)
+    expect(classes.boxCursorReplace).toBe(false)
+  })
+
+  it('durant edició (neutral), la cel·la activa amb text sí té cursor replace', () => {
+    const classes = computeCellClasses({ status: 'neutral', isActive: true, char: 'G', col: 1, cursorCol: 1 })
+    expect(classes.boxCursorReplace).toBe(true)
+    expect(classes.boxError).toBe(false)
+    expect(classes.boxCorrect).toBe(false)
+  })
+
+  it('durant edició (neutral), la cel·la activa buida té boxActive', () => {
+    const classes = computeCellClasses({ status: 'neutral', isActive: true, char: '', col: 0, cursorCol: 0 })
+    expect(classes.boxActive).toBe(true)
+    expect(classes.boxCursorReplace).toBe(false)
+  })
+
+  it('si la fila no és activa, cap classe cursor s\'aplica', () => {
+    const classes = computeCellClasses({ status: 'neutral', isActive: false, char: 'A', col: 0, cursorCol: 0 })
+    expect(classes.boxCursorReplace).toBe(false)
+    expect(classes.boxActive).toBe(false)
+  })
+
+  it('si la fila és error i activa (last row), NO hi ha highlight groc a cap cel·la', () => {
+    for (let col = 0; col < 7; col++) {
+      const classes = computeCellClasses({ status: 'error', isActive: true, char: 'X', col, cursorCol: 6 })
+      expect(classes.boxCursorReplace).toBe(false)
+      expect(classes.boxActive).toBe(false)
+    }
+  })
+})

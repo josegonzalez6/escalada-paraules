@@ -1,948 +1,948 @@
 [
   {
     "dateKey": "2026-06-01",
-    "gameIndex": 187,
-    "baseWord": "emparejarle"
+    "gameIndex": 163,
+    "baseWord": "dinamicen"
   },
   {
     "dateKey": "2026-06-02",
-    "gameIndex": 233,
-    "baseWord": "exhíbeselas"
-  },
-  {
-    "dateKey": "2026-06-03",
-    "gameIndex": 440,
-    "baseWord": "hidrostticos"
-  },
-  {
-    "dateKey": "2026-06-04",
-    "gameIndex": 175,
-    "baseWord": "agaucharas"
-  },
-  {
-    "dateKey": "2026-06-05",
-    "gameIndex": 191,
-    "baseWord": "precalculemos"
-  },
-  {
-    "dateKey": "2026-06-06",
-    "gameIndex": 195,
-    "baseWord": "exhalndooslo"
-  },
-  {
-    "dateKey": "2026-06-07",
-    "gameIndex": 142,
-    "baseWord": "refinaríais"
-  },
-  {
-    "dateKey": "2026-06-08",
-    "gameIndex": 480,
-    "baseWord": "superpueblan"
-  },
-  {
-    "dateKey": "2026-06-09",
-    "gameIndex": 458,
-    "baseWord": "engrifaréis"
-  },
-  {
-    "dateKey": "2026-06-10",
-    "gameIndex": 7,
-    "baseWord": "abstuvieren"
-  },
-  {
-    "dateKey": "2026-06-11",
-    "gameIndex": 441,
-    "baseWord": "damnificareis"
-  },
-  {
-    "dateKey": "2026-06-12",
-    "gameIndex": 61,
-    "baseWord": "bostezarías"
-  },
-  {
-    "dateKey": "2026-06-13",
-    "gameIndex": 346,
-    "baseWord": "hiérvelas"
-  },
-  {
-    "dateKey": "2026-06-14",
-    "gameIndex": 79,
-    "baseWord": "esquilmaron"
-  },
-  {
-    "dateKey": "2026-06-15",
-    "gameIndex": 410,
-    "baseWord": "fondearas"
-  },
-  {
-    "dateKey": "2026-06-16",
-    "gameIndex": 344,
-    "baseWord": "barqueasen"
-  },
-  {
-    "dateKey": "2026-06-17",
-    "gameIndex": 325,
-    "baseWord": "escarzarías"
-  },
-  {
-    "dateKey": "2026-06-18",
-    "gameIndex": 364,
-    "baseWord": "interponéoslos"
-  },
-  {
-    "dateKey": "2026-06-19",
-    "gameIndex": 380,
-    "baseWord": "sobrevivirs"
-  },
-  {
-    "dateKey": "2026-06-20",
-    "gameIndex": 94,
-    "baseWord": "colocndonoslos"
-  },
-  {
-    "dateKey": "2026-06-21",
-    "gameIndex": 116,
-    "baseWord": "zanganeados"
-  },
-  {
-    "dateKey": "2026-06-22",
-    "gameIndex": 454,
-    "baseWord": "ablandndolos"
-  },
-  {
-    "dateKey": "2026-06-23",
-    "gameIndex": 58,
-    "baseWord": "entrevéanlas"
-  },
-  {
-    "dateKey": "2026-06-24",
-    "gameIndex": 371,
-    "baseWord": "emboquillara"
-  },
-  {
-    "dateKey": "2026-06-25",
-    "gameIndex": 425,
-    "baseWord": "emergiendo"
-  },
-  {
-    "dateKey": "2026-06-26",
-    "gameIndex": 267,
-    "baseWord": "embarrancaos"
-  },
-  {
-    "dateKey": "2026-06-27",
-    "gameIndex": 57,
-    "baseWord": "descogisteis"
-  },
-  {
-    "dateKey": "2026-06-28",
-    "gameIndex": 97,
-    "baseWord": "muerdisorbes"
-  },
-  {
-    "dateKey": "2026-06-29",
-    "gameIndex": 174,
-    "baseWord": "enflautéis"
-  },
-  {
-    "dateKey": "2026-06-30",
-    "gameIndex": 361,
-    "baseWord": "sustituyéramos"
-  },
-  {
-    "dateKey": "2026-07-01",
-    "gameIndex": 25,
-    "baseWord": "profundizndole"
-  },
-  {
-    "dateKey": "2026-07-02",
-    "gameIndex": 402,
-    "baseWord": "dequeístas"
-  },
-  {
-    "dateKey": "2026-07-03",
-    "gameIndex": 48,
-    "baseWord": "estructurrmelo"
-  },
-  {
-    "dateKey": "2026-07-04",
-    "gameIndex": 446,
-    "baseWord": "trasmatarais"
-  },
-  {
-    "dateKey": "2026-07-05",
-    "gameIndex": 357,
-    "baseWord": "enséñalos"
-  },
-  {
-    "dateKey": "2026-07-06",
-    "gameIndex": 408,
-    "baseWord": "despancijremos"
-  },
-  {
-    "dateKey": "2026-07-07",
-    "gameIndex": 359,
-    "baseWord": "atrofiars"
-  },
-  {
-    "dateKey": "2026-07-08",
-    "gameIndex": 120,
-    "baseWord": "anocheceros"
-  },
-  {
-    "dateKey": "2026-07-09",
-    "gameIndex": 479,
-    "baseWord": "transfundieres"
-  },
-  {
-    "dateKey": "2026-07-10",
-    "gameIndex": 113,
-    "baseWord": "detraerse"
-  },
-  {
-    "dateKey": "2026-07-11",
-    "gameIndex": 316,
-    "baseWord": "escachéis"
-  },
-  {
-    "dateKey": "2026-07-12",
-    "gameIndex": 237,
-    "baseWord": "desgastndose"
-  },
-  {
-    "dateKey": "2026-07-13",
-    "gameIndex": 358,
-    "baseWord": "congratulación"
-  },
-  {
-    "dateKey": "2026-07-14",
-    "gameIndex": 199,
-    "baseWord": "esposaríais"
-  },
-  {
-    "dateKey": "2026-07-15",
-    "gameIndex": 336,
-    "baseWord": "soporosos"
-  },
-  {
-    "dateKey": "2026-07-16",
-    "gameIndex": 42,
-    "baseWord": "dilucidndolos"
-  },
-  {
-    "dateKey": "2026-07-17",
-    "gameIndex": 139,
-    "baseWord": "astríferos"
-  },
-  {
-    "dateKey": "2026-07-18",
-    "gameIndex": 156,
-    "baseWord": "chulearnos"
-  },
-  {
-    "dateKey": "2026-07-19",
-    "gameIndex": 315,
-    "baseWord": "mtenosles"
-  },
-  {
-    "dateKey": "2026-07-20",
-    "gameIndex": 271,
-    "baseWord": "relamiéndose"
-  },
-  {
-    "dateKey": "2026-07-21",
-    "gameIndex": 101,
-    "baseWord": "abochornada"
-  },
-  {
-    "dateKey": "2026-07-22",
-    "gameIndex": 236,
-    "baseWord": "solivintenlos"
-  },
-  {
-    "dateKey": "2026-07-23",
-    "gameIndex": 443,
-    "baseWord": "sofocaremos"
-  },
-  {
-    "dateKey": "2026-07-24",
-    "gameIndex": 319,
-    "baseWord": "empantanadas"
-  },
-  {
-    "dateKey": "2026-07-25",
-    "gameIndex": 404,
-    "baseWord": "asemejndonos"
-  },
-  {
-    "dateKey": "2026-07-26",
-    "gameIndex": 203,
-    "baseWord": "candaríamos"
-  },
-  {
-    "dateKey": "2026-07-27",
-    "gameIndex": 70,
-    "baseWord": "piérdansele"
-  },
-  {
-    "dateKey": "2026-07-28",
-    "gameIndex": 190,
-    "baseWord": "pasterizndole"
-  },
-  {
-    "dateKey": "2026-07-29",
-    "gameIndex": 178,
-    "baseWord": "perecieras"
-  },
-  {
-    "dateKey": "2026-07-30",
-    "gameIndex": 257,
-    "baseWord": "rebócennosla"
-  },
-  {
-    "dateKey": "2026-07-31",
-    "gameIndex": 470,
-    "baseWord": "extensible"
-  },
-  {
-    "dateKey": "2026-08-01",
-    "gameIndex": 262,
-    "baseWord": "aunndose"
-  },
-  {
-    "dateKey": "2026-08-02",
-    "gameIndex": 110,
-    "baseWord": "encostraren"
-  },
-  {
-    "dateKey": "2026-08-03",
-    "gameIndex": 381,
-    "baseWord": "redactaras"
-  },
-  {
-    "dateKey": "2026-08-04",
-    "gameIndex": 213,
-    "baseWord": "compadecería"
-  },
-  {
-    "dateKey": "2026-08-05",
-    "gameIndex": 150,
-    "baseWord": "entreverías"
-  },
-  {
-    "dateKey": "2026-08-06",
-    "gameIndex": 417,
-    "baseWord": "envalentonamos"
-  },
-  {
-    "dateKey": "2026-08-07",
-    "gameIndex": 107,
-    "baseWord": "desagradasteis"
-  },
-  {
-    "dateKey": "2026-08-08",
-    "gameIndex": 35,
-    "baseWord": "trepanaba"
-  },
-  {
-    "dateKey": "2026-08-09",
-    "gameIndex": 65,
-    "baseWord": "incorrectas"
-  },
-  {
-    "dateKey": "2026-08-10",
-    "gameIndex": 4,
-    "baseWord": "campanilleéis"
-  },
-  {
-    "dateKey": "2026-08-11",
-    "gameIndex": 386,
-    "baseWord": "desmanguemos"
-  },
-  {
-    "dateKey": "2026-08-12",
-    "gameIndex": 2,
-    "baseWord": "empezosla"
-  },
-  {
-    "dateKey": "2026-08-13",
-    "gameIndex": 38,
-    "baseWord": "enanchase"
-  },
-  {
-    "dateKey": "2026-08-14",
-    "gameIndex": 67,
-    "baseWord": "acromatiza"
-  },
-  {
-    "dateKey": "2026-08-15",
-    "gameIndex": 330,
-    "baseWord": "desaparease"
-  },
-  {
-    "dateKey": "2026-08-16",
-    "gameIndex": 474,
-    "baseWord": "acometerían"
-  },
-  {
-    "dateKey": "2026-08-17",
-    "gameIndex": 133,
-    "baseWord": "asentaos"
-  },
-  {
-    "dateKey": "2026-08-18",
-    "gameIndex": 449,
-    "baseWord": "abarrotas"
-  },
-  {
-    "dateKey": "2026-08-19",
-    "gameIndex": 183,
-    "baseWord": "escudereó"
-  },
-  {
-    "dateKey": "2026-08-20",
-    "gameIndex": 379,
-    "baseWord": "zúrrenles"
-  },
-  {
-    "dateKey": "2026-08-21",
-    "gameIndex": 276,
-    "baseWord": "desahuciarles"
-  },
-  {
-    "dateKey": "2026-08-22",
-    "gameIndex": 387,
-    "baseWord": "formúlenles"
-  },
-  {
-    "dateKey": "2026-08-23",
-    "gameIndex": 431,
-    "baseWord": "viticultor"
-  },
-  {
-    "dateKey": "2026-08-24",
-    "gameIndex": 225,
-    "baseWord": "instaldmela"
-  },
-  {
-    "dateKey": "2026-08-25",
-    "gameIndex": 291,
-    "baseWord": "desenvolvimos"
-  },
-  {
-    "dateKey": "2026-08-26",
-    "gameIndex": 59,
-    "baseWord": "implicadnos"
-  },
-  {
-    "dateKey": "2026-08-27",
-    "gameIndex": 32,
-    "baseWord": "cangrejas"
-  },
-  {
-    "dateKey": "2026-08-28",
-    "gameIndex": 62,
-    "baseWord": "aterrizó"
-  },
-  {
-    "dateKey": "2026-08-29",
-    "gameIndex": 221,
-    "baseWord": "recluirle"
-  },
-  {
-    "dateKey": "2026-08-30",
-    "gameIndex": 455,
-    "baseWord": "anticiparlos"
-  },
-  {
-    "dateKey": "2026-08-31",
-    "gameIndex": 415,
-    "baseWord": "untadura"
-  },
-  {
-    "dateKey": "2026-09-01",
-    "gameIndex": 155,
-    "baseWord": "fallaras"
-  },
-  {
-    "dateKey": "2026-09-02",
-    "gameIndex": 14,
-    "baseWord": "estrelleros"
-  },
-  {
-    "dateKey": "2026-09-03",
-    "gameIndex": 179,
-    "baseWord": "perfundiré"
-  },
-  {
-    "dateKey": "2026-09-04",
-    "gameIndex": 136,
-    "baseWord": "asomaría"
-  },
-  {
-    "dateKey": "2026-09-05",
-    "gameIndex": 44,
-    "baseWord": "gibaríamos"
-  },
-  {
-    "dateKey": "2026-09-06",
-    "gameIndex": 499,
-    "baseWord": "restñenlos"
-  },
-  {
-    "dateKey": "2026-09-07",
-    "gameIndex": 69,
-    "baseWord": "quimificado"
-  },
-  {
-    "dateKey": "2026-09-08",
-    "gameIndex": 170,
-    "baseWord": "tergiversables"
-  },
-  {
-    "dateKey": "2026-09-09",
-    "gameIndex": 17,
-    "baseWord": "achantaríais"
-  },
-  {
-    "dateKey": "2026-09-10",
-    "gameIndex": 393,
-    "baseWord": "setecientos"
-  },
-  {
-    "dateKey": "2026-09-11",
-    "gameIndex": 284,
-    "baseWord": "infligieses"
-  },
-  {
-    "dateKey": "2026-09-12",
-    "gameIndex": 239,
-    "baseWord": "paralelada"
-  },
-  {
-    "dateKey": "2026-09-13",
-    "gameIndex": 309,
-    "baseWord": "ventílenlo"
-  },
-  {
-    "dateKey": "2026-09-14",
-    "gameIndex": 487,
-    "baseWord": "recitada"
-  },
-  {
-    "dateKey": "2026-09-15",
-    "gameIndex": 247,
-    "baseWord": "acéndrenlo"
-  },
-  {
-    "dateKey": "2026-09-16",
-    "gameIndex": 289,
-    "baseWord": "descorcharéis"
-  },
-  {
-    "dateKey": "2026-09-17",
-    "gameIndex": 352,
-    "baseWord": "tangones"
-  },
-  {
-    "dateKey": "2026-09-18",
-    "gameIndex": 240,
-    "baseWord": "desarrancarais"
-  },
-  {
-    "dateKey": "2026-09-19",
-    "gameIndex": 96,
-    "baseWord": "teorizarais"
-  },
-  {
-    "dateKey": "2026-09-20",
-    "gameIndex": 238,
-    "baseWord": "verguearíamos"
-  },
-  {
-    "dateKey": "2026-09-21",
-    "gameIndex": 160,
-    "baseWord": "retomndomelo"
-  },
-  {
-    "dateKey": "2026-09-22",
-    "gameIndex": 228,
-    "baseWord": "enroñemos"
-  },
-  {
-    "dateKey": "2026-09-23",
-    "gameIndex": 318,
-    "baseWord": "hechizaríais"
-  },
-  {
-    "dateKey": "2026-09-24",
-    "gameIndex": 496,
-    "baseWord": "desengrana"
-  },
-  {
-    "dateKey": "2026-09-25",
-    "gameIndex": 263,
-    "baseWord": "enmordazar"
-  },
-  {
-    "dateKey": "2026-09-26",
-    "gameIndex": 77,
-    "baseWord": "rolaseis"
-  },
-  {
-    "dateKey": "2026-09-27",
-    "gameIndex": 356,
-    "baseWord": "fedérameles"
-  },
-  {
-    "dateKey": "2026-09-28",
-    "gameIndex": 119,
-    "baseWord": "resurtiré"
-  },
-  {
-    "dateKey": "2026-09-29",
-    "gameIndex": 207,
-    "baseWord": "autorizarías"
-  },
-  {
-    "dateKey": "2026-09-30",
-    "gameIndex": 167,
-    "baseWord": "consiguieres"
-  },
-  {
-    "dateKey": "2026-10-01",
-    "gameIndex": 482,
-    "baseWord": "tramitémosle"
-  },
-  {
-    "dateKey": "2026-10-02",
-    "gameIndex": 272,
-    "baseWord": "ataludar"
-  },
-  {
-    "dateKey": "2026-10-03",
-    "gameIndex": 126,
-    "baseWord": "australopiteco"
-  },
-  {
-    "dateKey": "2026-10-04",
-    "gameIndex": 442,
-    "baseWord": "nemotécnicos"
-  },
-  {
-    "dateKey": "2026-10-05",
-    "gameIndex": 347,
-    "baseWord": "aballestando"
-  },
-  {
-    "dateKey": "2026-10-06",
-    "gameIndex": 193,
-    "baseWord": "ondulares"
-  },
-  {
-    "dateKey": "2026-10-07",
-    "gameIndex": 412,
-    "baseWord": "churrscale"
-  },
-  {
-    "dateKey": "2026-10-08",
-    "gameIndex": 148,
-    "baseWord": "desclasara"
-  },
-  {
-    "dateKey": "2026-10-09",
-    "gameIndex": 279,
-    "baseWord": "papelearme"
-  },
-  {
-    "dateKey": "2026-10-10",
-    "gameIndex": 363,
-    "baseWord": "desgranaremos"
-  },
-  {
-    "dateKey": "2026-10-11",
-    "gameIndex": 245,
-    "baseWord": "descoceréis"
-  },
-  {
-    "dateKey": "2026-10-12",
-    "gameIndex": 327,
-    "baseWord": "explícameles"
-  },
-  {
-    "dateKey": "2026-10-13",
-    "gameIndex": 484,
-    "baseWord": "embanderamos"
-  },
-  {
-    "dateKey": "2026-10-14",
-    "gameIndex": 128,
-    "baseWord": "empelotó"
-  },
-  {
-    "dateKey": "2026-10-15",
-    "gameIndex": 117,
-    "baseWord": "zaragateasen"
-  },
-  {
-    "dateKey": "2026-10-16",
-    "gameIndex": 33,
-    "baseWord": "salseada"
-  },
-  {
-    "dateKey": "2026-10-17",
-    "gameIndex": 243,
-    "baseWord": "julianos"
-  },
-  {
-    "dateKey": "2026-10-18",
-    "gameIndex": 15,
-    "baseWord": "procuraren"
-  },
-  {
-    "dateKey": "2026-10-19",
-    "gameIndex": 37,
-    "baseWord": "falseasteis"
-  },
-  {
-    "dateKey": "2026-10-20",
     "gameIndex": 398,
     "baseWord": "almendré"
   },
   {
-    "dateKey": "2026-10-21",
-    "gameIndex": 86,
-    "baseWord": "entrecomillan"
+    "dateKey": "2026-06-03",
+    "gameIndex": 110,
+    "baseWord": "encostraren"
   },
   {
-    "dateKey": "2026-10-22",
-    "gameIndex": 299,
-    "baseWord": "cuiddmelo"
+    "dateKey": "2026-06-04",
+    "gameIndex": 78,
+    "baseWord": "consentídnosle"
   },
   {
-    "dateKey": "2026-10-23",
-    "gameIndex": 169,
-    "baseWord": "conténgase"
+    "dateKey": "2026-06-05",
+    "gameIndex": 144,
+    "baseWord": "iterasen"
   },
   {
-    "dateKey": "2026-10-24",
-    "gameIndex": 90,
-    "baseWord": "detestaríamos"
+    "dateKey": "2026-06-06",
+    "gameIndex": 485,
+    "baseWord": "desmallada"
   },
   {
-    "dateKey": "2026-10-25",
-    "gameIndex": 92,
-    "baseWord": "quíntuplos"
+    "dateKey": "2026-06-07",
+    "gameIndex": 106,
+    "baseWord": "aburguésenos"
   },
   {
-    "dateKey": "2026-10-26",
-    "gameIndex": 118,
-    "baseWord": "pudrieran"
+    "dateKey": "2026-06-08",
+    "gameIndex": 339,
+    "baseWord": "desorillbamos"
   },
   {
-    "dateKey": "2026-10-27",
-    "gameIndex": 370,
-    "baseWord": "soportndote"
+    "dateKey": "2026-06-09",
+    "gameIndex": 191,
+    "baseWord": "precalculemos"
   },
   {
-    "dateKey": "2026-10-28",
-    "gameIndex": 335,
-    "baseWord": "codificadoras"
+    "dateKey": "2026-06-10",
+    "gameIndex": 257,
+    "baseWord": "rebócennosla"
   },
   {
-    "dateKey": "2026-10-29",
-    "gameIndex": 214,
-    "baseWord": "discordaran"
+    "dateKey": "2026-06-11",
+    "gameIndex": 115,
+    "baseWord": "estampíllelas"
   },
   {
-    "dateKey": "2026-10-30",
-    "gameIndex": 98,
-    "baseWord": "estornudndonos"
+    "dateKey": "2026-06-12",
+    "gameIndex": 416,
+    "baseWord": "enrbienle"
   },
   {
-    "dateKey": "2026-10-31",
-    "gameIndex": 337,
-    "baseWord": "pelagianismo"
+    "dateKey": "2026-06-13",
+    "gameIndex": 332,
+    "baseWord": "aromaseis"
   },
   {
-    "dateKey": "2026-11-01",
-    "gameIndex": 189,
-    "baseWord": "tapiscabas"
-  },
-  {
-    "dateKey": "2026-11-02",
-    "gameIndex": 24,
-    "baseWord": "atribúyaselas"
-  },
-  {
-    "dateKey": "2026-11-03",
-    "gameIndex": 9,
-    "baseWord": "aflautarías"
-  },
-  {
-    "dateKey": "2026-11-04",
-    "gameIndex": 248,
-    "baseWord": "latinicémosles"
-  },
-  {
-    "dateKey": "2026-11-05",
-    "gameIndex": 8,
-    "baseWord": "penduras"
-  },
-  {
-    "dateKey": "2026-11-06",
-    "gameIndex": 388,
-    "baseWord": "resalieran"
-  },
-  {
-    "dateKey": "2026-11-07",
-    "gameIndex": 210,
-    "baseWord": "aupbamos"
-  },
-  {
-    "dateKey": "2026-11-08",
-    "gameIndex": 241,
-    "baseWord": "tonifíquenles"
-  },
-  {
-    "dateKey": "2026-11-09",
-    "gameIndex": 478,
-    "baseWord": "constitúyanla"
-  },
-  {
-    "dateKey": "2026-11-10",
-    "gameIndex": 368,
-    "baseWord": "esforzarlas"
-  },
-  {
-    "dateKey": "2026-11-11",
-    "gameIndex": 465,
-    "baseWord": "espaciémosles"
-  },
-  {
-    "dateKey": "2026-11-12",
-    "gameIndex": 366,
-    "baseWord": "retejieran"
-  },
-  {
-    "dateKey": "2026-11-13",
-    "gameIndex": 333,
-    "baseWord": "frotbamos"
-  },
-  {
-    "dateKey": "2026-11-14",
-    "gameIndex": 369,
-    "baseWord": "despuntarles"
-  },
-  {
-    "dateKey": "2026-11-15",
-    "gameIndex": 185,
-    "baseWord": "reprobatoria"
-  },
-  {
-    "dateKey": "2026-11-16",
-    "gameIndex": 331,
-    "baseWord": "oponiéndole"
-  },
-  {
-    "dateKey": "2026-11-17",
-    "gameIndex": 22,
-    "baseWord": "sumergieses"
-  },
-  {
-    "dateKey": "2026-11-18",
-    "gameIndex": 93,
-    "baseWord": "encostale"
-  },
-  {
-    "dateKey": "2026-11-19",
-    "gameIndex": 411,
-    "baseWord": "menéanosla"
-  },
-  {
-    "dateKey": "2026-11-20",
-    "gameIndex": 365,
-    "baseWord": "eternícesele"
-  },
-  {
-    "dateKey": "2026-11-21",
-    "gameIndex": 218,
-    "baseWord": "bastearon"
-  },
-  {
-    "dateKey": "2026-11-22",
-    "gameIndex": 436,
-    "baseWord": "sexagesimal"
-  },
-  {
-    "dateKey": "2026-11-23",
-    "gameIndex": 217,
-    "baseWord": "espurriémosle"
-  },
-  {
-    "dateKey": "2026-11-24",
-    "gameIndex": 125,
-    "baseWord": "traslapes"
-  },
-  {
-    "dateKey": "2026-11-25",
-    "gameIndex": 250,
-    "baseWord": "deletrears"
-  },
-  {
-    "dateKey": "2026-11-26",
-    "gameIndex": 129,
-    "baseWord": "gitaneas"
-  },
-  {
-    "dateKey": "2026-11-27",
-    "gameIndex": 282,
-    "baseWord": "enacerando"
-  },
-  {
-    "dateKey": "2026-11-28",
-    "gameIndex": 56,
-    "baseWord": "desmenuzaba"
-  },
-  {
-    "dateKey": "2026-11-29",
-    "gameIndex": 273,
-    "baseWord": "préndanse"
-  },
-  {
-    "dateKey": "2026-11-30",
-    "gameIndex": 317,
-    "baseWord": "supedítalas"
-  },
-  {
-    "dateKey": "2026-12-01",
-    "gameIndex": 355,
-    "baseWord": "suplíquense"
-  },
-  {
-    "dateKey": "2026-12-02",
-    "gameIndex": 222,
-    "baseWord": "desanímalas"
-  },
-  {
-    "dateKey": "2026-12-03",
+    "dateKey": "2026-06-14",
     "gameIndex": 477,
     "baseWord": "neutralizases"
   },
   {
+    "dateKey": "2026-06-15",
+    "gameIndex": 148,
+    "baseWord": "desclasara"
+  },
+  {
+    "dateKey": "2026-06-16",
+    "gameIndex": 405,
+    "baseWord": "engrumecers"
+  },
+  {
+    "dateKey": "2026-06-17",
+    "gameIndex": 454,
+    "baseWord": "ablandndolos"
+  },
+  {
+    "dateKey": "2026-06-18",
+    "gameIndex": 449,
+    "baseWord": "abarrotas"
+  },
+  {
+    "dateKey": "2026-06-19",
+    "gameIndex": 248,
+    "baseWord": "latinicémosles"
+  },
+  {
+    "dateKey": "2026-06-20",
+    "gameIndex": 409,
+    "baseWord": "parafraseares"
+  },
+  {
+    "dateKey": "2026-06-21",
+    "gameIndex": 336,
+    "baseWord": "soporosos"
+  },
+  {
+    "dateKey": "2026-06-22",
+    "gameIndex": 298,
+    "baseWord": "remembrasteis"
+  },
+  {
+    "dateKey": "2026-06-23",
+    "gameIndex": 161,
+    "baseWord": "embrollndonos"
+  },
+  {
+    "dateKey": "2026-06-24",
+    "gameIndex": 188,
+    "baseWord": "surtiésemos"
+  },
+  {
+    "dateKey": "2026-06-25",
+    "gameIndex": 301,
+    "baseWord": "escíndame"
+  },
+  {
+    "dateKey": "2026-06-26",
+    "gameIndex": 111,
+    "baseWord": "aseglarasen"
+  },
+  {
+    "dateKey": "2026-06-27",
+    "gameIndex": 254,
+    "baseWord": "adobaría"
+  },
+  {
+    "dateKey": "2026-06-28",
+    "gameIndex": 185,
+    "baseWord": "reprobatoria"
+  },
+  {
+    "dateKey": "2026-06-29",
+    "gameIndex": 275,
+    "baseWord": "revivificaréis"
+  },
+  {
+    "dateKey": "2026-06-30",
+    "gameIndex": 41,
+    "baseWord": "atropéllenlas"
+  },
+  {
+    "dateKey": "2026-07-01",
+    "gameIndex": 264,
+    "baseWord": "politizaros"
+  },
+  {
+    "dateKey": "2026-07-02",
+    "gameIndex": 296,
+    "baseWord": "dificultan"
+  },
+  {
+    "dateKey": "2026-07-03",
+    "gameIndex": 49,
+    "baseWord": "violoncelistas"
+  },
+  {
+    "dateKey": "2026-07-04",
+    "gameIndex": 62,
+    "baseWord": "aterrizó"
+  },
+  {
+    "dateKey": "2026-07-05",
+    "gameIndex": 345,
+    "baseWord": "estipulremos"
+  },
+  {
+    "dateKey": "2026-07-06",
+    "gameIndex": 74,
+    "baseWord": "elevndooslos"
+  },
+  {
+    "dateKey": "2026-07-07",
+    "gameIndex": 258,
+    "baseWord": "ensopaban"
+  },
+  {
+    "dateKey": "2026-07-08",
+    "gameIndex": 29,
+    "baseWord": "telegrafiaseis"
+  },
+  {
+    "dateKey": "2026-07-09",
+    "gameIndex": 92,
+    "baseWord": "quíntuplos"
+  },
+  {
+    "dateKey": "2026-07-10",
+    "gameIndex": 124,
+    "baseWord": "absolverse"
+  },
+  {
+    "dateKey": "2026-07-11",
+    "gameIndex": 175,
+    "baseWord": "agaucharas"
+  },
+  {
+    "dateKey": "2026-07-12",
+    "gameIndex": 277,
+    "baseWord": "cascabeleareis"
+  },
+  {
+    "dateKey": "2026-07-13",
+    "gameIndex": 38,
+    "baseWord": "enanchase"
+  },
+  {
+    "dateKey": "2026-07-14",
+    "gameIndex": 114,
+    "baseWord": "tembleteemos"
+  },
+  {
+    "dateKey": "2026-07-15",
+    "gameIndex": 439,
+    "baseWord": "reunmonoslos"
+  },
+  {
+    "dateKey": "2026-07-16",
+    "gameIndex": 81,
+    "baseWord": "empetatasteis"
+  },
+  {
+    "dateKey": "2026-07-17",
+    "gameIndex": 138,
+    "baseWord": "enfervoreciese"
+  },
+  {
+    "dateKey": "2026-07-18",
+    "gameIndex": 77,
+    "baseWord": "rolaseis"
+  },
+  {
+    "dateKey": "2026-07-19",
+    "gameIndex": 471,
+    "baseWord": "ensotadas"
+  },
+  {
+    "dateKey": "2026-07-20",
+    "gameIndex": 413,
+    "baseWord": "sumergieras"
+  },
+  {
+    "dateKey": "2026-07-21",
+    "gameIndex": 414,
+    "baseWord": "reelíjannoslo"
+  },
+  {
+    "dateKey": "2026-07-22",
+    "gameIndex": 235,
+    "baseWord": "llénemeles"
+  },
+  {
+    "dateKey": "2026-07-23",
+    "gameIndex": 496,
+    "baseWord": "desengrana"
+  },
+  {
+    "dateKey": "2026-07-24",
+    "gameIndex": 129,
+    "baseWord": "gitaneas"
+  },
+  {
+    "dateKey": "2026-07-25",
+    "gameIndex": 434,
+    "baseWord": "validadla"
+  },
+  {
+    "dateKey": "2026-07-26",
+    "gameIndex": 9,
+    "baseWord": "aflautarías"
+  },
+  {
+    "dateKey": "2026-07-27",
+    "gameIndex": 233,
+    "baseWord": "exhíbeselas"
+  },
+  {
+    "dateKey": "2026-07-28",
+    "gameIndex": 76,
+    "baseWord": "emputeceos"
+  },
+  {
+    "dateKey": "2026-07-29",
+    "gameIndex": 420,
+    "baseWord": "divinízalo"
+  },
+  {
+    "dateKey": "2026-07-30",
+    "gameIndex": 238,
+    "baseWord": "verguearíamos"
+  },
+  {
+    "dateKey": "2026-07-31",
+    "gameIndex": 378,
+    "baseWord": "espacialmente"
+  },
+  {
+    "dateKey": "2026-08-01",
+    "gameIndex": 118,
+    "baseWord": "pudrieran"
+  },
+  {
+    "dateKey": "2026-08-02",
+    "gameIndex": 2,
+    "baseWord": "empezosla"
+  },
+  {
+    "dateKey": "2026-08-03",
+    "gameIndex": 194,
+    "baseWord": "industriéis"
+  },
+  {
+    "dateKey": "2026-08-04",
+    "gameIndex": 166,
+    "baseWord": "pipetearn"
+  },
+  {
+    "dateKey": "2026-08-05",
+    "gameIndex": 216,
+    "baseWord": "intuidla"
+  },
+  {
+    "dateKey": "2026-08-06",
+    "gameIndex": 259,
+    "baseWord": "herboles"
+  },
+  {
+    "dateKey": "2026-08-07",
+    "gameIndex": 433,
+    "baseWord": "atenazador"
+  },
+  {
+    "dateKey": "2026-08-08",
+    "gameIndex": 430,
+    "baseWord": "desaforaste"
+  },
+  {
+    "dateKey": "2026-08-09",
+    "gameIndex": 243,
+    "baseWord": "julianos"
+  },
+  {
+    "dateKey": "2026-08-10",
+    "gameIndex": 171,
+    "baseWord": "inquirieseis"
+  },
+  {
+    "dateKey": "2026-08-11",
+    "gameIndex": 318,
+    "baseWord": "hechizaríais"
+  },
+  {
+    "dateKey": "2026-08-12",
+    "gameIndex": 427,
+    "baseWord": "interpretasen"
+  },
+  {
+    "dateKey": "2026-08-13",
+    "gameIndex": 87,
+    "baseWord": "inducirla"
+  },
+  {
+    "dateKey": "2026-08-14",
+    "gameIndex": 85,
+    "baseWord": "desenseñar"
+  },
+  {
+    "dateKey": "2026-08-15",
+    "gameIndex": 73,
+    "baseWord": "barquilleros"
+  },
+  {
+    "dateKey": "2026-08-16",
+    "gameIndex": 39,
+    "baseWord": "encierras"
+  },
+  {
+    "dateKey": "2026-08-17",
+    "gameIndex": 75,
+    "baseWord": "tractorearemos"
+  },
+  {
+    "dateKey": "2026-08-18",
+    "gameIndex": 26,
+    "baseWord": "escríbannosla"
+  },
+  {
+    "dateKey": "2026-08-19",
+    "gameIndex": 269,
+    "baseWord": "refiguraban"
+  },
+  {
+    "dateKey": "2026-08-20",
+    "gameIndex": 125,
+    "baseWord": "traslapes"
+  },
+  {
+    "dateKey": "2026-08-21",
+    "gameIndex": 196,
+    "baseWord": "albriciaseis"
+  },
+  {
+    "dateKey": "2026-08-22",
+    "gameIndex": 79,
+    "baseWord": "esquilmaron"
+  },
+  {
+    "dateKey": "2026-08-23",
+    "gameIndex": 408,
+    "baseWord": "despancijremos"
+  },
+  {
+    "dateKey": "2026-08-24",
+    "gameIndex": 236,
+    "baseWord": "solivintenlos"
+  },
+  {
+    "dateKey": "2026-08-25",
+    "gameIndex": 329,
+    "baseWord": "refractaos"
+  },
+  {
+    "dateKey": "2026-08-26",
+    "gameIndex": 210,
+    "baseWord": "aupbamos"
+  },
+  {
+    "dateKey": "2026-08-27",
+    "gameIndex": 401,
+    "baseWord": "cambalachease"
+  },
+  {
+    "dateKey": "2026-08-28",
+    "gameIndex": 149,
+    "baseWord": "refinaseis"
+  },
+  {
+    "dateKey": "2026-08-29",
+    "gameIndex": 457,
+    "baseWord": "torpedeados"
+  },
+  {
+    "dateKey": "2026-08-30",
+    "gameIndex": 127,
+    "baseWord": "estafndosela"
+  },
+  {
+    "dateKey": "2026-08-31",
+    "gameIndex": 424,
+    "baseWord": "divorciaron"
+  },
+  {
+    "dateKey": "2026-09-01",
+    "gameIndex": 186,
+    "baseWord": "panificabas"
+  },
+  {
+    "dateKey": "2026-09-02",
+    "gameIndex": 117,
+    "baseWord": "zaragateasen"
+  },
+  {
+    "dateKey": "2026-09-03",
+    "gameIndex": 28,
+    "baseWord": "barnizaron"
+  },
+  {
+    "dateKey": "2026-09-04",
+    "gameIndex": 139,
+    "baseWord": "astríferos"
+  },
+  {
+    "dateKey": "2026-09-05",
+    "gameIndex": 249,
+    "baseWord": "ensalcémoslos"
+  },
+  {
+    "dateKey": "2026-09-06",
+    "gameIndex": 72,
+    "baseWord": "dalmtica"
+  },
+  {
+    "dateKey": "2026-09-07",
+    "gameIndex": 145,
+    "baseWord": "creativo"
+  },
+  {
+    "dateKey": "2026-09-08",
+    "gameIndex": 390,
+    "baseWord": "institúyemelos"
+  },
+  {
+    "dateKey": "2026-09-09",
+    "gameIndex": 209,
+    "baseWord": "reavivadlas"
+  },
+  {
+    "dateKey": "2026-09-10",
+    "gameIndex": 392,
+    "baseWord": "adormentad"
+  },
+  {
+    "dateKey": "2026-09-11",
+    "gameIndex": 306,
+    "baseWord": "supervisaría"
+  },
+  {
+    "dateKey": "2026-09-12",
+    "gameIndex": 15,
+    "baseWord": "procuraren"
+  },
+  {
+    "dateKey": "2026-09-13",
+    "gameIndex": 311,
+    "baseWord": "esfolando"
+  },
+  {
+    "dateKey": "2026-09-14",
+    "gameIndex": 474,
+    "baseWord": "acometerían"
+  },
+  {
+    "dateKey": "2026-09-15",
+    "gameIndex": 382,
+    "baseWord": "tractoreéis"
+  },
+  {
+    "dateKey": "2026-09-16",
+    "gameIndex": 59,
+    "baseWord": "implicadnos"
+  },
+  {
+    "dateKey": "2026-09-17",
+    "gameIndex": 316,
+    "baseWord": "escachéis"
+  },
+  {
+    "dateKey": "2026-09-18",
+    "gameIndex": 371,
+    "baseWord": "emboquillara"
+  },
+  {
+    "dateKey": "2026-09-19",
+    "gameIndex": 256,
+    "baseWord": "arriscramos"
+  },
+  {
+    "dateKey": "2026-09-20",
+    "gameIndex": 71,
+    "baseWord": "costeémoslos"
+  },
+  {
+    "dateKey": "2026-09-21",
+    "gameIndex": 229,
+    "baseWord": "desapropindose"
+  },
+  {
+    "dateKey": "2026-09-22",
+    "gameIndex": 24,
+    "baseWord": "atribúyaselas"
+  },
+  {
+    "dateKey": "2026-09-23",
+    "gameIndex": 182,
+    "baseWord": "irisaron"
+  },
+  {
+    "dateKey": "2026-09-24",
+    "gameIndex": 386,
+    "baseWord": "desmanguemos"
+  },
+  {
+    "dateKey": "2026-09-25",
+    "gameIndex": 260,
+    "baseWord": "reclamdnosla"
+  },
+  {
+    "dateKey": "2026-09-26",
+    "gameIndex": 395,
+    "baseWord": "recortrtela"
+  },
+  {
+    "dateKey": "2026-09-27",
+    "gameIndex": 220,
+    "baseWord": "fundadlo"
+  },
+  {
+    "dateKey": "2026-09-28",
+    "gameIndex": 10,
+    "baseWord": "deszulacasen"
+  },
+  {
+    "dateKey": "2026-09-29",
+    "gameIndex": 14,
+    "baseWord": "estrelleros"
+  },
+  {
+    "dateKey": "2026-09-30",
+    "gameIndex": 137,
+    "baseWord": "raboteares"
+  },
+  {
+    "dateKey": "2026-10-01",
+    "gameIndex": 352,
+    "baseWord": "tangones"
+  },
+  {
+    "dateKey": "2026-10-02",
+    "gameIndex": 343,
+    "baseWord": "englóbenoslos"
+  },
+  {
+    "dateKey": "2026-10-03",
+    "gameIndex": 422,
+    "baseWord": "notificas"
+  },
+  {
+    "dateKey": "2026-10-04",
+    "gameIndex": 364,
+    "baseWord": "interponéoslos"
+  },
+  {
+    "dateKey": "2026-10-05",
+    "gameIndex": 250,
+    "baseWord": "deletrears"
+  },
+  {
+    "dateKey": "2026-10-06",
+    "gameIndex": 300,
+    "baseWord": "intúbalos"
+  },
+  {
+    "dateKey": "2026-10-07",
+    "gameIndex": 315,
+    "baseWord": "mtenosles"
+  },
+  {
+    "dateKey": "2026-10-08",
+    "gameIndex": 453,
+    "baseWord": "apréndele"
+  },
+  {
+    "dateKey": "2026-10-09",
+    "gameIndex": 84,
+    "baseWord": "hipotecara"
+  },
+  {
+    "dateKey": "2026-10-10",
+    "gameIndex": 274,
+    "baseWord": "entoldabais"
+  },
+  {
+    "dateKey": "2026-10-11",
+    "gameIndex": 157,
+    "baseWord": "acometis"
+  },
+  {
+    "dateKey": "2026-10-12",
+    "gameIndex": 442,
+    "baseWord": "nemotécnicos"
+  },
+  {
+    "dateKey": "2026-10-13",
+    "gameIndex": 326,
+    "baseWord": "estréllennos"
+  },
+  {
+    "dateKey": "2026-10-14",
+    "gameIndex": 21,
+    "baseWord": "taloneaseis"
+  },
+  {
+    "dateKey": "2026-10-15",
+    "gameIndex": 367,
+    "baseWord": "centuplicndome"
+  },
+  {
+    "dateKey": "2026-10-16",
+    "gameIndex": 80,
+    "baseWord": "apilados"
+  },
+  {
+    "dateKey": "2026-10-17",
+    "gameIndex": 31,
+    "baseWord": "desajustar"
+  },
+  {
+    "dateKey": "2026-10-18",
+    "gameIndex": 89,
+    "baseWord": "farolearlo"
+  },
+  {
+    "dateKey": "2026-10-19",
+    "gameIndex": 394,
+    "baseWord": "romaneare"
+  },
+  {
+    "dateKey": "2026-10-20",
+    "gameIndex": 299,
+    "baseWord": "cuiddmelo"
+  },
+  {
+    "dateKey": "2026-10-21",
+    "gameIndex": 107,
+    "baseWord": "desagradasteis"
+  },
+  {
+    "dateKey": "2026-10-22",
+    "gameIndex": 53,
+    "baseWord": "paladendoles"
+  },
+  {
+    "dateKey": "2026-10-23",
+    "gameIndex": 37,
+    "baseWord": "falseasteis"
+  },
+  {
+    "dateKey": "2026-10-24",
+    "gameIndex": 418,
+    "baseWord": "ritmaren"
+  },
+  {
+    "dateKey": "2026-10-25",
+    "gameIndex": 246,
+    "baseWord": "varíamela"
+  },
+  {
+    "dateKey": "2026-10-26",
+    "gameIndex": 103,
+    "baseWord": "minutabais"
+  },
+  {
+    "dateKey": "2026-10-27",
+    "gameIndex": 342,
+    "baseWord": "sinteticen"
+  },
+  {
+    "dateKey": "2026-10-28",
+    "gameIndex": 426,
+    "baseWord": "deletréeme"
+  },
+  {
+    "dateKey": "2026-10-29",
+    "gameIndex": 202,
+    "baseWord": "exentares"
+  },
+  {
+    "dateKey": "2026-10-30",
+    "gameIndex": 331,
+    "baseWord": "oponiéndole"
+  },
+  {
+    "dateKey": "2026-10-31",
+    "gameIndex": 20,
+    "baseWord": "decorticasteis"
+  },
+  {
+    "dateKey": "2026-11-01",
+    "gameIndex": 289,
+    "baseWord": "descorcharéis"
+  },
+  {
+    "dateKey": "2026-11-02",
+    "gameIndex": 334,
+    "baseWord": "animalizo"
+  },
+  {
+    "dateKey": "2026-11-03",
+    "gameIndex": 50,
+    "baseWord": "replíquela"
+  },
+  {
+    "dateKey": "2026-11-04",
+    "gameIndex": 338,
+    "baseWord": "justificadas"
+  },
+  {
+    "dateKey": "2026-11-05",
+    "gameIndex": 387,
+    "baseWord": "formúlenles"
+  },
+  {
+    "dateKey": "2026-11-06",
+    "gameIndex": 134,
+    "baseWord": "fracturarme"
+  },
+  {
+    "dateKey": "2026-11-07",
+    "gameIndex": 179,
+    "baseWord": "perfundiré"
+  },
+  {
+    "dateKey": "2026-11-08",
+    "gameIndex": 201,
+    "baseWord": "corregíoslo"
+  },
+  {
+    "dateKey": "2026-11-09",
+    "gameIndex": 493,
+    "baseWord": "escacharradlo"
+  },
+  {
+    "dateKey": "2026-11-10",
+    "gameIndex": 55,
+    "baseWord": "verdegueé"
+  },
+  {
+    "dateKey": "2026-11-11",
+    "gameIndex": 126,
+    "baseWord": "australopiteco"
+  },
+  {
+    "dateKey": "2026-11-12",
+    "gameIndex": 67,
+    "baseWord": "acromatiza"
+  },
+  {
+    "dateKey": "2026-11-13",
+    "gameIndex": 12,
+    "baseWord": "acoceados"
+  },
+  {
+    "dateKey": "2026-11-14",
+    "gameIndex": 158,
+    "baseWord": "guasesemos"
+  },
+  {
+    "dateKey": "2026-11-15",
+    "gameIndex": 268,
+    "baseWord": "fecundarles"
+  },
+  {
+    "dateKey": "2026-11-16",
+    "gameIndex": 252,
+    "baseWord": "apremiare"
+  },
+  {
+    "dateKey": "2026-11-17",
+    "gameIndex": 64,
+    "baseWord": "topetaré"
+  },
+  {
+    "dateKey": "2026-11-18",
+    "gameIndex": 159,
+    "baseWord": "desobstruidla"
+  },
+  {
+    "dateKey": "2026-11-19",
+    "gameIndex": 119,
+    "baseWord": "resurtiré"
+  },
+  {
+    "dateKey": "2026-11-20",
+    "gameIndex": 61,
+    "baseWord": "bostezarías"
+  },
+  {
+    "dateKey": "2026-11-21",
+    "gameIndex": 133,
+    "baseWord": "asentaos"
+  },
+  {
+    "dateKey": "2026-11-22",
+    "gameIndex": 369,
+    "baseWord": "despuntarles"
+  },
+  {
+    "dateKey": "2026-11-23",
+    "gameIndex": 180,
+    "baseWord": "naranjillas"
+  },
+  {
+    "dateKey": "2026-11-24",
+    "gameIndex": 400,
+    "baseWord": "artesoné"
+  },
+  {
+    "dateKey": "2026-11-25",
+    "gameIndex": 376,
+    "baseWord": "deshacedla"
+  },
+  {
+    "dateKey": "2026-11-26",
+    "gameIndex": 370,
+    "baseWord": "soportndote"
+  },
+  {
+    "dateKey": "2026-11-27",
+    "gameIndex": 411,
+    "baseWord": "menéanosla"
+  },
+  {
+    "dateKey": "2026-11-28",
+    "gameIndex": 68,
+    "baseWord": "dirigiéndose"
+  },
+  {
+    "dateKey": "2026-11-29",
+    "gameIndex": 302,
+    "baseWord": "enchuletase"
+  },
+  {
+    "dateKey": "2026-11-30",
+    "gameIndex": 147,
+    "baseWord": "embebeciéramos"
+  },
+  {
+    "dateKey": "2026-12-01",
+    "gameIndex": 173,
+    "baseWord": "permitirlos"
+  },
+  {
+    "dateKey": "2026-12-02",
+    "gameIndex": 245,
+    "baseWord": "descoceréis"
+  },
+  {
+    "dateKey": "2026-12-03",
+    "gameIndex": 435,
+    "baseWord": "recomidos"
+  },
+  {
     "dateKey": "2026-12-04",
-    "gameIndex": 5,
-    "baseWord": "agrediéramos"
+    "gameIndex": 141,
+    "baseWord": "esclerosémoslo"
   },
   {
     "dateKey": "2026-12-05",
-    "gameIndex": 459,
-    "baseWord": "explicítenlas"
+    "gameIndex": 94,
+    "baseWord": "colocndonoslos"
   },
   {
     "dateKey": "2026-12-06",
-    "gameIndex": 424,
-    "baseWord": "divorciaron"
+    "gameIndex": 288,
+    "baseWord": "striptease"
   },
   {
     "dateKey": "2026-12-07",
@@ -951,63 +951,63 @@
   },
   {
     "dateKey": "2026-12-08",
-    "gameIndex": 83,
-    "baseWord": "exprésatele"
+    "gameIndex": 393,
+    "baseWord": "setecientos"
   },
   {
     "dateKey": "2026-12-09",
-    "gameIndex": 82,
-    "baseWord": "desatoradlas"
+    "gameIndex": 360,
+    "baseWord": "saponificaría"
   },
   {
     "dateKey": "2026-12-10",
-    "gameIndex": 230,
-    "baseWord": "amojamémonos"
+    "gameIndex": 36,
+    "baseWord": "ofendías"
   },
   {
     "dateKey": "2026-12-11",
-    "gameIndex": 391,
-    "baseWord": "reitérenmelos"
+    "gameIndex": 358,
+    "baseWord": "congratulación"
   },
   {
     "dateKey": "2026-12-12",
-    "gameIndex": 127,
-    "baseWord": "estafndosela"
+    "gameIndex": 35,
+    "baseWord": "trepanaba"
   },
   {
     "dateKey": "2026-12-13",
-    "gameIndex": 376,
-    "baseWord": "deshacedla"
+    "gameIndex": 473,
+    "baseWord": "acrecentarían"
   },
   {
     "dateKey": "2026-12-14",
-    "gameIndex": 194,
-    "baseWord": "industriéis"
+    "gameIndex": 146,
+    "baseWord": "destecharn"
   },
   {
     "dateKey": "2026-12-15",
-    "gameIndex": 165,
-    "baseWord": "disimilarías"
+    "gameIndex": 96,
+    "baseWord": "teorizarais"
   },
   {
     "dateKey": "2026-12-16",
-    "gameIndex": 367,
-    "baseWord": "centuplicndome"
+    "gameIndex": 5,
+    "baseWord": "agrediéramos"
   },
   {
     "dateKey": "2026-12-17",
-    "gameIndex": 164,
-    "baseWord": "limosneare"
+    "gameIndex": 374,
+    "baseWord": "desperfilaran"
   },
   {
     "dateKey": "2026-12-18",
-    "gameIndex": 208,
-    "baseWord": "rebufamos"
+    "gameIndex": 402,
+    "baseWord": "dequeístas"
   },
   {
     "dateKey": "2026-12-19",
-    "gameIndex": 283,
-    "baseWord": "desenconares"
+    "gameIndex": 95,
+    "baseWord": "macollase"
   },
   {
     "dateKey": "2026-12-20",
@@ -1016,57 +1016,57 @@
   },
   {
     "dateKey": "2026-12-21",
-    "gameIndex": 296,
-    "baseWord": "dificultan"
+    "gameIndex": 208,
+    "baseWord": "rebufamos"
   },
   {
     "dateKey": "2026-12-22",
-    "gameIndex": 153,
-    "baseWord": "escanciareis"
+    "gameIndex": 272,
+    "baseWord": "ataludar"
   },
   {
     "dateKey": "2026-12-23",
-    "gameIndex": 154,
-    "baseWord": "evoluciónenme"
+    "gameIndex": 6,
+    "baseWord": "anticuadamente"
   },
   {
     "dateKey": "2026-12-24",
-    "gameIndex": 184,
-    "baseWord": "choteasen"
+    "gameIndex": 45,
+    "baseWord": "mensurar"
   },
   {
     "dateKey": "2026-12-25",
-    "gameIndex": 413,
-    "baseWord": "sumergieras"
+    "gameIndex": 212,
+    "baseWord": "amanearemos"
   },
   {
     "dateKey": "2026-12-26",
-    "gameIndex": 396,
-    "baseWord": "colombinos"
+    "gameIndex": 136,
+    "baseWord": "asomaría"
   },
   {
     "dateKey": "2026-12-27",
-    "gameIndex": 298,
-    "baseWord": "remembrasteis"
+    "gameIndex": 341,
+    "baseWord": "escuchadores"
   },
   {
     "dateKey": "2026-12-28",
-    "gameIndex": 293,
-    "baseWord": "estríasele"
+    "gameIndex": 164,
+    "baseWord": "limosneare"
   },
   {
     "dateKey": "2026-12-29",
-    "gameIndex": 447,
-    "baseWord": "conquistaron"
+    "gameIndex": 172,
+    "baseWord": "entrabasteis"
   },
   {
     "dateKey": "2026-12-30",
-    "gameIndex": 434,
-    "baseWord": "validadla"
+    "gameIndex": 283,
+    "baseWord": "desenconares"
   },
   {
     "dateKey": "2026-12-31",
-    "gameIndex": 158,
-    "baseWord": "guasesemos"
+    "gameIndex": 294,
+    "baseWord": "acardenaló"
   }
 ]

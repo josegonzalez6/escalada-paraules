@@ -33,12 +33,14 @@ export function WordBoxRow({
 }: Props) {
   const chars = value.toUpperCase().split('').slice(0, length)
   const invalidPos = status === 'neutral' ? getInvalidPositions(value, baseCounts) : new Set<number>()
+  // El cursor (highlight actiu) només existeix mentre la fila no té resultat (status neutral)
+  const showCursor = isActive && status === 'neutral'
   // Natural cursor: first empty cell (or last if full)
-  const naturalCursor = isActive && activeCursorCol == null
+  const naturalCursor = showCursor && activeCursorCol == null
     ? Math.min(value.length, length - 1)
     : -1
   // Explicit cursor from cell click
-  const explicitCursor = isActive && activeCursorCol != null ? activeCursorCol : -1
+  const explicitCursor = showCursor && activeCursorCol != null ? activeCursorCol : -1
   const cursorCol = explicitCursor >= 0 ? explicitCursor : naturalCursor
 
   function handleCellClick(e: React.MouseEvent, col: number) {
@@ -64,8 +66,8 @@ export function WordBoxRow({
         {Array.from({ length }, (_, i) => {
           const char = chars[i] ?? ''
           const isInvalid = status === 'neutral' && invalidPos.has(i)
-          const isCursorCell = isActive && i === cursorCol && !char
-          const isCursorReplace = isActive && i === cursorCol && !!char
+          const isCursorCell = showCursor && i === cursorCol && !char
+          const isCursorReplace = showCursor && i === cursorCol && !!char
           return (
             <div
               key={i}
