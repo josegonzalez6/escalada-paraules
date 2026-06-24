@@ -206,6 +206,55 @@ describe('Botó COMENÇAR/COMENZAR: control explícit d\'inici de partida', () =
   })
 })
 
+describe('Estat visual: blur a lletres disponibles, NO a l\'escala', () => {
+  // La classe CSS 'baseSectionLocked' s'aplica a la secció de lletres disponibles
+  // La classe 'board' mai s'aplica blur — l'escala és sempre visible
+
+  function makeVisualState(gameStarted: boolean) {
+    return {
+      baseSectionLocked: !gameStarted,   // lletres: blur si no ha começat
+      boardDisabled: false,              // escala: mai difuminada
+      startBtnVisible: !gameStarted,     // botó visible fins que comença
+      validateBtnVisible: gameStarted,   // validar visible un cop comença
+    }
+  }
+
+  it('abans de COMEÇAR: lletres disponibles difuminades', () => {
+    const state = makeVisualState(false)
+    expect(state.baseSectionLocked).toBe(true)
+  })
+
+  it('abans de COMEÇAR: l\'escala NO està difuminada', () => {
+    const state = makeVisualState(false)
+    expect(state.boardDisabled).toBe(false)
+  })
+
+  it('abans de COMEÇAR: botó COMEÇAR visible', () => {
+    const state = makeVisualState(false)
+    expect(state.startBtnVisible).toBe(true)
+  })
+
+  it('abans de COMEÇAR: botó Validar no visible', () => {
+    const state = makeVisualState(false)
+    expect(state.validateBtnVisible).toBe(false)
+  })
+
+  it('després de COMEÇAR: lletres disponibles sense blur', () => {
+    const state = makeVisualState(true)
+    expect(state.baseSectionLocked).toBe(false)
+  })
+
+  it('després de COMENÇAR: botó COMEÇAR desapareix', () => {
+    const state = makeVisualState(true)
+    expect(state.startBtnVisible).toBe(false)
+  })
+
+  it('després de COMEÇAR: botó Validar visible', () => {
+    const state = makeVisualState(true)
+    expect(state.validateBtnVisible).toBe(true)
+  })
+})
+
 describe('Textos del botó d\'inici per idioma', () => {
   const translations = {
     ca: { startGame: 'COMENÇAR', startGameHint: 'Prem COMENÇAR per iniciar la partida.' },

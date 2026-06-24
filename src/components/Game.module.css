@@ -222,11 +222,15 @@
   flex-shrink: 0;
 }
 
-.boardDisabled {
-  opacity: 0.35;
-  filter: blur(1px);
-  pointer-events: none;
+.baseSectionLocked {
+  opacity: 0.25;
+  filter: blur(3px);
   user-select: none;
+  pointer-events: none;
+}
+
+.startRow {
+  padding: 0.75rem 1rem 0.25rem;
 }
 
 .startBtn {

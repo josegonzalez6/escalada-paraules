@@ -257,16 +257,24 @@ export function Game({ lang, archiveDateKey, todayKey, onChangeLang, onOpenArchi
         />
       ) : (
         <>
-          <div className={styles.baseSection}>
+          <div className={gameStarted ? styles.baseSection : `${styles.baseSection} ${styles.baseSectionLocked}`}>
             <BaseWordDisplay letters={game.baseLetters} label={tr.availableLetters} />
           </div>
+
+          {!gameStarted && (
+            <div className={styles.startRow}>
+              <button className={styles.startBtn} onClick={handleStartGame}>
+                {tr.startGame}
+              </button>
+            </div>
+          )}
 
           <div className={styles.timerRow}>
             <Timer seconds={elapsed} />
             <p className={styles.hint}>{tr.hint}</p>
           </div>
 
-          <div className={gameStarted ? styles.board : `${styles.board} ${styles.boardDisabled}`}>
+          <div className={styles.board}>
             {([0, 1, 2, 3, 4] as const).map(i => {
               const len = 3 + i
               return (
@@ -285,16 +293,7 @@ export function Game({ lang, archiveDateKey, todayKey, onChangeLang, onOpenArchi
               )
             })}
 
-            {!gameStarted ? (
-              <div className={styles.actions}>
-                <button
-                  className={styles.startBtn}
-                  onClick={handleStartGame}
-                >
-                  {tr.startGame}
-                </button>
-              </div>
-            ) : (
+            {gameStarted && (
               <div className={styles.actions}>
                 <button
                   className={styles.validateBtn}
