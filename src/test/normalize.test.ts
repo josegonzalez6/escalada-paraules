@@ -1,56 +1,67 @@
 import { describe, it, expect } from 'vitest'
-import { normalize, letterCounts, canFollow } from '../utils/normalize'
+import { normalizeWord, getLetterCounts, canBeFormedFromBase } from '../utils/normalize'
 
-describe('normalize', () => {
+describe('normalizeWord', () => {
   it('converts to lowercase', () => {
-    expect(normalize('CASA')).toBe('casa')
+    expect(normalizeWord('CASA')).toBe('casa')
   })
 
   it('removes accents', () => {
-    expect(normalize('àéíóú')).toBe('aeiou')
-    expect(normalize('café')).toBe('cafe')
+    expect(normalizeWord('àéíóú')).toBe('aeiou')
+    expect(normalizeWord('café')).toBe('cafe')
   })
 
   it('handles catalan ç', () => {
-    expect(normalize('cançó')).toBe('canco')
+    expect(normalizeWord('cançó')).toBe('canco')
   })
 
   it('removes non-alpha characters', () => {
-    expect(normalize('bon dia!')).toBe('bondia')
+    expect(normalizeWord('bon dia!')).toBe('bondia')
   })
 })
 
-describe('letterCounts', () => {
+describe('getLetterCounts', () => {
   it('counts letters correctly', () => {
-    expect(letterCounts('casa')).toEqual({ c: 1, a: 2, s: 1 })
+    expect(getLetterCounts('casa')).toEqual({ c: 1, a: 2, s: 1 })
   })
 
   it('counts repeated letters', () => {
-    expect(letterCounts('aaa')).toEqual({ a: 3 })
+    expect(getLetterCounts('aaa')).toEqual({ a: 3 })
   })
 })
 
-describe('canFollow', () => {
-  it('returns true when next has all prev letters + 1 new', () => {
-    expect(canFollow('sol', 'sols')).toBe(true)
-    expect(canFollow('mar', 'marc')).toBe(true)
-    expect(canFollow('gat', 'gats')).toBe(true)
+describe('canBeFormedFromBase', () => {
+  // base = cartons = { c:1, a:1, r:1, t:1, o:1, n:1, s:1 }
+
+  it('returns true when candidate uses only base letters', () => {
+    expect(canBeFormedFromBase('car', 'cartons')).toBe(true)
+    expect(canBeFormedFromBase('rost', 'cartons')).toBe(true)
+    expect(canBeFormedFromBase('canto', 'cartons')).toBe(true)
+    expect(canBeFormedFromBase('cartons', 'cartons')).toBe(true)
   })
 
-  it('returns true with reordering', () => {
-    expect(canFollow('sol', 'losa')).toBe(true)  // s,o,l -> l,o,s,a
+  it('returns true with letter reordering', () => {
+    expect(canBeFormedFromBase('rot', 'cartons')).toBe(true)
+    expect(canBeFormedFromBase('tron', 'cartons')).toBe(true)
   })
 
-  it('returns false when wrong length', () => {
-    expect(canFollow('sol', 'sola')).toBe(true)
-    expect(canFollow('sol', 'solar')).toBe(false) // +2 letters
+  it('returns false when candidate uses a letter absent from base', () => {
+    // 'cartons' has no 'p', 'e', 'l'
+    expect(canBeFormedFromBase('perla', 'cartons')).toBe(false)
+    expect(canBeFormedFromBase('bol', 'cartons')).toBe(false)
   })
 
-  it('returns false when missing letters', () => {
-    expect(canFollow('sol', 'gola')).toBe(false) // no s
+  it('returns false when candidate repeats a letter more times than in base', () => {
+    // 'cartons' has only 1 'r', 1 'a'
+    expect(canBeFormedFromBase('carro', 'cartons')).toBe(false) // needs 2 r's
+    expect(canBeFormedFromBase('caramel', 'cartons')).toBe(false) // needs 2 a's + absent letters
   })
 
-  it('returns false when adding more than 1 letter', () => {
-    expect(canFollow('sol', 'solra')).toBe(false)
+  it('returns false for empty base', () => {
+    expect(canBeFormedFromBase('car', '')).toBe(false)
+  })
+
+  it('returns true for empty candidate against any base', () => {
+    expect(canBeFormedFromBase('', 'cartons')).toBe(true)
   })
 })

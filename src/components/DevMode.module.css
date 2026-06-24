@@ -14,9 +14,34 @@
 
 .solution {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.solutionRow {
+  display: flex;
   align-items: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.lenBadge {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #475569;
+  color: #cbd5e1;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.more {
+  font-size: 0.7rem;
+  color: #64748b;
 }
 
 .word {

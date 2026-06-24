@@ -1,0 +1,82 @@
+[
+  {
+    "baseWord": "soleras",
+    "solutions": {
+      "3": [
+        "sol",
+        "sal",
+        "res",
+        "ras"
+      ],
+      "4": [
+        "sole",
+        "resa"
+      ],
+      "5": [
+        "soler",
+        "resal"
+      ],
+      "6": [
+        "solera"
+      ],
+      "7": [
+        "soleras"
+      ]
+    }
+  },
+  {
+    "baseWord": "caparas",
+    "solutions": {
+      "3": [
+        "par",
+        "cas",
+        "ras"
+      ],
+      "4": [
+        "capa",
+        "para",
+        "casa",
+        "rasa"
+      ],
+      "5": [
+        "capas",
+        "capar",
+        "casar"
+      ],
+      "6": [
+        "capara"
+      ],
+      "7": [
+        "caparas"
+      ]
+    }
+  },
+  {
+    "baseWord": "camaras",
+    "solutions": {
+      "3": [
+        "mar",
+        "mas",
+        "cas",
+        "ras"
+      ],
+      "4": [
+        "cama",
+        "masa",
+        "casa",
+        "rasa"
+      ],
+      "5": [
+        "camas",
+        "masar",
+        "casar"
+      ],
+      "6": [
+        "camara"
+      ],
+      "7": [
+        "camaras"
+      ]
+    }
+  }
+]

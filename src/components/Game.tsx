@@ -2,6 +2,7 @@ import type { Language } from '../types'
 import { useGame } from '../hooks/useGame'
 import { Timer } from './Timer'
 import { LadderRow } from './LadderRow'
+import { BaseWordDisplay } from './BaseWordDisplay'
 import { ResultScreen } from './ResultScreen'
 import { DevMode } from './DevMode'
 import { loadStats } from '../utils/stats'
@@ -11,8 +12,22 @@ import styles from './Game.module.css'
 const TOTAL_TIME = 60
 
 const T = {
-  ca: { validate: 'Validar escalada', new: 'Nova partida', lang: 'Idioma', loading: 'Carregant...', error: 'Error en carregar el diccionari.' },
-  es: { validate: 'Validar escalada', new: 'Nueva partida', lang: 'Idioma', loading: 'Cargando...', error: 'Error al cargar el diccionario.' },
+  ca: {
+    validate: 'Validar escalada',
+    new: 'Nova partida',
+    lang: 'Idioma',
+    loading: 'Carregant...',
+    error: 'Error en carregar les dades.',
+    baseLabel: 'Paraula base — forma paraules de 3 a 7 lletres',
+  },
+  es: {
+    validate: 'Validar escalada',
+    new: 'Nueva partida',
+    lang: 'Idioma',
+    loading: 'Cargando...',
+    error: 'Error al cargar los datos.',
+    baseLabel: 'Palabra base — forma palabras de 3 a 7 letras',
+  },
 }
 
 interface Props {
@@ -23,8 +38,8 @@ interface Props {
 
 export function Game({ lang, onChangeLang, devMode }: Props) {
   const {
-    phase, timeLeft, inputs, ladder, validationResult, loading, error,
-    ladderCount, dictionary, handleInput, handleValidate, handleNewGame,
+    phase, timeLeft, inputs, game, validationResult, loading, error,
+    gameCount, dictionary, handleInput, handleValidate, handleNewGame,
   } = useGame(lang)
 
   const t = T[lang]
@@ -42,12 +57,13 @@ export function Game({ lang, onChangeLang, devMode }: Props) {
     )
   }
 
-  if (!ladder) return null
+  if (!game) return null
 
+  // Mapa d'errors per longitud de paraula
   const errorMap: Record<number, string> = {}
   if (validationResult) {
     for (const e of validationResult.errors) {
-      errorMap[e.step] = reasonText(e.reason, lang)
+      errorMap[e.wordLength] = reasonText(e.reason, lang)
     }
   }
 
@@ -58,12 +74,6 @@ export function Game({ lang, onChangeLang, devMode }: Props) {
         <button className={styles.langBtn} onClick={onChangeLang}>{t.lang}</button>
       </header>
 
-      {phase === 'playing' && (
-        <div className={styles.timerWrapper}>
-          <Timer seconds={timeLeft} total={TOTAL_TIME} />
-        </div>
-      )}
-
       {phase === 'finished' && validationResult ? (
         <ResultScreen
           result={validationResult}
@@ -73,45 +83,57 @@ export function Game({ lang, onChangeLang, devMode }: Props) {
           onChangeLang={onChangeLang}
         />
       ) : (
-        <div className={styles.board}>
-          <LadderRow length={3} value={ladder[0]} locked />
-
-          {([0, 1, 2, 3] as const).map(i => {
-            const len = 4 + i
-            const stepNum = i + 1
-            const hasError = !!errorMap[stepNum]
-            return (
-              <LadderRow
-                key={len}
-                length={len}
-                value={inputs[i]}
-                onChange={v => handleInput(i, v)}
-                status={validationResult ? (hasError ? 'error' : 'correct') : 'neutral'}
-                errorText={errorMap[stepNum]}
-                autoFocus={i === 0}
-              />
-            )
-          })}
-
-          <div className={styles.actions}>
-            <button className={styles.validateBtn} onClick={handleValidate} disabled={phase !== 'playing'}>
-              {t.validate}
-            </button>
-            <button className={styles.newBtn} onClick={handleNewGame}>
-              {t.new}
-            </button>
+        <>
+          <div className={styles.baseSection}>
+            <p className={styles.baseLabel}>{t.baseLabel}</p>
+            <BaseWordDisplay word={game.baseWord} />
           </div>
 
-          {devMode && (
-            <DevMode
-              ladder={ladder}
-              ladderCount={ladderCount}
-              dictionary={dictionary}
-              lang={lang}
-              onRegenerate={handleNewGame}
-            />
-          )}
-        </div>
+          <div className={styles.timerWrapper}>
+            <Timer seconds={timeLeft} total={TOTAL_TIME} />
+          </div>
+
+          <div className={styles.board}>
+            {([0, 1, 2, 3, 4] as const).map(i => {
+              const len = 3 + i
+              const hasError = !!errorMap[len]
+              return (
+                <LadderRow
+                  key={len}
+                  length={len}
+                  value={inputs[i]}
+                  onChange={v => handleInput(i, v)}
+                  status={validationResult ? (hasError ? 'error' : 'correct') : 'neutral'}
+                  errorText={errorMap[len]}
+                  autoFocus={i === 0}
+                />
+              )
+            })}
+
+            <div className={styles.actions}>
+              <button
+                className={styles.validateBtn}
+                onClick={handleValidate}
+                disabled={phase !== 'playing'}
+              >
+                {t.validate}
+              </button>
+              <button className={styles.newBtn} onClick={handleNewGame}>
+                {t.new}
+              </button>
+            </div>
+
+            {devMode && (
+              <DevMode
+                game={game}
+                gameCount={gameCount}
+                dictionary={dictionary}
+                lang={lang}
+                onRegenerate={handleNewGame}
+              />
+            )}
+          </div>
+        </>
       )}
     </div>
   )

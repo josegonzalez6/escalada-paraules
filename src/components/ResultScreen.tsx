@@ -16,7 +16,7 @@ const T = {
     title_fail: 'Escalada incompleta',
     solution: 'Solució possible:',
     errors: 'Errors:',
-    step: 'Pas',
+    letters: 'lletres',
     new: 'Nova partida',
     change: 'Canviar idioma',
     played: 'Jugades',
@@ -32,7 +32,7 @@ const T = {
     title_fail: 'Escalada incompleta',
     solution: 'Posible solución:',
     errors: 'Errores:',
-    step: 'Paso',
+    letters: 'letras',
     new: 'Nueva partida',
     change: 'Cambiar idioma',
     played: 'Jugadas',
@@ -44,6 +44,8 @@ const T = {
     seconds: 's',
   },
 }
+
+const LENGTHS = [3, 4, 5, 6, 7] as const
 
 export function ResultScreen({ result, lang, stats, onNewGame, onChangeLang }: Props) {
   const t = T[lang]
@@ -60,7 +62,7 @@ export function ResultScreen({ result, lang, stats, onNewGame, onChangeLang }: P
           <h3 className={styles.sectionTitle}>{t.errors}</h3>
           {result.errors.map((e, i) => (
             <div key={i} className={styles.errorItem}>
-              <span className={styles.errorStep}>{t.step} {e.step}</span>
+              <span className={styles.errorStep}>{e.wordLength} {t.letters}</span>
               <span className={styles.errorWord}>«{e.word || '—'}»</span>
               <span className={styles.errorReason}>{reasonText(e.reason, lang)}</span>
             </div>
@@ -71,12 +73,19 @@ export function ResultScreen({ result, lang, stats, onNewGame, onChangeLang }: P
       <div className={styles.section}>
         <h3 className={styles.sectionTitle}>{t.solution}</h3>
         <div className={styles.solution}>
-          {result.solution.map((w, i) => (
-            <div key={i} className={styles.solutionStep}>
-              <span className={styles.solutionLen}>{w.length}</span>
-              <span className={styles.solutionWord}>{w.toUpperCase()}</span>
-            </div>
-          ))}
+          {LENGTHS.map(len => {
+            const words = result.solutions[String(len) as keyof typeof result.solutions]
+            const example = words[0] ?? '—'
+            return (
+              <div key={len} className={styles.solutionStep}>
+                <span className={styles.solutionLen}>{len}</span>
+                <span className={styles.solutionWord}>{example.toUpperCase()}</span>
+                {words.length > 1 && (
+                  <span className={styles.solutionAlt}>+{words.length - 1}</span>
+                )}
+              </div>
+            )
+          })}
         </div>
       </div>
 

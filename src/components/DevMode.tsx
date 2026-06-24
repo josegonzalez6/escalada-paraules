@@ -1,22 +1,22 @@
 import { useState } from 'react'
-import type { Language } from '../types'
-import { normalize } from '../utils/normalize'
+import type { Language, GameEntry } from '../types'
+import { normalizeWord } from '../utils/normalize'
 import styles from './DevMode.module.css'
 
 interface Props {
-  ladder: string[] | null
-  ladderCount: number
+  game: GameEntry | null
+  gameCount: number
   dictionary: Set<string>
   lang: Language
   onRegenerate: () => void
 }
 
-export function DevMode({ ladder, ladderCount, dictionary, lang, onRegenerate }: Props) {
+export function DevMode({ game, gameCount, dictionary, lang, onRegenerate }: Props) {
   const [testWord, setTestWord] = useState('')
   const [testResult, setTestResult] = useState<string | null>(null)
 
   function handleTest() {
-    const n = normalize(testWord)
+    const n = normalizeWord(testWord)
     const found = dictionary.has(n)
     setTestResult(found ? `✅ "${n}" al diccionari (${lang})` : `❌ "${n}" no trobat (${lang})`)
   }
@@ -24,11 +24,22 @@ export function DevMode({ ladder, ladderCount, dictionary, lang, onRegenerate }:
   return (
     <div className={styles.panel}>
       <p className={styles.label}>🛠 DEV MODE</p>
-      <p className={styles.info}>Escales carregades: <strong>{ladderCount}</strong></p>
-      {ladder && (
+      <p className={styles.info}>Partides carregades: <strong>{gameCount}</strong></p>
+      {game && (
         <div className={styles.solution}>
-          <p className={styles.label}>Solució actual:</p>
-          {ladder.map((w, i) => <span key={i} className={styles.word}>{w.toUpperCase()}</span>)}
+          <p className={styles.label}>Paraula base: <span className={styles.word}>{game.baseWord.toUpperCase()}</span></p>
+          {([3, 4, 5, 6, 7] as const).map(len => {
+            const sols = game.solutions[String(len) as keyof typeof game.solutions]
+            return (
+              <div key={len} className={styles.solutionRow}>
+                <span className={styles.lenBadge}>{len}</span>
+                {sols.slice(0, 3).map((w, i) => (
+                  <span key={i} className={styles.word}>{w.toUpperCase()}</span>
+                ))}
+                {sols.length > 3 && <span className={styles.more}>+{sols.length - 3}</span>}
+              </div>
+            )
+          })}
         </div>
       )}
       <div className={styles.testRow}>

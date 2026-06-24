@@ -1,0 +1,95 @@
+[
+  {
+    "baseWord": "marcats",
+    "solutions": {
+      "3": [
+        "mar",
+        "car",
+        "ras",
+        "mas",
+        "cas",
+        "mac",
+        "sac",
+        "arc"
+      ],
+      "4": [
+        "mars",
+        "marc",
+        "cars",
+        "cara",
+        "rasa",
+        "masa",
+        "casa",
+        "macs",
+        "maca",
+        "saca"
+      ],
+      "5": [
+        "marcs",
+        "marca",
+        "masar",
+        "casar",
+        "macar",
+        "sacar"
+      ],
+      "6": [
+        "macars",
+        "macats",
+        "arcats"
+      ],
+      "7": [
+        "marcats"
+      ]
+    }
+  },
+  {
+    "baseWord": "maneres",
+    "solutions": {
+      "3": [
+        "mar",
+        "man",
+        "ras",
+        "mas",
+        "nas",
+        "ans"
+      ],
+      "4": [
+        "mars",
+        "mans"
+      ],
+      "5": [
+        "manes",
+        "maner"
+      ],
+      "6": [
+        "maners"
+      ],
+      "7": [
+        "maneres"
+      ]
+    }
+  },
+  {
+    "baseWord": "pareres",
+    "solutions": {
+      "3": [
+        "par",
+        "ras",
+        "pas"
+      ],
+      "4": [
+        "pars"
+      ],
+      "5": [
+        "pares",
+        "parer"
+      ],
+      "6": [
+        "parers"
+      ],
+      "7": [
+        "pareres"
+      ]
+    }
+  }
+]

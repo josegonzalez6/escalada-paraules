@@ -1,23 +1,19 @@
-import type { ValidationResult, StepError, ErrorReason, Language } from '../types'
-import { normalize, canFollow } from './normalize'
+import type { ValidationResult, StepError, ErrorReason, Language, GameInputs, GameEntry } from '../types'
+import { normalizeWord, canBeFormedFromBase } from './normalize'
 
-export function validateLadder(
-  startWord: string,
-  inputs: [string, string, string, string],
+export function validateCompleteAttempt(
+  baseWord: string,
+  inputs: GameInputs,
   dictionary: Set<string>,
-  solution: string[],
-  _lang: Language
+  solutions: GameEntry['solutions']
 ): ValidationResult {
-  const words = [normalize(startWord), ...inputs.map(normalize)]
+  const base = normalizeWord(baseWord)
   const errors: StepError[] = []
   const seen = new Set<string>()
 
-  seen.add(words[0])
-
-  for (let i = 1; i < words.length; i++) {
-    const word = words[i]
+  for (let i = 0; i < inputs.length; i++) {
     const expectedLen = 3 + i
-    const prev = words[i - 1]
+    const word = normalizeWord(inputs[i])
     let reason: ErrorReason | null = null
 
     if (!word) {
@@ -30,42 +26,46 @@ export function validateLadder(
       reason = 'duplicate'
     } else if (!dictionary.has(word)) {
       reason = 'not_in_dictionary'
-    } else if (!canFollow(prev, word)) {
-      // Determine which sub-reason
-      const prevCounts: Record<string, number> = {}
-      for (const c of prev) prevCounts[c] = (prevCounts[c] || 0) + 1
-      const wordCounts: Record<string, number> = {}
-      for (const c of word) wordCounts[c] = (wordCounts[c] || 0) + 1
-      let missing = false
-      for (const [c, n] of Object.entries(prevCounts)) {
-        if ((wordCounts[c] ?? 0) < n) { missing = true; break }
-      }
-      reason = missing ? 'missing_letters' : 'too_many_new_letters'
+    } else if (!canBeFormedFromBase(word, base)) {
+      reason = 'letters_not_in_base'
     }
 
     if (reason) {
-      errors.push({ step: i, word: inputs[i - 1] ?? '', reason })
+      errors.push({ wordLength: expectedLen, word: inputs[i], reason })
     } else {
       seen.add(word)
     }
   }
 
-  return {
-    success: errors.length === 0,
-    errors,
-    solution,
-  }
+  return { success: errors.length === 0, errors, solutions }
 }
 
 export function reasonText(reason: ErrorReason, lang: Language): string {
   const texts: Record<ErrorReason, Record<Language, string>> = {
-    empty: { ca: 'Camp buit', es: 'Campo vacío' },
-    wrong_length: { ca: 'Longitud incorrecta', es: 'Longitud incorrecta' },
-    not_in_dictionary: { ca: 'Paraula no trobada al diccionari', es: 'Palabra no encontrada en el diccionario' },
-    missing_letters: { ca: 'Falten lletres de la paraula anterior', es: 'Faltan letras de la palabra anterior' },
-    too_many_new_letters: { ca: "S'ha afegit més d'una lletra nova", es: 'Se ha añadido más de una letra nueva' },
-    duplicate: { ca: 'Paraula repetida', es: 'Palabra repetida' },
-    invalid_chars: { ca: 'Caràcters no vàlids', es: 'Caracteres no válidos' },
+    empty: {
+      ca: 'Camp buit',
+      es: 'Campo vacío',
+    },
+    wrong_length: {
+      ca: 'Longitud incorrecta',
+      es: 'Longitud incorrecta',
+    },
+    not_in_dictionary: {
+      ca: 'Paraula no trobada al diccionari',
+      es: 'Palabra no encontrada en el diccionario',
+    },
+    letters_not_in_base: {
+      ca: 'Usa lletres que no estan a la paraula base',
+      es: 'Usa letras que no están en la palabra base',
+    },
+    duplicate: {
+      ca: 'Paraula repetida',
+      es: 'Palabra repetida',
+    },
+    invalid_chars: {
+      ca: 'Caràcters no vàlids',
+      es: 'Caracteres no válidos',
+    },
   }
   return texts[reason][lang]
 }

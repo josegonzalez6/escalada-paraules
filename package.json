@@ -1,6 +1,6 @@
 {
   "name": "escalada-paraules",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "vite --host 0.0.0.0",
@@ -8,7 +8,8 @@
     "preview": "vite preview --host 0.0.0.0",
     "test": "vitest run",
     "test:watch": "vitest",
-    "generate:ladders": "node scripts/generateLadders.mjs"
+    "generate:ladders": "node scripts/generateLadders.mjs",
+    "generate:games": "node scripts/generateGames.mjs"
   },
   "dependencies": {
     "react": "^18.2.0",

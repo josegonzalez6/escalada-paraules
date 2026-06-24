@@ -1,59 +1,60 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import type { Language, GamePhase, ValidationResult } from '../types'
-import { loadDictionary, loadLadders, pickRandomLadder } from '../utils/dictionary'
-import { validateLadder } from '../utils/validate'
-import { normalize } from '../utils/normalize'
+import type { Language, GamePhase, ValidationResult, GameEntry, GameInputs } from '../types'
+import { loadDictionary, loadGames, pickRandomGame } from '../utils/dictionary'
+import { validateCompleteAttempt } from '../utils/validate'
+import { normalizeWord } from '../utils/normalize'
 import { saveResult } from '../utils/stats'
 
 const GAME_DURATION = 60
 
+const EMPTY_INPUTS: GameInputs = ['', '', '', '', '']
+
 export function useGame(lang: Language) {
   const [phase, setPhase] = useState<GamePhase>('playing')
   const [timeLeft, setTimeLeft] = useState(GAME_DURATION)
-  const [inputs, setInputs] = useState<[string, string, string, string]>(['', '', '', ''])
-  const [ladder, setLadder] = useState<string[] | null>(null)
+  const [inputs, setInputs] = useState<GameInputs>([...EMPTY_INPUTS])
+  const [game, setGame] = useState<GameEntry | null>(null)
   const [dictionary, setDictionary] = useState<Set<string>>(new Set())
-  const [ladders, setLadders] = useState<string[][]>([])
+  const [games, setGames] = useState<GameEntry[]>([])
   const [validationResult, setValidationResult] = useState<ValidationResult | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const timeLeftRef = useRef(GAME_DURATION)
+  const inputsRef = useRef<GameInputs>([...EMPTY_INPUTS])
+  const gameRef = useRef<GameEntry | null>(null)
+  const dictRef = useRef<Set<string>>(new Set())
 
   const stopTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current)
   }, [])
 
   const finishGame = useCallback((
-    currentInputs: [string, string, string, string],
-    currentLadder: string[],
+    currentInputs: GameInputs,
+    currentGame: GameEntry,
     currentDict: Set<string>
   ) => {
     stopTimer()
     setPhase('finished')
-    const result = validateLadder(currentLadder[0], currentInputs, currentDict, currentLadder, lang)
+    const result = validateCompleteAttempt(
+      currentGame.baseWord,
+      currentInputs,
+      currentDict,
+      currentGame.solutions
+    )
     setValidationResult(result)
-    const timeUsed = GAME_DURATION - timeLeftRef.current
-    saveResult(lang, result.success, timeUsed)
+    saveResult(lang, result.success, GAME_DURATION - timeLeftRef.current)
   }, [lang, stopTimer])
 
-  // Refs per passar a startTimer
-  const inputsRef = useRef<[string, string, string, string]>(['', '', '', ''])
-  const ladderRef = useRef<string[] | null>(null)
-  const dictRef = useRef<Set<string>>(new Set())
-
-  const startTimer = useCallback((
-    iRef: React.MutableRefObject<[string, string, string, string]>,
-    lRef: React.MutableRefObject<string[] | null>,
-    dRef: React.MutableRefObject<Set<string>>
-  ) => {
+  const startTimer = useCallback(() => {
     timerRef.current = setInterval(() => {
       setTimeLeft(prev => {
         const next = prev - 1
         timeLeftRef.current = next
         if (next <= 0) {
-          if (lRef.current && dRef.current.size > 0) {
-            finishGame(iRef.current, lRef.current, dRef.current)
+          if (gameRef.current && dictRef.current.size > 0) {
+            finishGame(inputsRef.current, gameRef.current, dictRef.current)
           }
           return 0
         }
@@ -62,20 +63,20 @@ export function useGame(lang: Language) {
     }, 1000)
   }, [finishGame])
 
-  const initGame = useCallback(async (laddersList: string[][], dict: Set<string>) => {
+  const initGame = useCallback((gamesList: GameEntry[], dict: Set<string>) => {
     stopTimer()
-    const chosen = pickRandomLadder(laddersList)
-    const fresh: [string, string, string, string] = ['', '', '', '']
+    const chosen = pickRandomGame(gamesList)
+    const fresh: GameInputs = [...EMPTY_INPUTS]
     inputsRef.current = fresh
-    ladderRef.current = chosen
+    gameRef.current = chosen
     dictRef.current = dict
     timeLeftRef.current = GAME_DURATION
-    setLadder(chosen)
+    setGame(chosen)
     setInputs(fresh)
     setTimeLeft(GAME_DURATION)
     setValidationResult(null)
     setPhase('playing')
-    startTimer(inputsRef, ladderRef, dictRef)
+    startTimer()
   }, [stopTimer, startTimer])
 
   useEffect(() => {
@@ -84,11 +85,12 @@ export function useGame(lang: Language) {
       try {
         setLoading(true)
         setError(null)
-        const [dict, lads] = await Promise.all([loadDictionary(lang), loadLadders(lang)])
+        const [dict, gamesList] = await Promise.all([loadDictionary(lang), loadGames(lang)])
         if (cancelled) return
         setDictionary(dict)
-        setLadders(lads)
-        await initGame(lads, dict)
+        setGames(gamesList)
+        dictRef.current = dict
+        initGame(gamesList, dict)
       } catch (e) {
         if (!cancelled) setError((e as Error).message)
       } finally {
@@ -101,9 +103,9 @@ export function useGame(lang: Language) {
 
   const handleInput = useCallback((index: number, value: string) => {
     if (phase !== 'playing') return
-    const normalized = normalize(value)
+    const normalized = normalizeWord(value)
     setInputs(prev => {
-      const next: [string, string, string, string] = [...prev] as [string, string, string, string]
+      const next: GameInputs = [...prev]
       next[index] = normalized
       inputsRef.current = next
       return next
@@ -111,25 +113,25 @@ export function useGame(lang: Language) {
   }, [phase])
 
   const handleValidate = useCallback(() => {
-    if (phase !== 'playing' || !ladder) return
-    finishGame(inputsRef.current, ladder, dictRef.current)
-  }, [phase, ladder, finishGame])
+    if (phase !== 'playing' || !gameRef.current) return
+    finishGame(inputsRef.current, gameRef.current, dictRef.current)
+  }, [phase, finishGame])
 
   const handleNewGame = useCallback(() => {
-    if (ladders.length > 0 && dictionary.size > 0) {
-      initGame(ladders, dictionary)
+    if (games.length > 0 && dictionary.size > 0) {
+      initGame(games, dictionary)
     }
-  }, [ladders, dictionary, initGame])
+  }, [games, dictionary, initGame])
 
   return {
     phase,
     timeLeft,
     inputs,
-    ladder,
+    game,
     validationResult,
     loading,
     error,
-    ladderCount: ladders.length,
+    gameCount: games.length,
     dictionary,
     handleInput,
     handleValidate,
