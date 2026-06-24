@@ -66,6 +66,15 @@ export function Game({ lang, archiveDateKey, todayKey, onChangeLang, onOpenArchi
     }
   }, [gameStarted])
 
+  // En acabar la partida (phase canvia a 'finished'), neteja l'estat de selecció
+  useEffect(() => {
+    if (phase === 'finished') {
+      setActiveRow(-1)
+      setClickedCol(null)
+      hiddenInputRef.current?.blur()
+    }
+  }, [phase])
+
   // Resultat guardat per a aquesta data (avui o arxiu)
   const savedDaily = loadDailyResultForDate(lang, dateKey)
   // Només mostrar resultat guardat si no acabem de validar ara mateix (phase !== 'finished')
@@ -287,8 +296,8 @@ export function Game({ lang, archiveDateKey, todayKey, onChangeLang, onOpenArchi
                   baseCounts={baseCounts}
                   status={validationResult ? (errorMap[len] ? 'error' : 'correct') : 'neutral'}
                   errorText={errorMap[len]}
-                  isActive={gameStarted && activeRow === i}
-                  activeCursorCol={gameStarted && activeRow === i ? clickedCol : null}
+                  isActive={phase === 'playing' && gameStarted && activeRow === i}
+                  activeCursorCol={phase === 'playing' && gameStarted && activeRow === i ? clickedCol : null}
                   onRowClick={() => handleRowClick(i)}
                   onCellClick={(col) => handleCellClick(i, col)}
                 />
@@ -299,7 +308,7 @@ export function Game({ lang, archiveDateKey, todayKey, onChangeLang, onOpenArchi
               <div className={styles.actions}>
                 <button
                   className={styles.validateBtn}
-                  onClick={handleValidate}
+                  onClick={() => { setActiveRow(-1); setClickedCol(null); handleValidate() }}
                   disabled={phase !== 'playing'}
                 >
                   {tr.validate}

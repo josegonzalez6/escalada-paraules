@@ -130,4 +130,29 @@ describe('WordBoxRow — prioritat visual: resultat sobre cursor', () => {
       expect(classes.boxActive).toBe(false)
     }
   })
+
+  it('quan phase no és playing, isActive és false i no hi ha cursor', () => {
+    const classes = computeCellClasses({ status: 'neutral', isActive: false, char: 'A', col: 3, cursorCol: 3 })
+    expect(classes.boxCursorReplace).toBe(false)
+    expect(classes.boxActive).toBe(false)
+  })
+
+  it('si status és error i isActive és false (phase finished), cap classe cursor', () => {
+    const classes = computeCellClasses({ status: 'error', isActive: false, char: 'Z', col: 2, cursorCol: 2 })
+    expect(classes.boxError).toBe(true)
+    expect(classes.boxCursorReplace).toBe(false)
+    expect(classes.boxActive).toBe(false)
+  })
+
+  // Les classes active/cursorReplace ja NO apliquen background-color (v0.16.0)
+  // Usen outline+box-shadow, per tant no poden interferir mai amb vermell/verd.
+  it('active i error poden coexistir, però error sempre és present (disseny outline)', () => {
+    // En el disseny nou, active usa outline i no toca background.
+    // Si per qualsevol motiu isActive=true i status='error', boxError ha de ser present.
+    // showCursor bloqueja boxActive/boxCursorReplace quan status!='neutral', per tant:
+    const classes = computeCellClasses({ status: 'error', isActive: true, char: 'A', col: 0, cursorCol: 0 })
+    expect(classes.boxError).toBe(true)
+    expect(classes.boxCursorReplace).toBe(false)
+    expect(classes.boxActive).toBe(false)
+  })
 })
