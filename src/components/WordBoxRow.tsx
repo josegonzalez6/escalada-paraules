@@ -8,7 +8,9 @@ interface Props {
   status?: 'neutral' | 'correct' | 'error'
   errorText?: string
   isActive?: boolean
+  activeCursorCol?: number | null  // column index where cursor is (replace mode)
   onRowClick?: () => void
+  onCellClick?: (col: number) => void
 }
 
 function getInvalidPositions(value: string, baseCounts: Record<string, number>): Set<number> {
@@ -25,10 +27,24 @@ function getInvalidPositions(value: string, baseCounts: Record<string, number>):
   return invalid
 }
 
-export function WordBoxRow({ length, value, baseCounts, status = 'neutral', errorText, isActive, onRowClick }: Props) {
+export function WordBoxRow({
+  length, value, baseCounts, status = 'neutral', errorText,
+  isActive, activeCursorCol, onRowClick, onCellClick,
+}: Props) {
   const chars = value.toUpperCase().split('').slice(0, length)
   const invalidPos = status === 'neutral' ? getInvalidPositions(value, baseCounts) : new Set<number>()
-  const cursorCol = isActive ? Math.min(value.length, length - 1) : -1
+  // Natural cursor: first empty cell (or last if full)
+  const naturalCursor = isActive && activeCursorCol == null
+    ? Math.min(value.length, length - 1)
+    : -1
+  // Explicit cursor from cell click
+  const explicitCursor = isActive && activeCursorCol != null ? activeCursorCol : -1
+  const cursorCol = explicitCursor >= 0 ? explicitCursor : naturalCursor
+
+  function handleCellClick(e: React.MouseEvent, col: number) {
+    e.stopPropagation()
+    onCellClick?.(col)
+  }
 
   return (
     <div className={styles.row} onClick={onRowClick}>
@@ -40,7 +56,7 @@ export function WordBoxRow({ length, value, baseCounts, status = 'neutral', erro
         {length}
       </span>
       <div
-        className={[styles.boxesContainer, isActive ? styles.rowActive : ''].filter(Boolean).join(' ')}
+        className={styles.boxesContainer}
         role="button"
         tabIndex={-1}
         aria-label={`Paraula de ${length} lletres`}
@@ -48,7 +64,8 @@ export function WordBoxRow({ length, value, baseCounts, status = 'neutral', erro
         {Array.from({ length }, (_, i) => {
           const char = chars[i] ?? ''
           const isInvalid = status === 'neutral' && invalidPos.has(i)
-          const isCursor = isActive && !char && i === cursorCol
+          const isCursorCell = isActive && i === cursorCol && !char
+          const isCursorReplace = isActive && i === cursorCol && !!char
           return (
             <div
               key={i}
@@ -58,8 +75,10 @@ export function WordBoxRow({ length, value, baseCounts, status = 'neutral', erro
                 isInvalid ? styles.boxInvalid : '',
                 status === 'correct' ? styles.boxCorrect : '',
                 status === 'error' ? styles.boxError : '',
-                isCursor ? styles.boxActive : '',
+                isCursorCell ? styles.boxActive : '',
+                isCursorReplace ? styles.boxCursorReplace : '',
               ].filter(Boolean).join(' ')}
+              onClick={e => handleCellClick(e, i)}
             >
               {char}
             </div>

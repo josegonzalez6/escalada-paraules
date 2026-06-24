@@ -15,26 +15,58 @@ describe('buildShareText — emoji grid i format', () => {
     expect(text).toContain(OFFICIAL_URL)
   })
 
-  it('3/5 no inclou temps, files fallides en vermell', () => {
+  it('3/5 inclou temps i files fallides en vermell', () => {
     const errors = new Set([4, 6])
-    const text = buildShareText(3, 0, 'ca', 'daily', errors, MOCK_DATE)
+    const text = buildShareText(3, 134, 'ca', 'daily', errors, MOCK_DATE)
     expect(text).toContain('3/5')
-    expect(text).not.toContain('02:')
+    expect(text).toContain('02:14') // temps sempre visible
     expect(text).toContain('🟥🟥🟥🟥')
     expect(text).toContain('🟥🟥🟥🟥🟥🟥')
     expect(text).toContain('🟩🟩🟩')
     expect(text).toContain(OFFICIAL_URL)
   })
 
-  it('mode aleatori inclou prefix 🎲', () => {
-    const text = buildShareText(5, 60, 'ca', 'random', new Set(), MOCK_DATE)
-    expect(text).toContain('🎲')
+  it("capçalera CA conté L'Escalada CAT", () => {
+    const text = buildShareText(5, 60, 'ca', 'daily', new Set(), MOCK_DATE)
+    expect(text).toContain("L'Escalada CAT")
+    expect(text).not.toContain('Escalera')
   })
 
-  it('idioma ES usa ESP', () => {
+  it('capçalera ES conté La Escalera ES', () => {
     const text = buildShareText(5, 60, 'es', 'daily', new Set(), MOCK_DATE)
-    expect(text).toContain('ESP')
+    expect(text).toContain('La Escalera ES')
     expect(text).not.toContain('CAT')
+    expect(text).not.toContain("L'Escalada")
+  })
+
+  it('text CA per 5/5 conté missatge complet', () => {
+    const text = buildShareText(5, 98, 'ca', 'daily', new Set(), MOCK_DATE)
+    expect(text).toContain("He completat l'escala")
+  })
+
+  it('text ES per 5/5 conté missatge en castellà', () => {
+    const text = buildShareText(5, 98, 'es', 'daily', new Set(), MOCK_DATE)
+    expect(text).toContain('He completado la escalera')
+  })
+
+  it('text CA per 3/5 conté missatge parcial en català', () => {
+    const text = buildShareText(3, 134, 'ca', 'daily', new Set([5, 7]), MOCK_DATE)
+    expect(text).toContain('He fet 3/5')
+  })
+
+  it('text ES per 3/5 conté missatge parcial en castellà', () => {
+    const text = buildShareText(3, 134, 'es', 'daily', new Set([5, 7]), MOCK_DATE)
+    expect(text).toContain('He hecho 3/5')
+  })
+
+  it('files emojis en línies separades: 3,4,5,6,7 quadrats', () => {
+    const text = buildShareText(5, 60, 'ca', 'daily', new Set(), MOCK_DATE)
+    const lines = text.split('\n')
+    expect(lines).toContain('🟩🟩🟩')
+    expect(lines).toContain('🟩🟩🟩🟩')
+    expect(lines).toContain('🟩🟩🟩🟩🟩')
+    expect(lines).toContain('🟩🟩🟩🟩🟩🟩')
+    expect(lines).toContain('🟩🟩🟩🟩🟩🟩🟩')
   })
 
   it('no revela cap paraula', () => {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getDailyIndex, getMadridDateStr, formatDateDisplay, getDailyGameForDate } from '../utils/daily'
 import { loadGames } from '../utils/dictionary'
+import { resetDailyForDate, resetTodayDaily } from '../utils/archive'
 import type { Language, GameEntry } from '../types'
 import styles from './AdminPage.module.css'
 
@@ -108,6 +109,7 @@ export function AdminPage() {
             <option value="ca">Català</option>
             <option value="es">Castellano</option>
           </select>
+          <button className={styles.btnSecondary} onClick={() => { resetTodayDaily(lang); alert('Reiniciat! (localStorage local)') }}>🔄 Reset avui</button>
           <button className={styles.btnSecondary} onClick={exportJSON}>Exportar JSON</button>
           <button className={styles.btnSecondary} onClick={handleLogout}>Sortir</button>
           <a href="#/" className={styles.btnSecondary}>← Joc</a>
@@ -128,6 +130,7 @@ export function AdminPage() {
                 selectedDay === d.dateKey ? styles.dayBtnSelected : '',
               ].filter(Boolean).join(' ')}
               onClick={() => setSelectedDay(d.dateKey)}
+              onDoubleClick={() => { resetDailyForDate(lang, d.dateKey); alert(`Reset ${d.dateKey}`) }}
             >
               <span className={styles.dayDate}>{d.displayDate}</span>
               {d.isToday && <span className={styles.todayBadge}>Avui</span>}

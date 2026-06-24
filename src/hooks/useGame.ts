@@ -1,16 +1,17 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import type { Language, ValidationResult, GameEntry, GameInputs, GameMode, DictionaryIndex } from '../types'
-import { loadDictionary, loadGames, pickRandomGame } from '../utils/dictionary'
-import { pickDailyGame } from '../utils/daily'
+import type { Language, ValidationResult, GameEntry, GameInputs, DictionaryIndex } from '../types'
+import { loadDictionary, loadGames } from '../utils/dictionary'
 import { validateCompleteAttempt } from '../utils/validate'
 import { normalizeWord, normalizeForLookup, getLetterCountsForLookup } from '../utils/normalize'
 import { saveResult } from '../utils/stats'
+import { getMadridDateStr } from '../utils/daily'
+import { loadCalendar, getCalendarEntry, saveDailyResultForDate, loadDailyResultForDate } from '../utils/archive'
 
 const EMPTY_INPUTS: GameInputs = ['', '', '', '', '']
 
-export function useGame(lang: Language, mode: GameMode) {
+export function useGame(lang: Language, archiveDateKey?: string) {
   const [phase, setPhase] = useState<'playing' | 'finished'>('playing')
-  const [elapsed, setElapsed] = useState(0)  // cronòmetre ascendent (segons)
+  const [elapsed, setElapsed] = useState(0)
   const [inputs, setInputs] = useState<GameInputs>([...EMPTY_INPUTS])
   const [game, setGame] = useState<GameEntry | null>(null)
   const [dictionary, setDictionary] = useState<DictionaryIndex>({ lookupMap: new Map(), originalSet: new Set() })
@@ -19,6 +20,7 @@ export function useGame(lang: Language, mode: GameMode) {
   const [timeUsed, setTimeUsed] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [dateKey, setDateKey] = useState<string>(archiveDateKey ?? getMadridDateStr())
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const elapsedRef = useRef(0)
@@ -40,34 +42,55 @@ export function useGame(lang: Language, mode: GameMode) {
     }, 1000)
   }, [stopTimer])
 
-  const initGame = useCallback((gamesList: GameEntry[], dict: DictionaryIndex, forceRandom = false) => {
-    const chosen = (mode === 'daily' && !forceRandom)
-      ? pickDailyGame(gamesList, lang)
-      : pickRandomGame(gamesList)
+  const initGame = useCallback((chosenGame: GameEntry, dict: DictionaryIndex) => {
     const fresh: GameInputs = [...EMPTY_INPUTS]
     inputsRef.current = fresh
-    gameRef.current = chosen
+    gameRef.current = chosenGame
     dictRef.current = dict
-    setGame(chosen)
+    setGame(chosenGame)
     setInputs(fresh)
     setValidationResult(null)
     setTimeUsed(0)
     setPhase('playing')
     startTimer()
-  }, [mode, lang, startTimer])
+  }, [startTimer])
 
   useEffect(() => {
+    const targetDateKey = archiveDateKey ?? getMadridDateStr()
+    setDateKey(targetDateKey)
+
     let cancelled = false
     async function load() {
       try {
         setLoading(true)
         setError(null)
-        const [dict, gamesList] = await Promise.all([loadDictionary(lang), loadGames(lang)])
+
+        const [dict, gamesList, calendar] = await Promise.all([
+          loadDictionary(lang),
+          loadGames(lang),
+          loadCalendar(lang),
+        ])
+
         if (cancelled) return
+
+        const entry = getCalendarEntry(calendar, targetDateKey)
+        if (!entry) {
+          setError(`No hi ha partida per a la data ${targetDateKey}. El calendari cobreix del 2026-06-01 al 2026-12-31.`)
+          setLoading(false)
+          return
+        }
+
+        const chosenGame = gamesList[entry.gameIndex]
+        if (!chosenGame) {
+          setError(`Partida ${entry.gameIndex} no trobada.`)
+          setLoading(false)
+          return
+        }
+
         setDictionary(dict)
         setGames(gamesList)
         dictRef.current = dict
-        initGame(gamesList, dict)
+        initGame(chosenGame, dict)
       } catch (e) {
         if (!cancelled) setError((e as Error).message)
       } finally {
@@ -76,7 +99,7 @@ export function useGame(lang: Language, mode: GameMode) {
     }
     load()
     return () => { cancelled = true; stopTimer() }
-  }, [lang, mode]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [lang, archiveDateKey]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleInput = useCallback((index: number, value: string) => {
     if (phase !== 'playing') return
@@ -104,19 +127,34 @@ export function useGame(lang: Language, mode: GameMode) {
     )
     setValidationResult(result)
     saveResult(lang, result.score, used)
-  }, [phase, lang, stopTimer])
+
+    // Guardar resultat diari (sempre, sigui avui o arxiu)
+    saveDailyResultForDate({
+      dateKey: dateKey,
+      lang,
+      score: result.score,
+      timeUsed: used,
+      inputs: inputsRef.current,
+      errors: result.errors.map(e => e.wordLength),
+      validationErrors: result.errors,
+      timestamp: Date.now(),
+    })
+  }, [phase, lang, dateKey, stopTimer])
 
   const handleNewGame = useCallback(() => {
-    if (games.length > 0 && dictionary.lookupMap.size > 0) {
-      initGame(games, dictionary, true)
-    }
-  }, [games, dictionary, initGame])
+    // En mode arxiu no hi ha "nova partida" — el hook no ofereix random
+    // Reservat per compatibilitat amb components que el criden
+  }, [])
 
   const baseCounts = game ? getLetterCountsForLookup(normalizeForLookup(game.baseWord)) : {}
 
+  // Resultat guardat per a la data activa (per saber si ja s'ha jugat)
+  const savedResult = loadDailyResultForDate(lang, dateKey)
+
   return {
     phase, elapsed, timeUsed, inputs, game, validationResult,
-    loading, error, gameCount: games.length, dictionary,
+    loading, error, gameCount: games.length, dictionary, dateKey,
+    savedResult,
     handleInput, handleValidate, handleNewGame, baseCounts,
   }
 }

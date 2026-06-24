@@ -84,6 +84,14 @@
   color: #4c1d95;
 }
 
+.boxCursorReplace {
+  border-color: #f59e0b !important;
+  background: #fffbeb !important;
+  color: #92400e !important;
+  outline: 2px solid #f59e0b;
+  outline-offset: -2px;
+}
+
 .errorText {
   width: 100%;
   margin-left: calc(26px + 0.5rem);

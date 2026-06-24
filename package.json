@@ -1,6 +1,6 @@
 {
   "name": "escalada-paraules",
-  "version": "0.6.2",
+  "version": "0.8.0",
   "private": true,
   "scripts": {
     "dev": "vite --host 0.0.0.0",
@@ -16,7 +16,9 @@
     "audit:dict:ca": "node scripts/auditDictionary.mjs ca",
     "audit:dict:es": "node scripts/auditDictionary.mjs es",
     "check:games:ca": "node scripts/checkGames.mjs ca",
-    "check:games:es": "node scripts/checkGames.mjs es"
+    "check:games:es": "node scripts/checkGames.mjs es",
+    "generate:calendar": "node scripts/generateCalendar.mjs --lang all",
+    "check:calendar": "node scripts/checkCalendar.mjs ca && node scripts/checkCalendar.mjs es"
   },
   "dependencies": {
     "react": "^18.2.0",

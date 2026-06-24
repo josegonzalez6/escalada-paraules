@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import type { Language, GameMode, Stats, StepError, GameEntry } from '../types'
+import type { Language, Stats, StepError, GameEntry } from '../types'
 import { formatTime } from '../utils/daily'
 import { trackShare } from '../services/analytics'
 import { getMadridDateStr } from '../utils/daily'
 import { reasonText } from '../utils/validate'
+import { useT } from '../i18n'
 import styles from './ResultScreen.module.css'
 
 interface Props {
@@ -14,55 +15,27 @@ interface Props {
   validationErrors: StepError[]
   userInputs: string[]
   lang: Language
-  mode: GameMode
   stats: Stats
-  onNewGame: () => void
+  onOpenArchive: () => void
   buildShare: () => string
   alreadyPlayed: boolean
-}
-
-const T = {
-  ca: {
-    complete: 'Escalada completada! 🎉',
-    incomplete: 'Escalada incompleta',
-    timeLabel: 'Temps complert:',
-    solutionTitle: 'Solucions:',
-    errorTitle: 'Errors:',
-    letters: 'lletres',
-    newRandom: '🎲 Partida aleatòria',
-    share: '📤 Compartir resultat',
-    copied: '✅ Resultat copiat!',
-    alreadyPlayedMsg: "Ja has jugat l'Escalada del dia. Torna demà!",
-    played: 'Jugades', perfect: '5/5', pct: 'Encert',
-    best: 'Millor', avg: 'Mitjana', streak: 'Ratxa', bestStreak: 'Millor ratxa',
-    seconds: 's',
-    userWordsTitle: 'Les teves paraules:',
-  },
-  es: {
-    complete: '¡Escalada completada! 🎉',
-    incomplete: 'Escalada incompleta',
-    timeLabel: 'Tiempo completado:',
-    solutionTitle: 'Soluciones:',
-    errorTitle: 'Errores:',
-    letters: 'letras',
-    newRandom: '🎲 Partida aleatoria',
-    share: '📤 Compartir resultado',
-    copied: '✅ ¡Resultado copiado!',
-    alreadyPlayedMsg: '¡Ya jugaste la Escalada del día. ¡Vuelve mañana!',
-    played: 'Jugadas', perfect: '5/5', pct: 'Acierto',
-    best: 'Mejor', avg: 'Media', streak: 'Racha', bestStreak: 'Mejor racha',
-    seconds: 's',
-    userWordsTitle: 'Tus palabras:',
-  },
+  countdown: number
 }
 
 const LENGTHS = [3, 4, 5, 6, 7] as const
 
+function formatCountdown(seconds: number): string {
+  const h = Math.floor(seconds / 3600)
+  const m = Math.floor((seconds % 3600) / 60)
+  const s = seconds % 60
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+}
+
 export function ResultScreen({
   score, timeUsed, errors, solutions, validationErrors, userInputs, lang, stats,
-  onNewGame, buildShare, alreadyPlayed,
+  onOpenArchive, buildShare, alreadyPlayed, countdown,
 }: Props) {
-  const t = T[lang]
+  const tr = useT(lang)
   const [copied, setCopied] = useState(false)
   const isPerfect = score === 5
   const pct = stats.played > 0 ? Math.round((stats.perfect / stats.played) * 100) : 0
@@ -88,13 +61,11 @@ export function ResultScreen({
           <span className={`${styles.scoreNum} ${isPerfect ? styles.scoreNumPerfect : ''}`}>{score}</span>
           <span className={styles.scoreDen}>/5</span>
         </div>
-        <p className={styles.scoreTitle}>{isPerfect ? t.complete : t.incomplete}</p>
-        {isPerfect && (
-          <p className={styles.timeRow}>
-            <span>{t.timeLabel}</span>
-            <strong className={styles.timeVal}>{formatTime(timeUsed)}</strong>
-          </p>
-        )}
+        <p className={styles.scoreTitle}>{isPerfect ? tr.complete : tr.incomplete}</p>
+        <p className={styles.timeRow}>
+          <span>{tr.timeLabel}</span>
+          <strong className={styles.timeVal}>{formatTime(timeUsed)}</strong>
+        </p>
       </div>
 
       <div className={styles.emojiGrid}>
@@ -112,7 +83,7 @@ export function ResultScreen({
       </div>
 
       <div className={styles.section}>
-        <h3 className={styles.sectionTitle}>{t.userWordsTitle}</h3>
+        <h3 className={styles.sectionTitle}>{tr.userWordsTitle}</h3>
         {LENGTHS.map((len, i) => {
           const word = userInputs[i] ?? ''
           const failed = errors.has(len)
@@ -135,7 +106,7 @@ export function ResultScreen({
 
       {solutions && (
         <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>{t.solutionTitle}</h3>
+          <h3 className={styles.sectionTitle}>{tr.solutionTitle}</h3>
           {LENGTHS.map(len => {
             const words = solutions[String(len) as keyof typeof solutions]
             const example = words[0] ?? '—'
@@ -153,13 +124,13 @@ export function ResultScreen({
 
       <div className={styles.stats}>
         {[
-          [stats.played, t.played],
-          [stats.perfect, t.perfect],
-          [`${pct}%`, t.pct],
-          [stats.bestTime !== null ? formatTime(stats.bestTime) : '—', t.best],
-          [stats.avgTime !== null ? formatTime(stats.avgTime) : '—', t.avg],
-          [stats.currentStreak, t.streak],
-          [stats.bestStreak, t.bestStreak],
+          [stats.played, tr.statPlayed],
+          [stats.perfect, tr.statPerfect],
+          [`${pct}%`, tr.statPct],
+          [stats.bestTime !== null ? formatTime(stats.bestTime) : '—', tr.statBest],
+          [stats.avgTime !== null ? formatTime(stats.avgTime) : '—', tr.statAvg],
+          [stats.currentStreak, tr.statStreak],
+          [stats.bestStreak, tr.statBestStreak],
         ].map(([val, lbl], i) => (
           <div key={i} className={styles.statItem}>
             <span className={styles.statVal}>{val}</span>
@@ -169,14 +140,21 @@ export function ResultScreen({
       </div>
 
       {alreadyPlayed && (
-        <p className={styles.alreadyMsg}>{t.alreadyPlayedMsg}</p>
+        <div className={styles.alreadyBlock}>
+          <p className={styles.alreadyMsg}>{tr.alreadyPlayedMsg}</p>
+          {countdown > 0 && (
+            <p className={styles.countdown}>
+              {tr.nextIn}: <strong>{formatCountdown(countdown)}</strong>
+            </p>
+          )}
+        </div>
       )}
 
       <div className={styles.actions}>
         <button className={styles.shareBtn} onClick={handleShare}>
-          {copied ? t.copied : t.share}
+          {copied ? tr.copied : tr.share}
         </button>
-        <button className={styles.btnPrimary} onClick={onNewGame}>{t.newRandom}</button>
+        <button className={styles.btnSecondary} onClick={onOpenArchive}>{tr.archiveBtn}</button>
       </div>
     </div>
   )

@@ -1,6 +1,7 @@
 import { useRef, useEffect, useCallback, useState } from 'react'
-import type { Language, GameMode, ValidationResult } from '../types'
+import type { Language } from '../types'
 import { useGame } from '../hooks/useGame'
+import { useT } from '../i18n'
 import { Timer } from './Timer'
 import { WordBoxRow } from './WordBoxRow'
 import { BaseWordDisplay } from './BaseWordDisplay'
@@ -9,59 +10,41 @@ import { HowToPlay, HELP_SEEN_KEY } from './HowToPlay'
 import { DevMode } from './DevMode'
 import { loadStats } from '../utils/stats'
 import { reasonText } from '../utils/validate'
-import { formatDateDisplay, loadTodayDailyResult, saveDailyResult, buildShareText } from '../utils/daily'
+import {
+  formatDateDisplay, buildShareText, getSecondsUntilNextMadridMidnight,
+} from '../utils/daily'
+import { loadDailyResultForDate, resetTodayDaily, isDateLocked } from '../utils/archive'
 import { trackDailyStarted } from '../services/analytics'
 import { applyChars, applyBackspace } from '../utils/keyboard'
+import type { ValidationResult } from '../types'
 import styles from './Game.module.css'
-
-const T = {
-  ca: {
-    validate: 'Validar',
-    lang: 'Idioma',
-    loading: 'Carregant...',
-    error: 'Error en carregar les dades.',
-    hint: 'Forma paraules de 3, 4, 5, 6 i 7 lletres.',
-    daily: 'Escalada del dia',
-    random: 'Partida aleatòria',
-    switchRandom: '🎲 Partida aleatòria',
-    switchDaily: '📅 Escalada del dia',
-    langCA: 'Català',
-    langES: 'Castellano',
-  },
-  es: {
-    validate: 'Validar',
-    lang: 'Idioma',
-    loading: 'Cargando...',
-    error: 'Error al cargar los datos.',
-    hint: 'Forma palabras de 3, 4, 5, 6 y 7 letras.',
-    daily: 'Escalada del día',
-    random: 'Partida aleatoria',
-    switchRandom: '🎲 Partida aleatoria',
-    switchDaily: '📅 Escalada del día',
-    langCA: 'Català',
-    langES: 'Castellano',
-  },
-}
 
 interface Props {
   lang: Language
-  mode: GameMode
+  archiveDateKey?: string   // undefined = avui
   todayKey: string
   onChangeLang: (l: Language) => void
-  onSetMode: (m: GameMode) => void
+  onOpenArchive: () => void
+  onBackToToday: () => void
   devMode: boolean
 }
 
-export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }: Props) {
+export function Game({ lang, archiveDateKey, todayKey, onChangeLang, onOpenArchive, onBackToToday, devMode }: Props) {
   const {
     phase, elapsed, timeUsed, inputs, game, validationResult, loading, error,
-    gameCount, dictionary, handleInput, handleValidate, handleNewGame, baseCounts,
-  } = useGame(lang, mode)
+    gameCount, dictionary, dateKey,
+    handleInput, handleValidate, handleNewGame, baseCounts,
+  } = useGame(lang, archiveDateKey)
 
-  const t = T[lang]
+  const tr = useT(lang)
   const hiddenInputRef = useRef<HTMLInputElement>(null)
   const [activeRow, setActiveRow] = useState(0)
+  const [clickedCol, setClickedCol] = useState<number | null>(null)
   const [showHelp, setShowHelp] = useState(() => !localStorage.getItem(HELP_SEEN_KEY))
+  const [countdown, setCountdown] = useState(0)
+
+  const isArchiveDate = archiveDateKey !== undefined && archiveDateKey !== todayKey
+  const isLockedDate = archiveDateKey !== undefined && isDateLocked(archiveDateKey)
 
   function handleCloseHelp() {
     localStorage.setItem(HELP_SEEN_KEY, '1')
@@ -69,71 +52,105 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
     hiddenInputRef.current?.focus()
   }
 
-  // Reseteja cursor quan comença una nova partida
   useEffect(() => {
     if (game && phase === 'playing') {
       setActiveRow(0)
+      setClickedCol(null)
       hiddenInputRef.current?.focus()
     }
   }, [game]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const savedDaily = mode === 'daily' ? loadTodayDailyResult(lang) : null
-  const showSavedResult = mode === 'daily' && savedDaily !== null && savedDaily.dateKey === todayKey
+  // Resultat guardat per a aquesta data (avui o arxiu)
+  const savedDaily = loadDailyResultForDate(lang, dateKey)
+  const showSavedResult = savedDaily !== null
+
+  // Compte enrere fins a la propera escalada (només per avui)
+  useEffect(() => {
+    if (!showSavedResult || isArchiveDate) return
+    setCountdown(getSecondsUntilNextMadridMidnight())
+    const interval = setInterval(() => {
+      setCountdown(getSecondsUntilNextMadridMidnight())
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [showSavedResult, isArchiveDate])
 
   useEffect(() => {
-    if (mode === 'daily' && phase === 'finished' && validationResult && game) {
-      saveDailyResult({
-        dateKey: todayKey,
-        lang,
-        score: validationResult.score,
-        timeUsed,
-        inputs,
-        timestamp: Date.now(),
-      })
+    if (!showSavedResult && game) {
+      trackDailyStarted(lang, dateKey)
     }
-  }, [mode, phase, validationResult]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (mode === 'daily' && !showSavedResult && game) {
-      trackDailyStarted(lang, todayKey)
-    }
-  }, [game, mode]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [game]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const processChars = useCallback((rawChars: string) => {
     if (phase !== 'playing') return
-    const result = applyChars({ inputs, activeRow }, rawChars)
+    const result = applyChars({ inputs, activeRow, clickedCol }, rawChars)
     for (let i = 0; i < 5; i++) {
-      if (result.inputs[i] !== inputs[i]) {
-        handleInput(i, result.inputs[i])
-      }
+      if (result.inputs[i] !== inputs[i]) handleInput(i, result.inputs[i])
     }
     setActiveRow(result.activeRow)
-  }, [phase, inputs, activeRow, handleInput])
+    setClickedCol(result.clickedCol ?? null)
+  }, [phase, inputs, activeRow, clickedCol, handleInput])
 
   const handleBackspace = useCallback(() => {
     if (phase !== 'playing') return
-    const result = applyBackspace({ inputs, activeRow })
+    const result = applyBackspace({ inputs, activeRow, clickedCol })
     for (let i = 0; i < 5; i++) {
-      if (result.inputs[i] !== inputs[i]) {
-        handleInput(i, result.inputs[i])
-      }
+      if (result.inputs[i] !== inputs[i]) handleInput(i, result.inputs[i])
     }
     setActiveRow(result.activeRow)
-  }, [phase, inputs, activeRow, handleInput])
+    setClickedCol(result.clickedCol ?? null)
+  }, [phase, inputs, activeRow, clickedCol, handleInput])
 
   function handleRowClick(rowIndex: number) {
     if (phase !== 'playing') return
     setActiveRow(rowIndex)
+    setClickedCol(null)
     hiddenInputRef.current?.focus()
   }
 
-  if (loading) return <div className={styles.center}><p>{t.loading}</p></div>
+  function handleCellClick(rowIndex: number, col: number) {
+    if (phase !== 'playing') return
+    setActiveRow(rowIndex)
+    setClickedCol(col)
+    hiddenInputRef.current?.focus()
+  }
+
+  function handleResetToday() {
+    if (confirm(lang === 'ca' ? "Reiniciar l'escalada d'avui?" : "¿Reiniciar la escalera de hoy?")) {
+      resetTodayDaily(lang)
+      window.location.reload()
+    }
+  }
+
+  if (loading) return <div className={styles.center}><p>{tr.loading}</p></div>
   if (error) return (
     <div className={styles.center}>
-      <p className={styles.errorMsg}>{t.error}</p>
+      <p className={styles.errorMsg}>{tr.errorLoading}</p>
       <p className={styles.errorDetail}>{error}</p>
     </div>
   )
+
+  // Data bloquejada (futura)
+  if (isLockedDate) {
+    return (
+      <div className={styles.container}>
+        <header className={styles.header}>
+          <div className={styles.headerLeft}>
+            <h1 className={styles.title}>{tr.archiveLocked}</h1>
+          </div>
+          <div className={styles.headerRight}>
+            <button className={styles.modeToggle} onClick={onBackToToday}>{tr.backToGame}</button>
+          </div>
+        </header>
+        <div className={styles.center}>
+          <p style={{ fontSize: '2rem' }}>🔒</p>
+          <p>{tr.archiveLockedMsg}</p>
+          <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>
+            {archiveDateKey && formatDateDisplay(new Date(archiveDateKey + 'T12:00:00Z'))}
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   const isFinished = phase === 'finished' && validationResult !== null
 
@@ -141,14 +158,20 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
     return new Set(result.errors.map(e => e.wordLength))
   }
 
+  // Títol del header
+  const headerTitle = isArchiveDate && archiveDateKey
+    ? tr.archiveDailyTitle(formatDateDisplay(new Date(archiveDateKey + 'T12:00:00Z')))
+    : tr.dailyTitle
+
   const header = (
     <header className={styles.header}>
       <div className={styles.headerLeft}>
-        <h1 className={styles.title}>
-          {mode === 'daily' ? t.daily : t.random}
-        </h1>
-        {mode === 'daily' && (
+        <h1 className={styles.title}>{headerTitle}</h1>
+        {!isArchiveDate && (
           <span className={styles.dateBadge}>{formatDateDisplay()}</span>
+        )}
+        {isArchiveDate && (
+          <button className={styles.backLink} onClick={onBackToToday}>{tr.backToGame}</button>
         )}
       </div>
       <div className={styles.headerRight}>
@@ -156,23 +179,21 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
           className={styles.langSelect}
           value={lang}
           onChange={e => onChangeLang(e.target.value as Language)}
-          aria-label={t.lang}
+          aria-label={tr.langLabel}
         >
-          <option value="ca">{t.langCA}</option>
-          <option value="es">{t.langES}</option>
+          <option value="ca">{tr.langCA}</option>
+          <option value="es">{tr.langES}</option>
         </select>
-        <button
-          className={styles.modeToggle}
-          onClick={() => onSetMode(mode === 'daily' ? 'random' : 'daily')}
-        >
-          {mode === 'daily' ? t.switchRandom : t.switchDaily}
+        <button className={styles.modeToggle} onClick={onOpenArchive}>
+          {tr.archiveBtn}
         </button>
-        <button className={styles.helpBtn} onClick={() => setShowHelp(true)} aria-label="Instruccions">?</button>
+        <button className={styles.helpBtn} onClick={() => setShowHelp(true)} aria-label={tr.helpAriaLabel}>?</button>
       </div>
     </header>
   )
 
   if (showSavedResult && savedDaily) {
+    const savedErrors = new Set(savedDaily.errors ?? [])
     return (
       <div className={styles.container}>
         {showHelp && <HowToPlay lang={lang} onClose={handleCloseHelp} />}
@@ -180,16 +201,16 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
         <ResultScreen
           score={savedDaily.score}
           timeUsed={savedDaily.timeUsed}
-          errors={new Set()}
+          errors={savedErrors}
           solutions={null}
-          validationErrors={[]}
+          validationErrors={savedDaily.validationErrors ?? []}
           userInputs={savedDaily.inputs ? [...savedDaily.inputs] : ['', '', '', '', '']}
           lang={lang}
-          mode={mode}
           stats={loadStats(lang)}
-          onNewGame={() => onSetMode('random')}
-          buildShare={() => buildShareText(savedDaily.score, savedDaily.timeUsed, lang, mode, new Set(), new Date())}
+          onOpenArchive={onOpenArchive}
+          buildShare={() => buildShareText(savedDaily.score, savedDaily.timeUsed, lang, 'daily', savedErrors, new Date())}
           alreadyPlayed={true}
+          countdown={isArchiveDate ? 0 : countdown}
         />
       </div>
     )
@@ -218,21 +239,21 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
           validationErrors={validationResult.errors}
           userInputs={[...inputs]}
           lang={lang}
-          mode={mode}
           stats={loadStats(lang)}
-          onNewGame={handleNewGame}
-          buildShare={() => buildShareText(validationResult.score, timeUsed, lang, mode, getErrorSet(validationResult))}
+          onOpenArchive={onOpenArchive}
+          buildShare={() => buildShareText(validationResult.score, timeUsed, lang, 'daily', getErrorSet(validationResult))}
           alreadyPlayed={false}
+          countdown={0}
         />
       ) : (
         <>
           <div className={styles.baseSection}>
-            <BaseWordDisplay letters={game.baseLetters} />
+            <BaseWordDisplay letters={game.baseLetters} label={tr.availableLetters} />
           </div>
 
           <div className={styles.timerRow}>
             <Timer seconds={elapsed} />
-            <p className={styles.hint}>{t.hint}</p>
+            <p className={styles.hint}>{tr.hint}</p>
           </div>
 
           <div className={styles.board}>
@@ -247,7 +268,9 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
                   status={validationResult ? (errorMap[len] ? 'error' : 'correct') : 'neutral'}
                   errorText={errorMap[len]}
                   isActive={activeRow === i}
+                  activeCursorCol={activeRow === i ? clickedCol : null}
                   onRowClick={() => handleRowClick(i)}
+                  onCellClick={(col) => handleCellClick(i, col)}
                 />
               )
             })}
@@ -258,22 +281,30 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
                 onClick={handleValidate}
                 disabled={phase !== 'playing'}
               >
-                {t.validate}
+                {tr.validate}
               </button>
             </div>
 
             {devMode && game && (
-              <DevMode
-                game={game}
-                gameCount={gameCount}
-                dictionary={dictionary}
-                lang={lang}
-                onRegenerate={handleNewGame}
-              />
+              <>
+                <DevMode
+                  game={game}
+                  gameCount={gameCount}
+                  dictionary={dictionary}
+                  lang={lang}
+                  onRegenerate={handleNewGame}
+                />
+                <button
+                  className={styles.btnBack}
+                  onClick={handleResetToday}
+                  style={{ marginTop: '0.5rem', color: '#ef4444' }}
+                >
+                  {tr.resetToday}
+                </button>
+              </>
             )}
           </div>
 
-          {/* Input capturador de teclat — un únic element per tota la graella */}
           <input
             ref={hiddenInputRef}
             className={styles.hiddenCatcher}
@@ -289,20 +320,11 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
             onInput={(e) => {
               const target = e.target as HTMLInputElement
               const val = target.value
-              if (val) {
-                processChars(val)
-                target.value = ''
-              }
+              if (val) { processChars(val); target.value = '' }
             }}
             onKeyDown={(e) => {
-              if (e.key === 'Backspace') {
-                e.preventDefault()
-                handleBackspace()
-              }
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                handleValidate()
-              }
+              if (e.key === 'Backspace') { e.preventDefault(); handleBackspace() }
+              if (e.key === 'Enter') { e.preventDefault(); handleValidate() }
             }}
           />
         </>

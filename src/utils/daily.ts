@@ -1,4 +1,5 @@
 import type { Language, GameEntry, GameMode, DailyResult } from '../types'
+import { useT } from '../i18n'
 
 export function getMadridDateStr(date?: Date): string {
   const d = date ?? new Date()
@@ -43,38 +44,67 @@ export function getDailyGameForDate(games: GameEntry[], lang: Language, dateKey:
   return pickDailyGame(games, lang, date)
 }
 
-const DAILY_KEY = (lang: Language, dateKey: string) => `escalada-daily-${lang}-${dateKey}`
+export function getSecondsUntilNextMadridMidnight(now?: Date): number {
+  const d = now ?? new Date()
+  const todayMadrid = getMadridDateStr(d)
+
+  // Binary search: find exact moment when Madrid date changes (within 1 second)
+  let lo = d.getTime()
+  let hi = lo + 26 * 3600 * 1000
+
+  while (hi - lo > 1000) {
+    const mid = Math.floor((lo + hi) / 2)
+    if (getMadridDateStr(new Date(mid)) === todayMadrid) {
+      lo = mid
+    } else {
+      hi = mid
+    }
+  }
+
+  return Math.max(0, Math.ceil((hi - d.getTime()) / 1000))
+}
+
+// localStorage — delega a archive.ts per consistència de claus
+// Però manté funcions per compatibilitat de codi existent
 
 export function saveDailyResult(result: DailyResult): void {
-  localStorage.setItem(DAILY_KEY(result.lang, result.dateKey), JSON.stringify(result))
+  const key = `dailyResult:${result.lang}:${result.dateKey}`
+  localStorage.setItem(key, JSON.stringify(result))
 }
 
 export function loadTodayDailyResult(lang: Language, date?: Date): DailyResult | null {
   const dateKey = getMadridDateStr(date)
-  const raw = localStorage.getItem(DAILY_KEY(lang, dateKey))
+  // Nova clau
+  const raw = localStorage.getItem(`dailyResult:${lang}:${dateKey}`)
+    ?? localStorage.getItem(`escalada-daily-${lang}-${dateKey}`) // backward compat
   if (!raw) return null
-  try { return JSON.parse(raw) as DailyResult } catch { return null }
+  try {
+    const parsed = JSON.parse(raw) as DailyResult
+    if (!parsed.errors) parsed.errors = []
+    if (!parsed.validationErrors) parsed.validationErrors = []
+    return parsed
+  } catch { return null }
 }
 
 export function buildShareText(
   score: number,
   timeUsed: number,
   lang: Language,
-  mode: GameMode,
+  _mode: GameMode,
   errors: Set<number>,
   date?: Date
 ): string {
-  const langStr = lang === 'ca' ? 'CAT' : 'ESP'
+  const tr = useT(lang)
   const dateStr = formatDateDisplay(date)
-  const prefix = mode === 'daily' ? '' : '🎲 '
-  const timeStr = score === 5 ? ` · ${formatTime(timeUsed)}` : ''
-  const scoreLine = `${score}/5${timeStr}`
+  const timeStr = formatTime(timeUsed)
+  const scoreLine = `${score}/5 · ${timeStr}`
 
   const grid = [3, 4, 5, 6, 7].map(len => {
     const emoji = errors.has(len) ? '🟥' : '🟩'
     return emoji.repeat(len)
   }).join('\n')
 
-  const url = 'https://escalada-paraules.vercel.app/'
-  return `${prefix}L'Escalada ${langStr}\n${dateStr}\n${scoreLine}\n\n${grid}\n\n${url}`
+  const msg = score === 5 ? tr.sharePerfect(timeStr) : tr.sharePartial(score, timeStr)
+
+  return `${tr.shareHeader}\n${dateStr}\n${scoreLine}\n\n${grid}\n\n${msg}\n${tr.shareURL}`
 }

@@ -54,11 +54,11 @@ describe('getDailyIndex', () => {
 })
 
 describe('buildShareText', () => {
-  it('format correcte per 5/5', () => {
+  it("format correcte per 5/5", () => {
     const text = buildShareText(5, 37, 'ca', 'daily', new Set(), MOCK_DATE)
-    expect(text).toContain('CAT')
+    expect(text).toContain("L'Escalada CAT")
     expect(text).toContain('5/5')
-    expect(text).not.toContain('🎲') // mode daily no té el prefix aleatori
+    expect(text).toContain('00:37')
   })
 
   it('format correcte per 3/5', () => {
@@ -66,24 +66,23 @@ describe('buildShareText', () => {
     expect(text).toContain('3/5')
   })
 
-  it('mode aleatori té prefix 🎲', () => {
+  it('mode aleatori inclou la capçalera normal (sense prefix)', () => {
     const text = buildShareText(4, 50, 'es', 'random', new Set(), MOCK_DATE)
-    expect(text).toContain('🎲')
-    expect(text).toContain('ESP')
+    expect(text).toContain('La Escalera ES')
     expect(text).toContain('4/5')
   })
 
   it('no revela cap paraula', () => {
     const text = buildShareText(5, 30, 'ca', 'daily', new Set(), MOCK_DATE)
-    // El text compartit NO ha de contenir paraules del diccionari
     const lines = text.split('\n')
     expect(lines.length).toBeGreaterThanOrEqual(3)
   })
 
-  it('idioma ES usa ESP', () => {
+  it('idioma ES usa La Escalera ES', () => {
     const text = buildShareText(5, 20, 'es', 'daily', new Set(), MOCK_DATE)
-    expect(text).toContain('ESP')
+    expect(text).toContain('La Escalera ES')
     expect(text).not.toContain('CAT')
+    expect(text).not.toContain("L'Escalada")
   })
 })
 

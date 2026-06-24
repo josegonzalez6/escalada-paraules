@@ -47,16 +47,24 @@ export interface Stats {
   bestStreak: number
 }
 
+export interface CalendarEntry {
+  dateKey: string   // YYYY-MM-DD
+  gameIndex: number // índex al games array
+  baseWord: string  // per display ràpid a l'arxiu
+}
+
 export interface DictionaryIndex {
   lookupMap: Map<string, string[]>
   originalSet: Set<string>
 }
 
 export interface DailyResult {
-  dateKey: string        // 'YYYY-MM-DD' Europe/Madrid
+  dateKey: string           // 'YYYY-MM-DD' Europe/Madrid
   lang: Language
   score: number
-  timeUsed: number       // 0 si no és 5/5
-  inputs: GameInputs     // les respostes introduïdes
-  timestamp: number      // Date.now()
+  timeUsed: number          // 0 si no és 5/5
+  inputs: GameInputs        // les respostes introduïdes
+  errors: number[]          // longituds amb error (3,4,5,6,7) per mostrar colors reals
+  validationErrors: StepError[]  // errors detallats per missatges
+  timestamp: number         // Date.now()
 }
