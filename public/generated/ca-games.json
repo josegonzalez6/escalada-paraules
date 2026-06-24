@@ -2,13 +2,13 @@
   {
     "baseWord": "caminant",
     "baseLetters": [
-      "n",
+      "a",
       "m",
       "t",
-      "n",
-      "c",
       "i",
-      "a",
+      "c",
+      "n",
+      "n",
       "a"
     ],
     "solutions": {
@@ -49,14 +49,14 @@
   {
     "baseWord": "caminars",
     "baseLetters": [
-      "i",
       "c",
-      "m",
       "a",
-      "r",
       "a",
+      "n",
+      "i",
       "s",
-      "n"
+      "m",
+      "r"
     ],
     "solutions": {
       "3": [
@@ -106,14 +106,14 @@
   {
     "baseWord": "caminats",
     "baseLetters": [
-      "s",
-      "i",
-      "t",
-      "c",
       "m",
+      "s",
+      "t",
+      "i",
       "a",
+      "n",
       "a",
-      "n"
+      "c"
     ],
     "solutions": {
       "3": [
@@ -162,14 +162,14 @@
   {
     "baseWord": "cantinar",
     "baseLetters": [
-      "n",
+      "i",
       "a",
       "t",
-      "r",
+      "a",
       "c",
       "n",
-      "i",
-      "a"
+      "n",
+      "r"
     ],
     "solutions": {
       "3": [
@@ -201,14 +201,14 @@
   {
     "baseWord": "matinars",
     "baseLetters": [
-      "i",
-      "a",
-      "s",
       "t",
-      "r",
+      "n",
       "a",
+      "r",
       "m",
-      "n"
+      "i",
+      "s",
+      "a"
     ],
     "solutions": {
       "3": [
@@ -260,14 +260,14 @@
   {
     "baseWord": "matinals",
     "baseLetters": [
+      "l",
+      "s",
       "t",
       "a",
-      "a",
       "m",
-      "l",
-      "n",
-      "s",
-      "i"
+      "a",
+      "i",
+      "n"
     ],
     "solutions": {
       "3": [
@@ -310,15 +310,15 @@
   {
     "baseWord": "caminants",
     "baseLetters": [
-      "s",
-      "i",
       "t",
+      "n",
+      "s",
       "a",
       "n",
-      "a",
       "m",
+      "a",
       "c",
-      "n"
+      "i"
     ],
     "solutions": {
       "3": [
@@ -368,14 +368,14 @@
   {
     "baseWord": "cantinars",
     "baseLetters": [
+      "c",
+      "t",
+      "n",
+      "i",
+      "s",
       "n",
       "a",
-      "n",
-      "c",
-      "s",
       "r",
-      "t",
-      "i",
       "a"
     ],
     "solutions": {
@@ -427,15 +427,15 @@
   {
     "baseWord": "cantinats",
     "baseLetters": [
-      "a",
-      "s",
-      "c",
       "i",
+      "c",
       "t",
+      "a",
       "n",
       "t",
-      "a",
-      "n"
+      "n",
+      "s",
+      "a"
     ],
     "solutions": {
       "3": [
@@ -474,6 +474,390 @@
       "7": [
         "cantina",
         "cantats"
+      ]
+    }
+  },
+  {
+    "baseWord": "encaminament",
+    "baseLetters": [
+      "a",
+      "m",
+      "n",
+      "t",
+      "c",
+      "n",
+      "e",
+      "m",
+      "e",
+      "a",
+      "i",
+      "n"
+    ],
+    "solutions": {
+      "3": [
+        "can",
+        "man",
+        "mac",
+        "cam",
+        "nit",
+        "nim",
+        "mai",
+        "tan",
+        "tic",
+        "cim"
+      ],
+      "4": [
+        "cana",
+        "mana",
+        "maca",
+        "cami",
+        "mina",
+        "tina",
+        "cant"
+      ],
+      "5": [
+        "camin",
+        "manta",
+        "matin"
+      ],
+      "6": [
+        "maceta",
+        "mantic"
+      ],
+      "7": [
+        "cantina"
+      ]
+    }
+  },
+  {
+    "baseWord": "restabliment",
+    "baseLetters": [
+      "e",
+      "t",
+      "t",
+      "b",
+      "l",
+      "r",
+      "a",
+      "i",
+      "e",
+      "m",
+      "n",
+      "s"
+    ],
+    "solutions": {
+      "3": [
+        "mar",
+        "sal",
+        "bas",
+        "man",
+        "ras",
+        "mas",
+        "nas",
+        "ans",
+        "nit",
+        "nim"
+      ],
+      "4": [
+        "mars",
+        "base",
+        "mans",
+        "nits",
+        "mina",
+        "tina",
+        "tant"
+      ],
+      "5": [
+        "baser",
+        "manes",
+        "maner",
+        "mines",
+        "miner",
+        "tines",
+        "tinar",
+        "tants",
+        "matin"
+      ],
+      "6": [
+        "maners",
+        "miners",
+        "minera",
+        "mantis",
+        "matins",
+        "tinars",
+        "tinats",
+        "mantes"
+      ],
+      "7": [
+        "maneres"
+      ]
+    }
+  },
+  {
+    "baseWord": "escalonament",
+    "baseLetters": [
+      "c",
+      "m",
+      "e",
+      "a",
+      "n",
+      "s",
+      "e",
+      "l",
+      "o",
+      "n",
+      "t",
+      "a"
+    ],
+    "solutions": {
+      "3": [
+        "sol",
+        "sal",
+        "can",
+        "man",
+        "mas",
+        "nas",
+        "cas",
+        "mac",
+        "sac",
+        "ans"
+      ],
+      "4": [
+        "sola",
+        "sala",
+        "cans",
+        "cana",
+        "mans",
+        "mana",
+        "masa",
+        "nasa",
+        "casa",
+        "macs"
+      ],
+      "5": [
+        "canal",
+        "manes",
+        "maces",
+        "manta",
+        "santa",
+        "cants"
+      ],
+      "6": [
+        "canals",
+        "caseta",
+        "macats",
+        "maceta",
+        "mantes"
+      ],
+      "7": [
+        "macetes"
+      ]
+    }
+  },
+  {
+    "baseWord": "encaminaments",
+    "baseLetters": [
+      "i",
+      "a",
+      "m",
+      "a",
+      "s",
+      "m",
+      "e",
+      "n",
+      "n",
+      "c",
+      "n",
+      "e",
+      "t"
+    ],
+    "solutions": {
+      "3": [
+        "can",
+        "man",
+        "mas",
+        "nas",
+        "cas",
+        "mac",
+        "sac",
+        "ans",
+        "cam",
+        "nit"
+      ],
+      "4": [
+        "cans",
+        "cana",
+        "mans",
+        "mana",
+        "masa",
+        "nasa",
+        "casa",
+        "macs",
+        "maca",
+        "saca"
+      ],
+      "5": [
+        "manes",
+        "maces",
+        "camin",
+        "mines",
+        "tines",
+        "manta",
+        "santa",
+        "cants",
+        "matin"
+      ],
+      "6": [
+        "caseta",
+        "macats",
+        "maceta",
+        "camins",
+        "mantis",
+        "matins",
+        "mantic",
+        "mantes"
+      ],
+      "7": [
+        "macetes",
+        "cantina",
+        "mantics"
+      ]
+    }
+  },
+  {
+    "baseWord": "restabliments",
+    "baseLetters": [
+      "t",
+      "a",
+      "b",
+      "t",
+      "r",
+      "e",
+      "l",
+      "m",
+      "i",
+      "e",
+      "s",
+      "n",
+      "s"
+    ],
+    "solutions": {
+      "3": [
+        "mar",
+        "sal",
+        "bas",
+        "man",
+        "ras",
+        "mas",
+        "nas",
+        "ans",
+        "nit",
+        "nim"
+      ],
+      "4": [
+        "mars",
+        "sals",
+        "base",
+        "mans",
+        "nits",
+        "mina",
+        "tina",
+        "tant"
+      ],
+      "5": [
+        "sales",
+        "bases",
+        "baser",
+        "manes",
+        "maner",
+        "mines",
+        "miner",
+        "tines",
+        "tinar",
+        "tants"
+      ],
+      "6": [
+        "basers",
+        "basset",
+        "maners",
+        "miners",
+        "minera",
+        "mantis",
+        "matins",
+        "tinars",
+        "tinats",
+        "mantes"
+      ],
+      "7": [
+        "maneres"
+      ]
+    }
+  },
+  {
+    "baseWord": "relacionament",
+    "baseLetters": [
+      "e",
+      "l",
+      "o",
+      "e",
+      "a",
+      "i",
+      "n",
+      "a",
+      "c",
+      "m",
+      "r",
+      "t",
+      "n"
+    ],
+    "solutions": {
+      "3": [
+        "mar",
+        "can",
+        "man",
+        "car",
+        "mac",
+        "arc",
+        "cam",
+        "nit",
+        "nim",
+        "mai"
+      ],
+      "4": [
+        "marc",
+        "cana",
+        "mana",
+        "cara",
+        "maca",
+        "arca",
+        "cami",
+        "mina",
+        "tina",
+        "cant"
+      ],
+      "5": [
+        "marca",
+        "canal",
+        "maner",
+        "macar",
+        "camin",
+        "miner",
+        "tinar",
+        "manta",
+        "matin"
+      ],
+      "6": [
+        "maceta",
+        "minera",
+        "mantic",
+        "mantar",
+        "cantar"
+      ],
+      "7": [
+        "cantina",
+        "caminar",
+        "matinar",
+        "matinal"
       ]
     }
   }

@@ -1,33 +1,149 @@
-.root {
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  background: #f8f9fa;
-}
-
 .splash {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(160deg, #6366f1 0%, #8b5cf6 60%, #a78bfa 100%);
+  padding: 2rem 1.5rem 3rem;
   color: white;
-  text-align: center;
+}
+
+.splashInner {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .title {
-  font-size: 2.5rem;
-  font-weight: 800;
-  margin: 0 0 0.5rem;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-size: 2.4rem;
+  font-weight: 900;
+  margin: 0;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-top: 1rem;
 }
 
 .subtitle {
   font-size: 1rem;
-  opacity: 0.85;
-  margin: 0 0 2.5rem;
+  opacity: 0.9;
+  margin: 0;
   line-height: 1.5;
+}
+
+.rules {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rules li {
+  font-size: 0.875rem;
+  opacity: 0.92;
+  line-height: 1.4;
+  padding-left: 1.25rem;
+  position: relative;
+}
+
+.rules li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  opacity: 0.7;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sectionLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  margin: 0;
+}
+
+.btnGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.langBtn {
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.18);
+  color: white;
+  backdrop-filter: blur(10px);
+  transition: background 0.15s, transform 0.1s;
+  -webkit-tap-highlight-color: transparent;
+  text-align: left;
+}
+
+.langBtn:active {
+  background: rgba(255,255,255,0.3);
+  transform: scale(0.98);
+}
+
+.modeBtn {
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.18);
+  color: white;
+  backdrop-filter: blur(10px);
+  transition: background 0.15s, transform 0.1s;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+}
+
+.modeBtn:active {
+  background: rgba(255,255,255,0.3);
+  transform: scale(0.98);
+}
+
+.modeBtnTitle {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.modeBtnDesc {
+  font-size: 0.8rem;
+  opacity: 0.75;
+  font-weight: 400;
+}
+
+.backBtn {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.25rem 0;
+  cursor: pointer;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.backBtn:active {
+  opacity: 0.6;
 }

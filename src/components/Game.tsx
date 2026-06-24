@@ -1,12 +1,15 @@
-import type { Language } from '../types'
+import { useRef, useEffect } from 'react'
+import type { Language, GameMode } from '../types'
 import { useGame } from '../hooks/useGame'
 import { Timer } from './Timer'
-import { LadderRow } from './LadderRow'
+import { WordBoxRow } from './WordBoxRow'
+import type { WordBoxRowHandle } from './WordBoxRow'
 import { BaseWordDisplay } from './BaseWordDisplay'
 import { ResultScreen } from './ResultScreen'
 import { DevMode } from './DevMode'
 import { loadStats } from '../utils/stats'
 import { reasonText } from '../utils/validate'
+import { formatDateDisplay } from '../utils/daily'
 import styles from './Game.module.css'
 
 const TOTAL_TIME = 60
@@ -14,16 +17,18 @@ const TOTAL_TIME = 60
 const T = {
   ca: {
     validate: 'Validar escalada',
-    new: 'Nova partida',
-    lang: 'Idioma',
+    new: 'Nova partida aleatòria',
+    daily: 'Paraula del dia',
+    lang: 'Inici',
     loading: 'Carregant...',
     error: 'Error en carregar les dades.',
     baseLabel: 'Lletres disponibles',
   },
   es: {
     validate: 'Validar escalada',
-    new: 'Nueva partida',
-    lang: 'Idioma',
+    new: 'Partida aleatoria',
+    daily: 'Palabra del día',
+    lang: 'Inicio',
     loading: 'Cargando...',
     error: 'Error al cargar los datos.',
     baseLabel: 'Letras disponibles',
@@ -32,17 +37,31 @@ const T = {
 
 interface Props {
   lang: Language
+  mode: GameMode
   onChangeLang: () => void
   devMode: boolean
 }
 
-export function Game({ lang, onChangeLang, devMode }: Props) {
+export function Game({ lang, mode, onChangeLang, devMode }: Props) {
   const {
     phase, timeLeft, timeUsed, inputs, game, validationResult, loading, error,
     gameCount, dictionary, handleInput, handleValidate, handleNewGame,
-  } = useGame(lang)
+  } = useGame(lang, mode)
 
   const t = T[lang]
+  const rowRefs = useRef<(WordBoxRowHandle | null)[]>([null, null, null, null, null])
+
+  // Auto-avanç al camp següent quan el camp actual s'omple
+  useEffect(() => {
+    if (phase !== 'playing') return
+    for (let i = 0; i < 5; i++) {
+      const expectedLen = 3 + i
+      if (inputs[i].length === expectedLen && i < 4) {
+        rowRefs.current[i + 1]?.focus()
+        break
+      }
+    }
+  }, [inputs, phase])
 
   if (loading) {
     return <div className={styles.center}><p>{t.loading}</p></div>
@@ -66,17 +85,25 @@ export function Game({ lang, onChangeLang, devMode }: Props) {
     }
   }
 
+  const isFinished = phase === 'finished' && validationResult !== null
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Escalada</h1>
+        <div className={styles.headerLeft}>
+          <h1 className={styles.title}>L'Escalada</h1>
+          {mode === 'daily' && (
+            <span className={styles.dailyBadge}>{formatDateDisplay()}</span>
+          )}
+        </div>
         <button className={styles.langBtn} onClick={onChangeLang}>{t.lang}</button>
       </header>
 
-      {phase === 'finished' && validationResult ? (
+      {isFinished ? (
         <ResultScreen
           result={validationResult}
           lang={lang}
+          mode={mode}
           stats={loadStats(lang)}
           timeUsed={timeUsed}
           onNewGame={handleNewGame}
@@ -97,14 +124,16 @@ export function Game({ lang, onChangeLang, devMode }: Props) {
               const len = 3 + i
               const hasError = !!errorMap[len]
               return (
-                <LadderRow
+                <WordBoxRow
                   key={len}
+                  ref={el => { rowRefs.current[i] = el }}
                   length={len}
                   value={inputs[i]}
                   onChange={v => handleInput(i, v)}
                   status={validationResult ? (hasError ? 'error' : 'correct') : 'neutral'}
                   errorText={errorMap[len]}
                   autoFocus={i === 0}
+                  disabled={phase !== 'playing'}
                 />
               )
             })}
@@ -116,9 +145,6 @@ export function Game({ lang, onChangeLang, devMode }: Props) {
                 disabled={phase !== 'playing'}
               >
                 {t.validate}
-              </button>
-              <button className={styles.newBtn} onClick={handleNewGame}>
-                {t.new}
               </button>
             </div>
 

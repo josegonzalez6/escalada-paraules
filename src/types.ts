@@ -1,4 +1,5 @@
 export type Language = 'ca' | 'es'
+export type GameMode = 'daily' | 'random'
 
 export type GamePhase = 'playing' | 'finished'
 
@@ -6,8 +7,8 @@ export type GamePhase = 'playing' | 'finished'
 export type GameInputs = [string, string, string, string, string]
 
 export interface GameEntry {
-  baseWord: string       // paraula base de 8-10 lletres (conjunt de lletres disponibles)
-  baseLetters: string[]  // lletres individuals de baseWord, per mostrar a la UI
+  baseWord: string       // paraula base REAL del diccionari, de 8-14 lletres
+  baseLetters: string[]  // lletres de baseWord barrejades, per mostrar a la UI
   solutions: {
     '3': string[]
     '4': string[]

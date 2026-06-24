@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import type { Language, GamePhase, ValidationResult, GameEntry, GameInputs } from '../types'
+import type { Language, GamePhase, ValidationResult, GameEntry, GameInputs, GameMode } from '../types'
 import { loadDictionary, loadGames, pickRandomGame } from '../utils/dictionary'
+import { pickDailyGame } from '../utils/daily'
 import { validateCompleteAttempt } from '../utils/validate'
 import { normalizeWord } from '../utils/normalize'
 import { saveResult } from '../utils/stats'
 
 const GAME_DURATION = 60
-
 const EMPTY_INPUTS: GameInputs = ['', '', '', '', '']
 
-export function useGame(lang: Language) {
+export function useGame(lang: Language, mode: GameMode) {
   const [phase, setPhase] = useState<GamePhase>('playing')
   const [timeLeft, setTimeLeft] = useState(GAME_DURATION)
   const [inputs, setInputs] = useState<GameInputs>([...EMPTY_INPUTS])
@@ -66,9 +66,12 @@ export function useGame(lang: Language) {
     }, 1000)
   }, [finishGame])
 
-  const initGame = useCallback((gamesList: GameEntry[], dict: Set<string>) => {
+  const initGame = useCallback((gamesList: GameEntry[], dict: Set<string>, forceRandom = false) => {
     stopTimer()
-    const chosen = pickRandomGame(gamesList)
+    // En mode daily, la primera vegada tria la partida del dia. Nova partida → aleatòria.
+    const chosen = (mode === 'daily' && !forceRandom)
+      ? pickDailyGame(gamesList, lang)
+      : pickRandomGame(gamesList)
     const fresh: GameInputs = [...EMPTY_INPUTS]
     inputsRef.current = fresh
     gameRef.current = chosen
@@ -81,7 +84,7 @@ export function useGame(lang: Language) {
     setTimeUsed(0)
     setPhase('playing')
     startTimer()
-  }, [stopTimer, startTimer])
+  }, [mode, lang, stopTimer, startTimer])
 
   useEffect(() => {
     let cancelled = false
@@ -103,11 +106,12 @@ export function useGame(lang: Language) {
     }
     load()
     return () => { cancelled = true; stopTimer() }
-  }, [lang]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [lang, mode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleInput = useCallback((index: number, value: string) => {
     if (phase !== 'playing') return
-    const normalized = normalizeWord(value)
+    const expectedLen = 3 + index
+    const normalized = normalizeWord(value).slice(0, expectedLen)
     setInputs(prev => {
       const next: GameInputs = [...prev]
       next[index] = normalized
@@ -123,23 +127,14 @@ export function useGame(lang: Language) {
 
   const handleNewGame = useCallback(() => {
     if (games.length > 0 && dictionary.size > 0) {
-      initGame(games, dictionary)
+      // forceRandom=true: en mode daily, la nova partida és aleatòria
+      initGame(games, dictionary, true)
     }
   }, [games, dictionary, initGame])
 
   return {
-    phase,
-    timeLeft,
-    timeUsed,
-    inputs,
-    game,
-    validationResult,
-    loading,
-    error,
-    gameCount: games.length,
-    dictionary,
-    handleInput,
-    handleValidate,
-    handleNewGame,
+    phase, timeLeft, timeUsed, inputs, game, validationResult,
+    loading, error, gameCount: games.length, dictionary,
+    handleInput, handleValidate, handleNewGame,
   }
 }

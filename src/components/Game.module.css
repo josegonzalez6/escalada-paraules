@@ -103,6 +103,19 @@
   border-color: #94a3b8;
 }
 
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.dailyBadge {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
 .center {
   display: flex;
   flex-direction: column;

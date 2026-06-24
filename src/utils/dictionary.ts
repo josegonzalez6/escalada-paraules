@@ -14,8 +14,8 @@ export async function loadDictionary(lang: Language): Promise<Set<string>> {
   const words = new Set<string>()
   for (const line of text.split('\n')) {
     const w = normalizeWord(line.trim())
-    // El diccionari pot tenir paraules de 3-10 lletres (3-7 per a respostes, 8-10 per a bases)
-    if (w.length >= 3 && w.length <= 10) words.add(w)
+    // El diccionari pot tenir paraules de 3-14 lletres (3-7 per a respostes, 8-14 per a bases)
+    if (w.length >= 3 && w.length <= 14) words.add(w)
   }
   dictCache[lang] = words
   return words

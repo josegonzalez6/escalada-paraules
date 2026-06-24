@@ -231,3 +231,21 @@
 }
 
 .btnSecondary:active { border-color: #94a3b8; }
+
+.shareBtn {
+  width: 100%;
+  padding: 0.875rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: #f8fafc;
+  color: #1a1a2e;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  transition: background 0.15s, border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.shareBtn:active {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}

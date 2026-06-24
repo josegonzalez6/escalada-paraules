@@ -1,0 +1,105 @@
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.badgeCorrect { background: #22c55e; color: white; }
+.badgeError   { background: #ef4444; color: white; }
+
+.boxesContainer {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  cursor: text;
+  position: relative;
+}
+
+.box {
+  width: 42px;
+  height: 42px;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  transition: border-color 0.1s, background 0.1s;
+  user-select: none;
+}
+
+.boxEmpty {
+  border: 2px solid #cbd5e1;
+  background: white;
+  color: transparent;
+}
+
+.boxFilled {
+  border: 2px solid #6366f1;
+  background: #eef2ff;
+  color: #3730a3;
+}
+
+.boxCursor {
+  border-color: #6366f1;
+  animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+  50% { border-color: #a5b4fc; }
+}
+
+.boxCorrect {
+  border-color: #22c55e !important;
+  background: #f0fdf4 !important;
+  color: #166534 !important;
+}
+
+.boxError {
+  border-color: #ef4444 !important;
+  background: #fef2f2 !important;
+  color: #991b1b !important;
+}
+
+.hiddenInput {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0.01;
+  font-size: 16px;
+  border: none;
+  background: transparent;
+  color: transparent;
+  caret-color: transparent;
+  outline: none;
+  padding: 0;
+  margin: 0;
+}
+
+.errorText {
+  width: 100%;
+  margin-left: calc(26px + 0.5rem);
+  font-size: 0.72rem;
+  color: #ef4444;
+  margin-top: -0.1rem;
+  line-height: 1.3;
+}

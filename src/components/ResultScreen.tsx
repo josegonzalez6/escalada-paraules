@@ -1,10 +1,13 @@
-import type { ValidationResult, Language, Stats } from '../types'
+import { useState } from 'react'
+import type { ValidationResult, Language, Stats, GameMode } from '../types'
 import { reasonText } from '../utils/validate'
+import { buildShareText, formatDateDisplay } from '../utils/daily'
 import styles from './ResultScreen.module.css'
 
 interface Props {
   result: ValidationResult
   lang: Language
+  mode: GameMode
   stats: Stats
   timeUsed: number
   onNewGame: () => void
@@ -21,8 +24,11 @@ const T = {
     solution: 'Solucions possibles:',
     errors: 'Paraules incorrectes:',
     letters: 'lletres',
-    new: 'Nova partida',
-    change: 'Canviar idioma',
+    new_random: '🎲 Partida aleatòria',
+    new_again: '🔄 Tornar a jugar',
+    change: '← Inici',
+    share: 'Compartir resultat',
+    shared: 'Copiat!',
     played: 'Jugades',
     perfect_lbl: '5/5',
     pct: 'Encert',
@@ -40,8 +46,11 @@ const T = {
     solution: 'Soluciones posibles:',
     errors: 'Palabras incorrectas:',
     letters: 'letras',
-    new: 'Nueva partida',
-    change: 'Cambiar idioma',
+    new_random: '🎲 Partida aleatoria',
+    new_again: '🔄 Volver a jugar',
+    change: '← Inicio',
+    share: 'Compartir resultado',
+    shared: '¡Copiado!',
     played: 'Jugadas',
     perfect_lbl: '5/5',
     pct: 'Acierto',
@@ -54,13 +63,33 @@ const T = {
 
 const LENGTHS = [3, 4, 5, 6, 7] as const
 
-export function ResultScreen({ result, lang, stats, timeUsed, onNewGame, onChangeLang }: Props) {
+export function ResultScreen({ result, lang, mode, stats, timeUsed, onNewGame, onChangeLang }: Props) {
   const t = T[lang]
+  const [copied, setCopied] = useState(false)
   const isPerfect = result.score === 5
   const pct = stats.played > 0 ? Math.round((stats.perfect / stats.played) * 100) : 0
   const errorLengths = new Set(result.errors.map(e => e.wordLength))
-
   const titleText = isPerfect ? t.perfect : result.score >= 3 ? t.partial : t.fail
+
+  async function handleShare() {
+    const text = buildShareText(result.score, timeUsed, lang, mode)
+    try {
+      if (navigator.share) {
+        await navigator.share({ text })
+      } else {
+        await navigator.clipboard.writeText(text)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+      }
+    } catch {
+      // User cancelled share — no action needed
+    }
+  }
+
+  // formatDateDisplay unused but imported — kept for potential future use
+  void formatDateDisplay
+
+  const newBtnText = mode === 'daily' ? t.new_random : t.new_again
 
   return (
     <div className={styles.container}>
@@ -83,7 +112,7 @@ export function ResultScreen({ result, lang, stats, timeUsed, onNewGame, onChang
         )}
       </div>
 
-      {/* Errors — paraules incorrectes */}
+      {/* Errors */}
       {result.errors.length > 0 && (
         <div className={styles.section}>
           <h3 className={styles.sectionTitle}>{t.errors}</h3>
@@ -122,36 +151,19 @@ export function ResultScreen({ result, lang, stats, timeUsed, onNewGame, onChang
 
       {/* Estadístiques */}
       <div className={styles.stats}>
-        <div className={styles.statItem}>
-          <span className={styles.statVal}>{stats.played}</span>
-          <span className={styles.statLbl}>{t.played}</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statVal}>{stats.perfect}</span>
-          <span className={styles.statLbl}>{t.perfect_lbl}</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statVal}>{pct}%</span>
-          <span className={styles.statLbl}>{t.pct}</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statVal}>
-            {stats.bestTime !== null ? `${stats.bestTime}${t.seconds}` : '—'}
-          </span>
-          <span className={styles.statLbl}>{t.best}</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statVal}>{stats.currentStreak}</span>
-          <span className={styles.statLbl}>{t.streak}</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statVal}>{stats.bestStreak}</span>
-          <span className={styles.statLbl}>{t.best_streak}</span>
-        </div>
+        <div className={styles.statItem}><span className={styles.statVal}>{stats.played}</span><span className={styles.statLbl}>{t.played}</span></div>
+        <div className={styles.statItem}><span className={styles.statVal}>{stats.perfect}</span><span className={styles.statLbl}>{t.perfect_lbl}</span></div>
+        <div className={styles.statItem}><span className={styles.statVal}>{pct}%</span><span className={styles.statLbl}>{t.pct}</span></div>
+        <div className={styles.statItem}><span className={styles.statVal}>{stats.bestTime !== null ? `${stats.bestTime}${t.seconds}` : '—'}</span><span className={styles.statLbl}>{t.best}</span></div>
+        <div className={styles.statItem}><span className={styles.statVal}>{stats.currentStreak}</span><span className={styles.statLbl}>{t.streak}</span></div>
+        <div className={styles.statItem}><span className={styles.statVal}>{stats.bestStreak}</span><span className={styles.statLbl}>{t.best_streak}</span></div>
       </div>
 
       <div className={styles.actions}>
-        <button className={styles.btnPrimary} onClick={onNewGame}>{t.new}</button>
+        <button className={styles.shareBtn} onClick={handleShare}>
+          {copied ? t.shared : t.share}
+        </button>
+        <button className={styles.btnPrimary} onClick={onNewGame}>{newBtnText}</button>
         <button className={styles.btnSecondary} onClick={onChangeLang}>{t.change}</button>
       </div>
     </div>

@@ -28,7 +28,7 @@ const root = join(__dirname, '..')
 const MAX_GAMES = 500
 const MAX_SOLUTIONS_PER_LEN = 10
 const MIN_BASE_LEN = 8
-const MAX_BASE_LEN = 10
+const MAX_BASE_LEN = 14
 
 function normalize(word) {
   return word

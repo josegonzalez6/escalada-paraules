@@ -2,14 +2,14 @@
   {
     "baseWord": "paradeos",
     "baseLetters": [
-      "e",
-      "s",
-      "o",
-      "a",
-      "d",
       "a",
       "r",
-      "p"
+      "d",
+      "e",
+      "p",
+      "a",
+      "o",
+      "s"
     ],
     "solutions": {
       "3": [
@@ -40,14 +40,14 @@
   {
     "baseWord": "riojanas",
     "baseLetters": [
-      "s",
-      "i",
-      "a",
-      "a",
       "n",
-      "j",
       "r",
-      "o"
+      "i",
+      "o",
+      "s",
+      "j",
+      "a",
+      "a"
     ],
     "solutions": {
       "3": [
@@ -76,13 +76,13 @@
     "baseWord": "matinals",
     "baseLetters": [
       "a",
-      "i",
-      "m",
+      "s",
       "a",
       "t",
-      "n",
-      "s",
-      "l"
+      "l",
+      "m",
+      "i",
+      "n"
     ],
     "solutions": {
       "3": [
@@ -118,15 +118,15 @@
   {
     "baseWord": "matinales",
     "baseLetters": [
-      "s",
-      "l",
-      "i",
       "m",
-      "t",
       "n",
-      "e",
       "a",
-      "a"
+      "e",
+      "t",
+      "s",
+      "a",
+      "l",
+      "i"
     ],
     "solutions": {
       "3": [
@@ -162,16 +162,16 @@
   {
     "baseWord": "caminantes",
     "baseLetters": [
-      "n",
       "m",
+      "n",
       "a",
-      "a",
-      "c",
+      "i",
       "s",
       "e",
-      "n",
-      "i",
-      "t"
+      "a",
+      "t",
+      "c",
+      "n"
     ],
     "solutions": {
       "3": [
@@ -210,16 +210,16 @@
   {
     "baseWord": "salmantino",
     "baseLetters": [
-      "n",
-      "l",
-      "o",
+      "s",
+      "m",
       "a",
       "t",
-      "i",
       "a",
       "n",
-      "s",
-      "m"
+      "o",
+      "n",
+      "l",
+      "i"
     ],
     "solutions": {
       "3": [
@@ -249,6 +249,220 @@
         "mantas"
       ],
       "7": [
+        "matinal"
+      ]
+    }
+  },
+  {
+    "baseWord": "caminadora",
+    "baseLetters": [
+      "o",
+      "n",
+      "a",
+      "m",
+      "i",
+      "a",
+      "d",
+      "a",
+      "r",
+      "c"
+    ],
+    "solutions": {
+      "3": [
+        "mar",
+        "rio",
+        "dan",
+        "cam"
+      ],
+      "4": [
+        "cama",
+        "rion",
+        "dana",
+        "cima",
+        "mina"
+      ],
+      "5": [
+        "riona",
+        "danar"
+      ],
+      "6": [
+        "camara"
+      ],
+      "7": [
+        "caminar"
+      ]
+    }
+  },
+  {
+    "baseWord": "salmantinos",
+    "baseLetters": [
+      "s",
+      "n",
+      "a",
+      "t",
+      "a",
+      "m",
+      "s",
+      "l",
+      "i",
+      "o",
+      "n"
+    ],
+    "solutions": {
+      "3": [
+        "sol",
+        "sal",
+        "mal",
+        "mas",
+        "nas",
+        "nit",
+        "tan"
+      ],
+      "4": [
+        "sala",
+        "mala",
+        "masa",
+        "nasa",
+        "mina"
+      ],
+      "5": [
+        "malas",
+        "masas",
+        "nasas",
+        "minas",
+        "manta",
+        "santa"
+      ],
+      "6": [
+        "mantis",
+        "mantas",
+        "santas"
+      ],
+      "7": [
+        "matinal"
+      ]
+    }
+  },
+  {
+    "baseWord": "caminadores",
+    "baseLetters": [
+      "e",
+      "r",
+      "i",
+      "a",
+      "o",
+      "d",
+      "a",
+      "s",
+      "n",
+      "c",
+      "m"
+    ],
+    "solutions": {
+      "3": [
+        "mar",
+        "rio",
+        "dos",
+        "res",
+        "red",
+        "dan",
+        "mas",
+        "cas",
+        "nas",
+        "ras"
+      ],
+      "4": [
+        "mare",
+        "cama",
+        "rion",
+        "dosa",
+        "resa",
+        "reda",
+        "dana",
+        "masa",
+        "casa",
+        "nasa"
+      ],
+      "5": [
+        "mares",
+        "camas",
+        "riona",
+        "redas",
+        "danas",
+        "danar",
+        "masar",
+        "casar",
+        "nasar",
+        "minas"
+      ],
+      "6": [
+        "rionas",
+        "danars",
+        "minera"
+      ],
+      "7": [
+        "caminar"
+      ]
+    }
+  },
+  {
+    "baseWord": "escalonamiento",
+    "baseLetters": [
+      "i",
+      "a",
+      "a",
+      "o",
+      "n",
+      "e",
+      "o",
+      "l",
+      "e",
+      "n",
+      "t",
+      "m",
+      "c",
+      "s"
+    ],
+    "solutions": {
+      "3": [
+        "sol",
+        "sal",
+        "mal",
+        "mas",
+        "cas",
+        "nas",
+        "cam",
+        "nit",
+        "cos",
+        "tan"
+      ],
+      "4": [
+        "sole",
+        "sala",
+        "mala",
+        "cama",
+        "masa",
+        "casa",
+        "nasa",
+        "cima",
+        "mina",
+        "cant"
+      ],
+      "5": [
+        "malas",
+        "camas",
+        "minas",
+        "manta",
+        "santa",
+        "canto"
+      ],
+      "6": [
+        "mantis",
+        "mantas",
+        "cantos"
+      ],
+      "7": [
+        "cantina",
         "matinal"
       ]
     }
