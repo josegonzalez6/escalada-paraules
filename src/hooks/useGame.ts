@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import type { Language, ValidationResult, GameEntry, GameInputs, GameMode } from '../types'
+import type { Language, ValidationResult, GameEntry, GameInputs, GameMode, DictionaryIndex } from '../types'
 import { loadDictionary, loadGames, pickRandomGame } from '../utils/dictionary'
 import { pickDailyGame } from '../utils/daily'
 import { validateCompleteAttempt } from '../utils/validate'
-import { normalizeWord, getLetterCounts } from '../utils/normalize'
+import { normalizeWord, normalizeForLookup, getLetterCountsForLookup } from '../utils/normalize'
 import { saveResult } from '../utils/stats'
 
 const EMPTY_INPUTS: GameInputs = ['', '', '', '', '']
@@ -13,7 +13,7 @@ export function useGame(lang: Language, mode: GameMode) {
   const [elapsed, setElapsed] = useState(0)  // cronòmetre ascendent (segons)
   const [inputs, setInputs] = useState<GameInputs>([...EMPTY_INPUTS])
   const [game, setGame] = useState<GameEntry | null>(null)
-  const [dictionary, setDictionary] = useState<Set<string>>(new Set())
+  const [dictionary, setDictionary] = useState<DictionaryIndex>({ lookupMap: new Map(), originalSet: new Set() })
   const [games, setGames] = useState<GameEntry[]>([])
   const [validationResult, setValidationResult] = useState<ValidationResult | null>(null)
   const [timeUsed, setTimeUsed] = useState(0)
@@ -24,7 +24,7 @@ export function useGame(lang: Language, mode: GameMode) {
   const elapsedRef = useRef(0)
   const inputsRef = useRef<GameInputs>([...EMPTY_INPUTS])
   const gameRef = useRef<GameEntry | null>(null)
-  const dictRef = useRef<Set<string>>(new Set())
+  const dictRef = useRef<DictionaryIndex>({ lookupMap: new Map(), originalSet: new Set() })
 
   const stopTimer = useCallback(() => {
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null }
@@ -40,7 +40,7 @@ export function useGame(lang: Language, mode: GameMode) {
     }, 1000)
   }, [stopTimer])
 
-  const initGame = useCallback((gamesList: GameEntry[], dict: Set<string>, forceRandom = false) => {
+  const initGame = useCallback((gamesList: GameEntry[], dict: DictionaryIndex, forceRandom = false) => {
     const chosen = (mode === 'daily' && !forceRandom)
       ? pickDailyGame(gamesList, lang)
       : pickRandomGame(gamesList)
@@ -107,12 +107,12 @@ export function useGame(lang: Language, mode: GameMode) {
   }, [phase, lang, stopTimer])
 
   const handleNewGame = useCallback(() => {
-    if (games.length > 0 && dictionary.size > 0) {
+    if (games.length > 0 && dictionary.lookupMap.size > 0) {
       initGame(games, dictionary, true)
     }
   }, [games, dictionary, initGame])
 
-  const baseCounts = game ? getLetterCounts(normalizeWord(game.baseWord)) : {}
+  const baseCounts = game ? getLetterCountsForLookup(normalizeForLookup(game.baseWord)) : {}
 
   return {
     phase, elapsed, timeUsed, inputs, game, validationResult,

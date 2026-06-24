@@ -47,6 +47,11 @@ export interface Stats {
   bestStreak: number
 }
 
+export interface DictionaryIndex {
+  lookupMap: Map<string, string[]>
+  originalSet: Set<string>
+}
+
 export interface DailyResult {
   dateKey: string        // 'YYYY-MM-DD' Europe/Madrid
   lang: Language

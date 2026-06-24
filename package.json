@@ -1,6 +1,6 @@
 {
   "name": "escalada-paraules",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "private": true,
   "scripts": {
     "dev": "vite --host 0.0.0.0",
@@ -12,7 +12,11 @@
     "generate:games": "node scripts/generateGames.mjs",
     "prepare:dict": "node scripts/prepareDictionary.mjs",
     "prepare:dict:ca": "node scripts/prepareDictionary.mjs raw/ca.txt public/dictionaries/ca.txt --lang ca",
-    "prepare:dict:es": "node scripts/prepareDictionary.mjs raw/es.txt public/dictionaries/es.txt --lang es"
+    "prepare:dict:es": "node scripts/prepareDictionary.mjs raw/es.txt public/dictionaries/es.txt --lang es",
+    "audit:dict:ca": "node scripts/auditDictionary.mjs ca",
+    "audit:dict:es": "node scripts/auditDictionary.mjs es",
+    "check:games:ca": "node scripts/checkGames.mjs ca",
+    "check:games:es": "node scripts/checkGames.mjs es"
   },
   "dependencies": {
     "react": "^18.2.0",

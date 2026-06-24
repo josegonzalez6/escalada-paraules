@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import type { Language, GameEntry } from '../types'
-import { normalizeWord } from '../utils/normalize'
+import type { Language, GameEntry, DictionaryIndex } from '../types'
+import { normalizeForLookup } from '../utils/normalize'
 import styles from './DevMode.module.css'
 
 interface Props {
   game: GameEntry | null
   gameCount: number
-  dictionary: Set<string>
+  dictionary: DictionaryIndex
   lang: Language
   onRegenerate: () => void
 }
@@ -16,8 +16,8 @@ export function DevMode({ game, gameCount, dictionary, lang, onRegenerate }: Pro
   const [testResult, setTestResult] = useState<string | null>(null)
 
   function handleTest() {
-    const n = normalizeWord(testWord)
-    const found = dictionary.has(n)
+    const n = normalizeForLookup(testWord)
+    const found = dictionary.lookupMap.has(n)
     setTestResult(found ? `✅ "${n}" al diccionari (${lang})` : `❌ "${n}" no trobat (${lang})`)
   }
 
@@ -29,7 +29,7 @@ export function DevMode({ game, gameCount, dictionary, lang, onRegenerate }: Pro
         <div className={styles.solution}>
           <p className={styles.label}>
             Paraula base: <span className={styles.word}>{game.baseWord.toUpperCase()}</span>
-            {' '}— al diccionari: <strong>{dictionary.has(game.baseWord.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/·/g,'l').replace(/[^a-z]/g,'')) ? '✅' : '❌'}</strong>
+            {' '}— al diccionari: <strong>{dictionary.lookupMap.has(normalizeForLookup(game.baseWord)) ? '✅' : '❌'}</strong>
           </p>
           {([3, 4, 5, 6, 7] as const).map(len => {
             const sols = game.solutions[String(len) as keyof typeof game.solutions]

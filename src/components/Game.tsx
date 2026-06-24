@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from 'react'
+import { useRef, useEffect, useCallback, useState } from 'react'
 import type { Language, GameMode, ValidationResult } from '../types'
 import { useGame } from '../hooks/useGame'
 import { Timer } from './Timer'
@@ -6,6 +6,7 @@ import { WordBoxRow } from './WordBoxRow'
 import type { WordBoxRowHandle } from './WordBoxRow'
 import { BaseWordDisplay } from './BaseWordDisplay'
 import { ResultScreen } from './ResultScreen'
+import { HowToPlay, HELP_SEEN_KEY } from './HowToPlay'
 import { DevMode } from './DevMode'
 import { loadStats } from '../utils/stats'
 import { reasonText } from '../utils/validate'
@@ -59,6 +60,12 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
 
   const t = T[lang]
   const rowRefs = useRef<(WordBoxRowHandle | null)[]>([null, null, null, null, null])
+  const [showHelp, setShowHelp] = useState(() => !localStorage.getItem(HELP_SEEN_KEY))
+
+  function handleCloseHelp() {
+    localStorage.setItem(HELP_SEEN_KEY, '1')
+    setShowHelp(false)
+  }
 
   const savedDaily = mode === 'daily' ? loadTodayDailyResult(lang) : null
   const showSavedResult = mode === 'daily' && savedDaily !== null && savedDaily.dateKey === todayKey
@@ -143,6 +150,7 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
         >
           {mode === 'daily' ? t.switchRandom : t.switchDaily}
         </button>
+        <button className={styles.helpBtn} onClick={() => setShowHelp(true)} aria-label="Instruccions">?</button>
       </div>
     </header>
   )
@@ -150,6 +158,7 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
   if (showSavedResult && savedDaily) {
     return (
       <div className={styles.container}>
+        {showHelp && <HowToPlay lang={lang} onClose={handleCloseHelp} />}
         {header}
         <ResultScreen
           score={savedDaily.score}
@@ -157,6 +166,7 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
           errors={new Set()}
           solutions={null}
           validationErrors={[]}
+          userInputs={savedDaily.inputs ? [...savedDaily.inputs] : ['', '', '', '', '']}
           lang={lang}
           mode={mode}
           stats={loadStats(lang)}
@@ -179,6 +189,7 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
 
   return (
     <div className={styles.container}>
+      {showHelp && <HowToPlay lang={lang} onClose={handleCloseHelp} />}
       {header}
 
       {isFinished ? (
@@ -188,6 +199,7 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
           errors={getErrorSet(validationResult)}
           solutions={validationResult.solutions}
           validationErrors={validationResult.errors}
+          userInputs={[...inputs]}
           lang={lang}
           mode={mode}
           stats={loadStats(lang)}

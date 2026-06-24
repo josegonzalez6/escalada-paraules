@@ -1,24 +1,33 @@
-import type { Language, GameEntry } from '../types'
+import type { Language, GameEntry, DictionaryIndex } from '../types'
 import { normalizeWord } from './normalize'
+import { normalizeForLookup } from './normalize'
 
-const dictCache: Partial<Record<Language, Set<string>>> = {}
+const dictCache: Partial<Record<Language, DictionaryIndex>> = {}
 const gamesCache: Partial<Record<Language, GameEntry[]>> = {}
 
-export async function loadDictionary(lang: Language): Promise<Set<string>> {
+export async function loadDictionary(lang: Language): Promise<DictionaryIndex> {
   if (dictCache[lang]) return dictCache[lang]!
 
   const res = await fetch(`/dictionaries/${lang}.txt`)
   if (!res.ok) throw new Error(`Cannot load dictionary for ${lang}`)
   const text = await res.text()
 
-  const words = new Set<string>()
+  const lookupMap = new Map<string, string[]>()
+  const originalSet = new Set<string>()
+
   for (const line of text.split('\n')) {
-    const w = normalizeWord(line.trim())
-    // El diccionari pot tenir paraules de 3-14 lletres (3-7 per a respostes, 8-14 per a bases)
-    if (w.length >= 3 && w.length <= 14) words.add(w)
+    const original = line.trim()
+    if (!original) continue
+    const norm = normalizeForLookup(original)
+    if (norm.length < 3 || norm.length > 14) continue
+    originalSet.add(original)
+    if (!lookupMap.has(norm)) lookupMap.set(norm, [])
+    lookupMap.get(norm)!.push(original)
   }
-  dictCache[lang] = words
-  return words
+
+  const index: DictionaryIndex = { lookupMap, originalSet }
+  dictCache[lang] = index
+  return index
 }
 
 function isValidEntry(entry: GameEntry): boolean {

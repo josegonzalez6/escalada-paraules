@@ -230,3 +230,51 @@
 }
 
 .timeVal { color: #22c55e; margin-left: 0.4rem; }
+
+.userWordRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 8px;
+  margin-bottom: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.userWordOk { background: #f0fdf4; }
+.userWordFailed { background: #fef2f2; }
+
+.userLetters {
+  display: flex;
+  gap: 3px;
+}
+
+.userLetterBox {
+  width: 32px;
+  height: 32px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+.userLetterOk {
+  background: #22c55e;
+  color: white;
+}
+
+.userLetterFailed {
+  background: #ef4444;
+  color: white;
+}
+
+.userWordError {
+  font-size: 0.7rem;
+  color: #ef4444;
+  font-style: italic;
+  flex-basis: 100%;
+  margin-left: calc(24px + 1rem);
+}

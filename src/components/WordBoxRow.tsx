@@ -1,5 +1,5 @@
 import { forwardRef, useRef, useImperativeHandle } from 'react'
-import { normalizeWord } from '../utils/normalize'
+import { normalizeForLookup } from '../utils/normalize'
 import styles from './WordBoxRow.module.css'
 
 interface Props {
@@ -21,7 +21,7 @@ export interface WordBoxRowHandle {
 function getInvalidPositions(value: string, baseCounts: Record<string, number>): Set<number> {
   const invalid = new Set<number>()
   const usedCounts: Record<string, number> = {}
-  const norm = normalizeWord(value)
+  const norm = normalizeForLookup(value)
   for (let i = 0; i < norm.length; i++) {
     const c = norm[i]
     usedCounts[c] = (usedCounts[c] ?? 0) + 1

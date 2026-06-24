@@ -3,6 +3,7 @@ import type { Language, GameMode, Stats, StepError, GameEntry } from '../types'
 import { formatTime } from '../utils/daily'
 import { trackShare } from '../services/analytics'
 import { getMadridDateStr } from '../utils/daily'
+import { reasonText } from '../utils/validate'
 import styles from './ResultScreen.module.css'
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
   errors: Set<number>
   solutions: GameEntry['solutions'] | null
   validationErrors: StepError[]
+  userInputs: string[]
   lang: Language
   mode: GameMode
   stats: Stats
@@ -34,6 +36,7 @@ const T = {
     played: 'Jugades', perfect: '5/5', pct: 'Encert',
     best: 'Millor', avg: 'Mitjana', streak: 'Ratxa', bestStreak: 'Millor ratxa',
     seconds: 's',
+    userWordsTitle: 'Les teves paraules:',
   },
   es: {
     complete: '¡Escalada completada! 🎉',
@@ -49,13 +52,14 @@ const T = {
     played: 'Jugadas', perfect: '5/5', pct: 'Acierto',
     best: 'Mejor', avg: 'Media', streak: 'Racha', bestStreak: 'Mejor racha',
     seconds: 's',
+    userWordsTitle: 'Tus palabras:',
   },
 }
 
 const LENGTHS = [3, 4, 5, 6, 7] as const
 
 export function ResultScreen({
-  score, timeUsed, errors, solutions, lang, stats,
+  score, timeUsed, errors, solutions, validationErrors, userInputs, lang, stats,
   onNewGame, buildShare, alreadyPlayed,
 }: Props) {
   const t = T[lang]
@@ -102,6 +106,28 @@ export function ResultScreen({
               {Array.from({ length: len }, (_, i) => (
                 <span key={i} className={styles.emojiCell}>{emoji}</span>
               ))}
+            </div>
+          )
+        })}
+      </div>
+
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>{t.userWordsTitle}</h3>
+        {LENGTHS.map((len, i) => {
+          const word = userInputs[i] ?? ''
+          const failed = errors.has(len)
+          const validationErr = validationErrors.find(e => e.wordLength === len)
+          return (
+            <div key={len} className={`${styles.userWordRow} ${failed ? styles.userWordFailed : styles.userWordOk}`}>
+              <span className={`${styles.solutionLen} ${failed ? styles.solutionLenFailed : styles.solutionLenOk}`}>{len}</span>
+              <div className={styles.userLetters}>
+                {Array.from({ length: len }, (_, pos) => (
+                  <span key={pos} className={`${styles.userLetterBox} ${failed ? styles.userLetterFailed : styles.userLetterOk}`}>
+                    {word[pos]?.toUpperCase() ?? ''}
+                  </span>
+                ))}
+              </div>
+              {validationErr && <span className={styles.userWordError}>{reasonText(validationErr.reason, lang)}</span>}
             </div>
           )
         })}

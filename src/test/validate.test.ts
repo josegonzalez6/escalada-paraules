@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { validateCompleteAttempt } from '../utils/validate'
-import type { GameEntry, GameInputs } from '../types'
+import type { GameEntry, GameInputs, DictionaryIndex } from '../types'
 
 // Paraula base de 9 lletres: "caminants" = c:1,a:2,m:1,i:1,n:2,t:1,s:1
 // Les respostes han de ser de 3 a 7 lletres, NO la paraula base mateixa.
@@ -14,7 +14,19 @@ const solutions: GameEntry['solutions'] = {
   '7': ['cantina'],
 }
 
-const dict = new Set([
+// Crea un DictionaryIndex des d'una llista de paraules (ja normalitzades per als tests)
+function makeDictIndex(words: string[]): DictionaryIndex {
+  const lookupMap = new Map<string, string[]>()
+  const originalSet = new Set<string>()
+  for (const w of words) {
+    originalSet.add(w)
+    if (!lookupMap.has(w)) lookupMap.set(w, [])
+    lookupMap.get(w)!.push(w)
+  }
+  return { lookupMap, originalSet }
+}
+
+const dict: DictionaryIndex = makeDictIndex([
   // solucions vàlides
   'cam', 'mas', 'tan',
   'cana', 'mana', 'cant',

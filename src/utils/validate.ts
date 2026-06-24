@@ -1,73 +1,72 @@
-import type { ValidationResult, StepError, ErrorReason, Language, GameInputs, GameEntry } from '../types'
-import { normalizeWord, canBeFormedFromBase } from './normalize'
+import type { ValidationResult, StepError, ErrorReason, Language, GameInputs, GameEntry, DictionaryIndex } from '../types'
+import { normalizeForLookup, getLetterCountsForLookup } from './normalize'
+
+function canBeFormedFromBaseLookup(candidate: string, baseCounts: Record<string, number>): boolean {
+  const candCounts = getLetterCountsForLookup(candidate)
+  for (const [c, n] of Object.entries(candCounts)) {
+    if ((baseCounts[c] ?? 0) < n) return false
+  }
+  return true
+}
 
 export function validateCompleteAttempt(
   baseWord: string,
   inputs: GameInputs,
-  dictionary: Set<string>,
+  dictIndex: DictionaryIndex,
   solutions: GameEntry['solutions']
 ): ValidationResult {
-  const base = normalizeWord(baseWord)
+  const baseNorm = normalizeForLookup(baseWord)
+  const baseCounts = getLetterCountsForLookup(baseNorm)
   const errors: StepError[] = []
   const seen = new Set<string>()
 
   for (let i = 0; i < inputs.length; i++) {
     const expectedLen = 3 + i
-    const word = normalizeWord(inputs[i])
+    const rawInput = inputs[i]
+    const wordNorm = normalizeForLookup(rawInput)
     let reason: ErrorReason | null = null
 
-    if (!word) {
+    if (!wordNorm) {
       reason = 'empty'
-    } else if (/[^a-z]/.test(word)) {
-      reason = 'invalid_chars'
-    } else if (word.length !== expectedLen) {
+    } else if (wordNorm.length !== expectedLen) {
       reason = 'wrong_length'
-    } else if (seen.has(word)) {
+    } else if (seen.has(wordNorm)) {
       reason = 'duplicate'
-    } else if (!dictionary.has(word)) {
+    } else if (!dictIndex.lookupMap.has(wordNorm)) {
       reason = 'not_in_dictionary'
-    } else if (!canBeFormedFromBase(word, base)) {
+    } else if (!canBeFormedFromBaseLookup(wordNorm, baseCounts)) {
       reason = 'letters_not_in_base'
     }
 
     if (reason) {
-      errors.push({ wordLength: expectedLen, word: inputs[i], reason })
+      errors.push({ wordLength: expectedLen, word: rawInput, reason })
     } else {
-      seen.add(word)
+      seen.add(wordNorm)
     }
   }
 
   const score = 5 - errors.length
-
   return { score, errors, solutions }
 }
 
 export function reasonText(reason: ErrorReason, lang: Language): string {
-  const texts: Record<ErrorReason, Record<Language, string>> = {
-    empty: {
-      ca: 'Camp buit',
-      es: 'Campo vacío',
+  const T = {
+    ca: {
+      empty: 'Camp buit',
+      wrong_length: 'Longitud incorrecta',
+      not_in_dictionary: 'No existeix al diccionari',
+      letters_not_in_base: 'Usa lletres no disponibles',
+      duplicate: 'Paraula duplicada',
+      invalid_chars: 'Caràcters no vàlids',
     },
-    wrong_length: {
-      ca: 'Longitud incorrecta',
-      es: 'Longitud incorrecta',
-    },
-    not_in_dictionary: {
-      ca: 'Paraula no trobada al diccionari',
-      es: 'Palabra no encontrada en el diccionario',
-    },
-    letters_not_in_base: {
-      ca: 'Usa lletres que no estan disponibles',
-      es: 'Usa letras que no están disponibles',
-    },
-    duplicate: {
-      ca: 'Paraula repetida',
-      es: 'Palabra repetida',
-    },
-    invalid_chars: {
-      ca: 'Caràcters no vàlids',
-      es: 'Caracteres no válidos',
+    es: {
+      empty: 'Campo vacío',
+      wrong_length: 'Longitud incorrecta',
+      not_in_dictionary: 'No existe en el diccionario',
+      letters_not_in_base: 'Usa letras no disponibles',
+      duplicate: 'Palabra duplicada',
+      invalid_chars: 'Caracteres no válidos',
     },
   }
-  return texts[reason][lang]
+  return T[lang][reason] ?? reason
 }

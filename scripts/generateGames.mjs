@@ -34,11 +34,12 @@ const SOLUTION_LENGTHS = [3, 4, 5, 6, 7]
 
 // --- Normalització ---
 function normalize(word) {
-  return word.toLowerCase()
+  return word
+    .toLowerCase()
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/·/g, 'l')
-    .replace(/[^a-z]/g, '')
+    .replace(/[̀́̂̆̈]/g, '')
+    .normalize('NFC')
+    .replace(/[^a-zçñ·]/g, '')
 }
 
 function getLetterCounts(norm) {
