@@ -69,10 +69,13 @@ for (const game of games) {
     errors++
   }
 
-  const fromWord = baseNorm.split('').sort().join('')
-  const fromLetters = game.baseLetters.map(l => normalizeForLookup(l)).sort().join('')
-  if (fromWord !== fromLetters) {
-    console.error(`❌ [${checked}] baseLetters de "${game.baseWord}" no coincideix amb baseWord`)
+  const expectedLetters = baseNorm.split('')
+  const actualLetters = game.baseLetters.map(l => normalizeForLookup(l))
+  if (expectedLetters.slice().sort().join('') !== actualLetters.slice().sort().join('')) {
+    console.error(`❌ [${checked}] baseLetters de "${game.baseWord}" no coincideix amb baseWord (multiset diferent)`)
+    errors++
+  } else if (expectedLetters.join('') !== actualLetters.join('')) {
+    console.error(`❌ [${checked}] baseLetters de "${game.baseWord}" no respecta l'ordre (esperat: ${expectedLetters.join('')}, actual: ${actualLetters.join('')})`)
     errors++
   }
 

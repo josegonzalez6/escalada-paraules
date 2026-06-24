@@ -145,6 +145,23 @@
   letter-spacing: 0.03em;
 }
 
+.hiddenCatcher {
+  position: fixed;
+  left: -9999px;
+  top: 50%;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: transparent;
+  caret-color: transparent;
+  padding: 0;
+  margin: 0;
+}
+
 .helpBtn {
   width: 30px;
   height: 30px;

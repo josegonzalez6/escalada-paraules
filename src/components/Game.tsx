@@ -3,7 +3,6 @@ import type { Language, GameMode, ValidationResult } from '../types'
 import { useGame } from '../hooks/useGame'
 import { Timer } from './Timer'
 import { WordBoxRow } from './WordBoxRow'
-import type { WordBoxRowHandle } from './WordBoxRow'
 import { BaseWordDisplay } from './BaseWordDisplay'
 import { ResultScreen } from './ResultScreen'
 import { HowToPlay, HELP_SEEN_KEY } from './HowToPlay'
@@ -12,6 +11,7 @@ import { loadStats } from '../utils/stats'
 import { reasonText } from '../utils/validate'
 import { formatDateDisplay, loadTodayDailyResult, saveDailyResult, buildShareText } from '../utils/daily'
 import { trackDailyStarted } from '../services/analytics'
+import { applyChars, applyBackspace } from '../utils/keyboard'
 import styles from './Game.module.css'
 
 const T = {
@@ -59,13 +59,23 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
   } = useGame(lang, mode)
 
   const t = T[lang]
-  const rowRefs = useRef<(WordBoxRowHandle | null)[]>([null, null, null, null, null])
+  const hiddenInputRef = useRef<HTMLInputElement>(null)
+  const [activeRow, setActiveRow] = useState(0)
   const [showHelp, setShowHelp] = useState(() => !localStorage.getItem(HELP_SEEN_KEY))
 
   function handleCloseHelp() {
     localStorage.setItem(HELP_SEEN_KEY, '1')
     setShowHelp(false)
+    hiddenInputRef.current?.focus()
   }
+
+  // Reseteja cursor quan comença una nova partida
+  useEffect(() => {
+    if (game && phase === 'playing') {
+      setActiveRow(0)
+      hiddenInputRef.current?.focus()
+    }
+  }, [game]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const savedDaily = mode === 'daily' ? loadTodayDailyResult(lang) : null
   const showSavedResult = mode === 'daily' && savedDaily !== null && savedDaily.dateKey === todayKey
@@ -89,26 +99,33 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
     }
   }, [game, mode]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
+  const processChars = useCallback((rawChars: string) => {
     if (phase !== 'playing') return
+    const result = applyChars({ inputs, activeRow }, rawChars)
     for (let i = 0; i < 5; i++) {
-      const expectedLen = 3 + i
-      if (inputs[i].length === expectedLen && i < 4) {
-        rowRefs.current[i + 1]?.focus()
-        break
+      if (result.inputs[i] !== inputs[i]) {
+        handleInput(i, result.inputs[i])
       }
     }
-  }, [inputs, phase])
+    setActiveRow(result.activeRow)
+  }, [phase, inputs, activeRow, handleInput])
 
-  const handleBackspaceAtStart = useCallback((rowIndex: number) => {
-    if (rowIndex === 0) return
-    const prevIndex = rowIndex - 1
-    const prevValue = inputs[prevIndex]
-    if (prevValue.length > 0) {
-      handleInput(prevIndex, prevValue.slice(0, -1))
+  const handleBackspace = useCallback(() => {
+    if (phase !== 'playing') return
+    const result = applyBackspace({ inputs, activeRow })
+    for (let i = 0; i < 5; i++) {
+      if (result.inputs[i] !== inputs[i]) {
+        handleInput(i, result.inputs[i])
+      }
     }
-    rowRefs.current[prevIndex]?.focus()
-  }, [inputs, handleInput])
+    setActiveRow(result.activeRow)
+  }, [phase, inputs, activeRow, handleInput])
+
+  function handleRowClick(rowIndex: number) {
+    if (phase !== 'playing') return
+    setActiveRow(rowIndex)
+    hiddenInputRef.current?.focus()
+  }
 
   if (loading) return <div className={styles.center}><p>{t.loading}</p></div>
   if (error) return (
@@ -224,16 +241,13 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
               return (
                 <WordBoxRow
                   key={len}
-                  ref={el => { rowRefs.current[i] = el }}
                   length={len}
                   value={inputs[i]}
                   baseCounts={baseCounts}
-                  onChange={v => handleInput(i, v)}
-                  onBackspaceAtStart={() => handleBackspaceAtStart(i)}
                   status={validationResult ? (errorMap[len] ? 'error' : 'correct') : 'neutral'}
                   errorText={errorMap[len]}
-                  autoFocus={i === 0}
-                  disabled={phase !== 'playing'}
+                  isActive={activeRow === i}
+                  onRowClick={() => handleRowClick(i)}
                 />
               )
             })}
@@ -258,6 +272,39 @@ export function Game({ lang, mode, todayKey, onChangeLang, onSetMode, devMode }:
               />
             )}
           </div>
+
+          {/* Input capturador de teclat — un únic element per tota la graella */}
+          <input
+            ref={hiddenInputRef}
+            className={styles.hiddenCatcher}
+            type="text"
+            inputMode="text"
+            autoCapitalize="none"
+            autoCorrect="off"
+            autoComplete="off"
+            defaultValue=""
+            aria-hidden="true"
+            tabIndex={-1}
+            disabled={showHelp}
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement
+              const val = target.value
+              if (val) {
+                processChars(val)
+                target.value = ''
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Backspace') {
+                e.preventDefault()
+                handleBackspace()
+              }
+              if (e.key === 'Enter') {
+                e.preventDefault()
+                handleValidate()
+              }
+            }}
+          />
         </>
       )}
     </div>

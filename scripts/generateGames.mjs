@@ -153,7 +153,7 @@ function processLang(lang) {
 
     games.push({
       baseWord: base.original,
-      baseLetters: shuffle(base.original.split('')),
+      baseLetters: base.original.split(''),
       solutions,
     })
   }
