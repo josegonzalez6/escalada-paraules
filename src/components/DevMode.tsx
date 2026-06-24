@@ -27,7 +27,10 @@ export function DevMode({ game, gameCount, dictionary, lang, onRegenerate }: Pro
       <p className={styles.info}>Partides carregades: <strong>{gameCount}</strong></p>
       {game && (
         <div className={styles.solution}>
-          <p className={styles.label}>Paraula base: <span className={styles.word}>{game.baseWord.toUpperCase()}</span></p>
+          <p className={styles.label}>
+            Paraula base: <span className={styles.word}>{game.baseWord.toUpperCase()}</span>
+            {' '}— al diccionari: <strong>{dictionary.has(game.baseWord.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/·/g,'l').replace(/[^a-z]/g,'')) ? '✅' : '❌'}</strong>
+          </p>
           {([3, 4, 5, 6, 7] as const).map(len => {
             const sols = game.solutions[String(len) as keyof typeof game.solutions]
             return (

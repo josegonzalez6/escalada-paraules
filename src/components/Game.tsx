@@ -19,7 +19,6 @@ const T = {
     lang: 'Inici',
     loading: 'Carregant...',
     error: 'Error en carregar les dades.',
-    baseLabel: 'Lletres disponibles',
     hint: 'Forma paraules de 3, 4, 5, 6 i 7 lletres. No hi ha límit de temps.',
   },
   es: {
@@ -28,7 +27,6 @@ const T = {
     lang: 'Inicio',
     loading: 'Cargando...',
     error: 'Error al cargar los datos.',
-    baseLabel: 'Letras disponibles',
     hint: 'Forma palabras de 3, 4, 5, 6 y 7 letras. Sin límite de tiempo.',
   },
 }
@@ -103,7 +101,7 @@ export function Game({ lang, mode, onChangeLang, devMode }: Props) {
       ) : (
         <>
           <div className={styles.baseSection}>
-            <BaseWordDisplay letters={game.baseLetters} label={t.baseLabel} />
+            <BaseWordDisplay baseWord={game.baseWord} letters={game.baseLetters} />
           </div>
 
           <div className={styles.timerWrapper}>

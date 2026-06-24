@@ -21,14 +21,30 @@ export async function loadDictionary(lang: Language): Promise<Set<string>> {
   return words
 }
 
+function isValidEntry(entry: GameEntry): boolean {
+  const norm = normalizeWord(entry.baseWord)
+  if (norm.length < 8 || norm.length > 14) return false
+  // baseLetters ha de coincidir amb baseWord
+  const fromWord = norm.split('').sort().join('')
+  const fromLetters = entry.baseLetters.map(l => normalizeWord(l)).sort().join('')
+  if (fromWord !== fromLetters) return false
+  // totes les longituds 3-7 han de tenir solucions
+  for (const len of ['3', '4', '5', '6', '7'] as const) {
+    if (!entry.solutions[len] || entry.solutions[len].length === 0) return false
+  }
+  return true
+}
+
 export async function loadGames(lang: Language): Promise<GameEntry[]> {
   if (gamesCache[lang]) return gamesCache[lang]!
 
   const res = await fetch(`/generated/${lang}-games.json`)
   if (!res.ok) throw new Error(`Cannot load games for ${lang}. Run: npm run generate:games`)
   const data: GameEntry[] = await res.json()
-  gamesCache[lang] = data
-  return data
+  const valid = data.filter(isValidEntry)
+  if (valid.length === 0) throw new Error(`No valid games found for ${lang}. Regenerate with: npm run generate:games`)
+  gamesCache[lang] = valid
+  return valid
 }
 
 export function pickRandomGame(games: GameEntry[]): GameEntry {

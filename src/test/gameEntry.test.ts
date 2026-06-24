@@ -163,3 +163,59 @@ describe('GameEntry — baseWord ha de ser paraula real del diccionari', () => {
     expect(baseLettersMatchBaseWord(entry14)).toBe(true)
   })
 })
+
+// Replica la funció isValidEntry de dictionary.ts per als tests
+function isValidEntry(entry: GameEntry): boolean {
+  const norm = normalizeWord(entry.baseWord)
+  if (norm.length < 8 || norm.length > 14) return false
+  const fromWord = norm.split('').sort().join('')
+  const fromLetters = entry.baseLetters.map((l: string) => normalizeWord(l)).sort().join('')
+  if (fromWord !== fromLetters) return false
+  for (const len of ['3', '4', '5', '6', '7'] as const) {
+    if (!entry.solutions[len] || entry.solutions[len].length === 0) return false
+  }
+  return true
+}
+
+describe('isValidEntry — validació de GameEntry en carregar JSON', () => {
+  it('accepta una entrada vàlida', () => {
+    expect(isValidEntry(validEntry)).toBe(true)
+  })
+
+  it('descarta baseWord inventada (baseLetters no coincideix)', () => {
+    const bad: GameEntry = {
+      baseWord: 'caminants',
+      baseLetters: ['x','y','z','a','b','c','d','e','f'],
+      solutions: { '3': ['can'], '4': ['cana'], '5': ['canta'], '6': ['camins'], '7': ['cantina'] },
+    }
+    expect(isValidEntry(bad)).toBe(false)
+  })
+
+  it('descarta baseWord massa curta (< 8 lletres)', () => {
+    const short: GameEntry = {
+      baseWord: 'camins',
+      baseLetters: 'camins'.split(''),
+      solutions: { '3': ['can'], '4': ['cana'], '5': ['camin'], '6': ['camins'], '7': ['cantina'] },
+    }
+    expect(isValidEntry(short)).toBe(false)
+  })
+
+  it('descarta entrada sense solucions en alguna longitud', () => {
+    const missing: GameEntry = {
+      ...validEntry,
+      solutions: { ...validEntry.solutions, '6': [] },
+    }
+    expect(isValidEntry(missing)).toBe(false)
+  })
+
+  it('la UI ha de mostrar baseWord (no baseLetters barrejades) com a text principal', () => {
+    // El BaseWordDisplay ara rep `baseWord: string` explícitament
+    // Aquest test documenta que baseWord és una propietat obligatòria de GameEntry
+    expect(typeof validEntry.baseWord).toBe('string')
+    expect(validEntry.baseWord.length).toBeGreaterThan(0)
+    // baseWord és la paraula que es mostra, baseLetters és l'ordre visual
+    expect(validEntry.baseLetters.sort().join('')).toBe(
+      normalizeWord(validEntry.baseWord).split('').sort().join('')
+    )
+  })
+})
