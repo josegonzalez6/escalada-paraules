@@ -1,179 +1,156 @@
 import { useState } from 'react'
-import type { ValidationResult, Language, Stats, GameMode } from '../types'
-import { reasonText } from '../utils/validate'
-import { buildShareText, formatDateDisplay } from '../utils/daily'
+import type { Language, GameMode, Stats, StepError, GameEntry } from '../types'
+import { formatTime } from '../utils/daily'
+import { trackShare } from '../services/analytics'
+import { getMadridDateStr } from '../utils/daily'
 import styles from './ResultScreen.module.css'
 
 interface Props {
-  result: ValidationResult
+  score: number
+  timeUsed: number
+  errors: Set<number>
+  solutions: GameEntry['solutions'] | null
+  validationErrors: StepError[]
   lang: Language
   mode: GameMode
   stats: Stats
-  timeUsed: number
   onNewGame: () => void
-  onChangeLang: () => void
+  buildShare: () => string
+  alreadyPlayed: boolean
 }
 
 const T = {
   ca: {
-    score_label: 'Resultat',
-    perfect: '🎉 Perfecte!',
-    partial: 'Bona feina!',
-    fail: 'Segueix provant',
-    time_used: 'Temps emprat:',
-    solution: 'Solucions possibles:',
-    errors: 'Paraules incorrectes:',
+    complete: 'Escalada completada! 🎉',
+    incomplete: 'Escalada incompleta',
+    timeLabel: 'Temps complert:',
+    solutionTitle: 'Solucions:',
+    errorTitle: 'Errors:',
     letters: 'lletres',
-    new_random: '🎲 Partida aleatòria',
-    new_again: '🔄 Tornar a jugar',
-    change: '← Inici',
-    share: 'Compartir resultat',
-    shared: 'Copiat!',
-    played: 'Jugades',
-    perfect_lbl: '5/5',
-    pct: 'Encert',
-    best: 'Millor temps',
-    avg: 'Temps mitjà',
-    streak: 'Ratxa',
-    best_streak: 'Millor ratxa',
+    newRandom: '🎲 Partida aleatòria',
+    share: '📤 Compartir resultat',
+    copied: '✅ Resultat copiat!',
+    alreadyPlayedMsg: "Ja has jugat l'Escalada del dia. Torna demà!",
+    played: 'Jugades', perfect: '5/5', pct: 'Encert',
+    best: 'Millor', avg: 'Mitjana', streak: 'Ratxa', bestStreak: 'Millor ratxa',
     seconds: 's',
   },
   es: {
-    score_label: 'Resultado',
-    perfect: '🎉 ¡Perfecto!',
-    partial: '¡Buen trabajo!',
-    fail: 'Sigue intentándolo',
-    time_used: 'Tiempo usado:',
-    solution: 'Soluciones posibles:',
-    errors: 'Palabras incorrectas:',
+    complete: '¡Escalada completada! 🎉',
+    incomplete: 'Escalada incompleta',
+    timeLabel: 'Tiempo completado:',
+    solutionTitle: 'Soluciones:',
+    errorTitle: 'Errores:',
     letters: 'letras',
-    new_random: '🎲 Partida aleatoria',
-    new_again: '🔄 Volver a jugar',
-    change: '← Inicio',
-    share: 'Compartir resultado',
-    shared: '¡Copiado!',
-    played: 'Jugadas',
-    perfect_lbl: '5/5',
-    pct: 'Acierto',
-    best: 'Mejor tiempo',
-    avg: 'Tiempo medio',
-    streak: 'Racha',
-    best_streak: 'Mejor racha',
+    newRandom: '🎲 Partida aleatoria',
+    share: '📤 Compartir resultado',
+    copied: '✅ ¡Resultado copiado!',
+    alreadyPlayedMsg: '¡Ya jugaste la Escalada del día. ¡Vuelve mañana!',
+    played: 'Jugadas', perfect: '5/5', pct: 'Acierto',
+    best: 'Mejor', avg: 'Media', streak: 'Racha', bestStreak: 'Mejor racha',
     seconds: 's',
   },
 }
 
 const LENGTHS = [3, 4, 5, 6, 7] as const
 
-function fmtTime(seconds: number): string {
-  const m = Math.floor(seconds / 60)
-  const s = seconds % 60
-  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
-}
-
-export function ResultScreen({ result, lang, mode, stats, timeUsed, onNewGame, onChangeLang }: Props) {
+export function ResultScreen({
+  score, timeUsed, errors, solutions, lang, stats,
+  onNewGame, buildShare, alreadyPlayed,
+}: Props) {
   const t = T[lang]
   const [copied, setCopied] = useState(false)
-  const isPerfect = result.score === 5
+  const isPerfect = score === 5
   const pct = stats.played > 0 ? Math.round((stats.perfect / stats.played) * 100) : 0
-  const errorLengths = new Set(result.errors.map(e => e.wordLength))
-  const titleText = isPerfect ? t.perfect : result.score >= 3 ? t.partial : t.fail
 
   async function handleShare() {
-    const text = buildShareText(result.score, timeUsed, lang, mode)
+    const text = buildShare()
+    trackShare(lang, getMadridDateStr())
     try {
       if (navigator.share) {
         await navigator.share({ text })
       } else {
         await navigator.clipboard.writeText(text)
         setCopied(true)
-        setTimeout(() => setCopied(false), 2000)
+        setTimeout(() => setCopied(false), 2500)
       }
-    } catch {
-      // User cancelled share — no action needed
-    }
+    } catch { /* user cancelled */ }
   }
-
-  // formatDateDisplay unused but imported — kept for potential future use
-  void formatDateDisplay
-
-  const newBtnText = mode === 'daily' ? t.new_random : t.new_again
 
   return (
     <div className={styles.container}>
-
-      {/* Puntuació N/5 */}
       <div className={`${styles.scoreBlock} ${isPerfect ? styles.scoreBlockPerfect : ''}`}>
-        <p className={styles.scoreLabel}>{t.score_label}</p>
         <div className={styles.scoreBig}>
-          <span className={`${styles.scoreNum} ${isPerfect ? styles.scoreNumPerfect : ''}`}>
-            {result.score}
-          </span>
+          <span className={`${styles.scoreNum} ${isPerfect ? styles.scoreNumPerfect : ''}`}>{score}</span>
           <span className={styles.scoreDen}>/5</span>
         </div>
-        <p className={styles.scoreTitle}>{titleText}</p>
+        <p className={styles.scoreTitle}>{isPerfect ? t.complete : t.incomplete}</p>
         {isPerfect && (
           <p className={styles.timeRow}>
-            <span className={styles.timeLabel}>{t.time_used}</span>
-            <strong className={styles.timeValue}>{fmtTime(timeUsed)}</strong>
+            <span>{t.timeLabel}</span>
+            <strong className={styles.timeVal}>{formatTime(timeUsed)}</strong>
           </p>
         )}
       </div>
 
-      {/* Errors */}
-      {result.errors.length > 0 && (
-        <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>{t.errors}</h3>
-          {result.errors.map((e, i) => (
-            <div key={i} className={styles.errorItem}>
-              <span className={styles.errorStep}>{e.wordLength} {t.letters}</span>
-              <span className={styles.errorWord}>«{e.word || '—'}»</span>
-              <span className={styles.errorReason}>{reasonText(e.reason, lang)}</span>
+      <div className={styles.emojiGrid}>
+        {LENGTHS.map(len => {
+          const ok = !errors.has(len)
+          const emoji = ok ? '🟩' : '🟥'
+          return (
+            <div key={len} className={styles.emojiRow}>
+              {Array.from({ length: len }, (_, i) => (
+                <span key={i} className={styles.emojiCell}>{emoji}</span>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
+          )
+        })}
+      </div>
 
-      {/* Solucions possibles */}
-      <div className={styles.section}>
-        <h3 className={styles.sectionTitle}>{t.solution}</h3>
-        <div className={styles.solution}>
+      {solutions && (
+        <div className={styles.section}>
+          <h3 className={styles.sectionTitle}>{t.solutionTitle}</h3>
           {LENGTHS.map(len => {
-            const words = result.solutions[String(len) as keyof typeof result.solutions]
+            const words = solutions[String(len) as keyof typeof solutions]
             const example = words[0] ?? '—'
-            const hadError = errorLengths.has(len)
+            const failed = errors.has(len)
             return (
-              <div key={len} className={`${styles.solutionStep} ${hadError ? styles.solutionFailed : styles.solutionOk}`}>
-                <span className={`${styles.solutionLen} ${hadError ? styles.solutionLenFailed : styles.solutionLenOk}`}>
-                  {len}
-                </span>
+              <div key={len} className={`${styles.solutionRow} ${failed ? styles.solutionFailed : styles.solutionOk}`}>
+                <span className={`${styles.solutionLen} ${failed ? styles.solutionLenFailed : styles.solutionLenOk}`}>{len}</span>
                 <span className={styles.solutionWord}>{example.toUpperCase()}</span>
-                {words.length > 1 && (
-                  <span className={styles.solutionAlt}>+{words.length - 1}</span>
-                )}
+                {words.length > 1 && <span className={styles.solutionAlt}>+{words.length - 1}</span>}
               </div>
             )
           })}
         </div>
+      )}
+
+      <div className={styles.stats}>
+        {[
+          [stats.played, t.played],
+          [stats.perfect, t.perfect],
+          [`${pct}%`, t.pct],
+          [stats.bestTime !== null ? formatTime(stats.bestTime) : '—', t.best],
+          [stats.avgTime !== null ? formatTime(stats.avgTime) : '—', t.avg],
+          [stats.currentStreak, t.streak],
+          [stats.bestStreak, t.bestStreak],
+        ].map(([val, lbl], i) => (
+          <div key={i} className={styles.statItem}>
+            <span className={styles.statVal}>{val}</span>
+            <span className={styles.statLbl}>{lbl as string}</span>
+          </div>
+        ))}
       </div>
 
-      {/* Estadístiques */}
-      <div className={styles.stats}>
-        <div className={styles.statItem}><span className={styles.statVal}>{stats.played}</span><span className={styles.statLbl}>{t.played}</span></div>
-        <div className={styles.statItem}><span className={styles.statVal}>{stats.perfect}</span><span className={styles.statLbl}>{t.perfect_lbl}</span></div>
-        <div className={styles.statItem}><span className={styles.statVal}>{pct}%</span><span className={styles.statLbl}>{t.pct}</span></div>
-        <div className={styles.statItem}><span className={styles.statVal}>{stats.bestTime !== null ? fmtTime(stats.bestTime) : '—'}</span><span className={styles.statLbl}>{t.best}</span></div>
-        <div className={styles.statItem}><span className={styles.statVal}>{stats.avgTime !== null ? fmtTime(stats.avgTime) : '—'}</span><span className={styles.statLbl}>{t.avg}</span></div>
-        <div className={styles.statItem}><span className={styles.statVal}>{stats.currentStreak}</span><span className={styles.statLbl}>{t.streak}</span></div>
-        <div className={styles.statItem}><span className={styles.statVal}>{stats.bestStreak}</span><span className={styles.statLbl}>{t.best_streak}</span></div>
-      </div>
+      {alreadyPlayed && (
+        <p className={styles.alreadyMsg}>{t.alreadyPlayedMsg}</p>
+      )}
 
       <div className={styles.actions}>
         <button className={styles.shareBtn} onClick={handleShare}>
-          {copied ? t.shared : t.share}
+          {copied ? t.copied : t.share}
         </button>
-        <button className={styles.btnPrimary} onClick={onNewGame}>{newBtnText}</button>
-        <button className={styles.btnSecondary} onClick={onChangeLang}>{t.change}</button>
+        <button className={styles.btnPrimary} onClick={onNewGame}>{t.newRandom}</button>
       </div>
     </div>
   )

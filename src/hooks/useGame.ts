@@ -3,7 +3,7 @@ import type { Language, ValidationResult, GameEntry, GameInputs, GameMode } from
 import { loadDictionary, loadGames, pickRandomGame } from '../utils/dictionary'
 import { pickDailyGame } from '../utils/daily'
 import { validateCompleteAttempt } from '../utils/validate'
-import { normalizeWord } from '../utils/normalize'
+import { normalizeWord, getLetterCounts } from '../utils/normalize'
 import { saveResult } from '../utils/stats'
 
 const EMPTY_INPUTS: GameInputs = ['', '', '', '', '']
@@ -112,9 +112,11 @@ export function useGame(lang: Language, mode: GameMode) {
     }
   }, [games, dictionary, initGame])
 
+  const baseCounts = game ? getLetterCounts(normalizeWord(game.baseWord)) : {}
+
   return {
     phase, elapsed, timeUsed, inputs, game, validationResult,
     loading, error, gameCount: games.length, dictionary,
-    handleInput, handleValidate, handleNewGame,
+    handleInput, handleValidate, handleNewGame, baseCounts,
   }
 }

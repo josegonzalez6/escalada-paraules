@@ -1,0 +1,176 @@
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+  font-family: inherit;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.header h1 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #6366f1;
+  margin: 0;
+}
+
+.headerActions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.select {
+  padding: 0.4rem 0.6rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.btnSecondary {
+  padding: 0.4rem 0.8rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.loading { color: #94a3b8; padding: 1rem; }
+
+.content {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 600px) {
+  .content { grid-template-columns: 1fr; }
+}
+
+.dayList {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.dayBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.dayBtnSelected { background: #eef2ff; border-color: #6366f1; }
+.dayBtnToday { font-weight: 700; }
+.dayBtnPast { opacity: 0.7; }
+.dayBtnFuture { color: #6366f1; }
+
+.dayDate { font-size: 0.8rem; }
+
+.todayBadge {
+  font-size: 0.65rem;
+  background: #6366f1;
+  color: white;
+  border-radius: 4px;
+  padding: 0.1rem 0.35rem;
+  font-weight: 700;
+}
+
+.detail { padding: 0 0.5rem; }
+.detail h2 { font-size: 1.2rem; font-weight: 800; color: #1a1a2e; margin: 0 0 0.25rem; }
+.meta { font-size: 0.8rem; color: #64748b; margin: 0 0 1rem; }
+
+.gameCard {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fieldLabel { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin: 0.5rem 0 0.1rem; }
+.fieldLabel:first-child { margin-top: 0; }
+
+.baseWord { font-size: 1.5rem; font-weight: 900; color: #6366f1; letter-spacing: 0.1em; margin: 0; }
+
+.tiles { display: flex; gap: 4px; flex-wrap: wrap; }
+
+.tile {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: #6366f1;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.solRow { display: flex; gap: 0.5rem; align-items: baseline; }
+.solLen { font-size: 0.75rem; font-weight: 700; color: #6366f1; min-width: 20px; }
+.solWords { font-size: 0.85rem; color: #1a1a2e; }
+
+.loginPage {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.loginPage h1 { font-size: 1.5rem; font-weight: 800; color: #6366f1; }
+
+.loginForm { display: flex; gap: 0.5rem; }
+
+.loginInput {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.loginInput:focus { border-color: #6366f1; }
+
+.loginBtn {
+  padding: 0.75rem 1.5rem;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.loginNote { font-size: 0.85rem; color: #94a3b8; }
+.loginNote a { color: #6366f1; }

@@ -22,33 +22,11 @@
   letter-spacing: -0.02em;
 }
 
-.langBtn {
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 0.4rem 0.8rem;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 8px;
-  background: white;
-  color: #64748b;
-  -webkit-tap-highlight-color: transparent;
-}
-
 .baseSection {
   padding: 0.875rem 1rem 0.5rem;
   text-align: center;
   background: #f8f9fa;
   border-bottom: 1px solid #e2e8f0;
-}
-
-.baseLabel {
-  font-size: 0.75rem;
-  color: #94a3b8;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-}
-
-.timerWrapper {
-  padding: 0.75rem 1rem 0.25rem;
 }
 
 .board {
@@ -87,33 +65,10 @@
   background: #4f46e5;
 }
 
-.newBtn {
-  width: 100%;
-  padding: 0.875rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  background: transparent;
-  color: #64748b;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.newBtn:active {
-  border-color: #94a3b8;
-}
-
 .headerLeft {
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
-}
-
-.dailyBadge {
-  font-size: 0.65rem;
-  color: #94a3b8;
-  font-weight: 500;
-  letter-spacing: 0.03em;
 }
 
 .center {
@@ -138,10 +93,54 @@
   color: #94a3b8;
 }
 
+.timerRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem 0.25rem;
+}
+
 .hint {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   color: #94a3b8;
-  padding: 0 1rem;
   margin: 0;
   line-height: 1.4;
+  flex: 1;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.langSelect {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.3rem 0.5rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  color: #64748b;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+.modeToggle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  color: #6366f1;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dateBadge {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  font-weight: 500;
+  letter-spacing: 0.03em;
 }

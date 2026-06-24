@@ -46,3 +46,12 @@ export interface Stats {
   currentStreak: number  // ratxa de 5/5 consecutius
   bestStreak: number
 }
+
+export interface DailyResult {
+  dateKey: string        // 'YYYY-MM-DD' Europe/Madrid
+  lang: Language
+  score: number
+  timeUsed: number       // 0 si no és 5/5
+  inputs: GameInputs     // les respostes introduïdes
+  timestamp: number      // Date.now()
+}

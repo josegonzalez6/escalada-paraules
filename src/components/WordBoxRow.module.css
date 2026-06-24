@@ -48,7 +48,6 @@
 .boxEmpty {
   border: 2px solid #cbd5e1;
   background: white;
-  color: transparent;
 }
 
 .boxFilled {
@@ -57,13 +56,10 @@
   color: #3730a3;
 }
 
-.boxCursor {
-  border-color: #6366f1;
-  animation: blink 1s step-start infinite;
-}
-
-@keyframes blink {
-  50% { border-color: #a5b4fc; }
+.boxInvalid {
+  border-color: #ef4444 !important;
+  background: #fef2f2 !important;
+  color: #991b1b !important;
 }
 
 .boxCorrect {
