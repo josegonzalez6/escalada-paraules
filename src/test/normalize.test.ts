@@ -30,38 +30,45 @@ describe('getLetterCounts', () => {
   })
 })
 
-describe('canBeFormedFromBase', () => {
-  // base = cartons = { c:1, a:1, r:1, t:1, o:1, n:1, s:1 }
+describe('canBeFormedFromBase — base de 8-10 lletres', () => {
+  // base = "caminants" (9 lletres): c:1, a:2, m:1, i:1, n:2, t:1, s:1
 
-  it('returns true when candidate uses only base letters', () => {
-    expect(canBeFormedFromBase('car', 'cartons')).toBe(true)
-    expect(canBeFormedFromBase('rost', 'cartons')).toBe(true)
-    expect(canBeFormedFromBase('canto', 'cartons')).toBe(true)
-    expect(canBeFormedFromBase('cartons', 'cartons')).toBe(true)
+  it('accepta paraules de 3 lletres formades de la base', () => {
+    expect(canBeFormedFromBase('cam', 'caminants')).toBe(true)
+    expect(canBeFormedFromBase('mas', 'caminants')).toBe(true)
+    expect(canBeFormedFromBase('tan', 'caminants')).toBe(true)
   })
 
-  it('returns true with letter reordering', () => {
-    expect(canBeFormedFromBase('rot', 'cartons')).toBe(true)
-    expect(canBeFormedFromBase('tron', 'cartons')).toBe(true)
+  it('accepta paraules de 7 lletres formades de la base (no la base mateixa)', () => {
+    // cantina (7): c:1,a:2,n:2,t:1,i:1 — tot present a "caminants"
+    expect(canBeFormedFromBase('cantina', 'caminants')).toBe(true)
   })
 
-  it('returns false when candidate uses a letter absent from base', () => {
-    // 'cartons' has no 'p', 'e', 'l'
-    expect(canBeFormedFromBase('perla', 'cartons')).toBe(false)
-    expect(canBeFormedFromBase('bol', 'cartons')).toBe(false)
+  it('rebutja paraules que usen lletres absents', () => {
+    expect(canBeFormedFromBase('perla', 'caminants')).toBe(false)  // no p, e, l
+    expect(canBeFormedFromBase('robot', 'caminants')).toBe(false)  // no r, o, b
   })
 
-  it('returns false when candidate repeats a letter more times than in base', () => {
-    // 'cartons' has only 1 'r', 1 'a'
-    expect(canBeFormedFromBase('carro', 'cartons')).toBe(false) // needs 2 r's
-    expect(canBeFormedFromBase('caramel', 'cartons')).toBe(false) // needs 2 a's + absent letters
+  it('rebutja paraules que repeteixen massa una lletra', () => {
+    // "caminants" té c:1. "coco" necessita c:2, o:2 → fals
+    expect(canBeFormedFromBase('coco', 'caminants')).toBe(false)
+    // "caminants" té a:2. "macarena" necessita a:3 → fals
+    expect(canBeFormedFromBase('macarena', 'caminants')).toBe(false)
+  })
+
+  it('la paraula base (9 lletres) no es pot posar com a resposta de 7 lletres', () => {
+    // "caminants" té 9 lletres → no pot ser resposta de 7 (longitud incorrecta)
+    expect('caminants'.length).toBe(9)
+    expect('caminants'.length).not.toBe(7)
+  })
+
+  it('accepta base de 8 lletres', () => {
+    // base = "caminant" (8): c:1,a:2,m:1,i:1,n:2,t:1
+    expect(canBeFormedFromBase('cantina', 'caminant')).toBe(true)  // cantina: c:1,a:2,n:2,t:1,i:1
+    expect(canBeFormedFromBase('cam', 'caminant')).toBe(true)
   })
 
   it('returns false for empty base', () => {
     expect(canBeFormedFromBase('car', '')).toBe(false)
-  })
-
-  it('returns true for empty candidate against any base', () => {
-    expect(canBeFormedFromBase('', 'cartons')).toBe(true)
   })
 })

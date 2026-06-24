@@ -1,49 +1,215 @@
 [
   {
-    "baseWord": "marcats",
+    "baseWord": "caminant",
+    "baseLetters": [
+      "n",
+      "m",
+      "t",
+      "n",
+      "c",
+      "i",
+      "a",
+      "a"
+    ],
+    "solutions": {
+      "3": [
+        "can",
+        "man",
+        "mac",
+        "cam",
+        "nit",
+        "nim",
+        "mai",
+        "tan",
+        "tic",
+        "cim"
+      ],
+      "4": [
+        "cana",
+        "mana",
+        "maca",
+        "cami",
+        "mina",
+        "tina",
+        "cant"
+      ],
+      "5": [
+        "camin",
+        "manta",
+        "matin"
+      ],
+      "6": [
+        "mantic"
+      ],
+      "7": [
+        "cantina"
+      ]
+    }
+  },
+  {
+    "baseWord": "caminars",
+    "baseLetters": [
+      "i",
+      "c",
+      "m",
+      "a",
+      "r",
+      "a",
+      "s",
+      "n"
+    ],
     "solutions": {
       "3": [
         "mar",
+        "can",
+        "man",
         "car",
         "ras",
         "mas",
+        "nas",
         "cas",
         "mac",
-        "sac",
-        "arc"
+        "sac"
       ],
       "4": [
         "mars",
         "marc",
+        "cans",
+        "cana",
+        "mans",
+        "mana",
         "cars",
         "cara",
         "rasa",
+        "masa"
+      ],
+      "5": [
+        "marcs",
+        "marca",
+        "masar",
+        "nasar",
+        "casar",
+        "macar",
+        "sacar",
+        "ansar",
+        "camin"
+      ],
+      "6": [
+        "macars",
+        "camins"
+      ],
+      "7": [
+        "caminar"
+      ]
+    }
+  },
+  {
+    "baseWord": "caminats",
+    "baseLetters": [
+      "s",
+      "i",
+      "t",
+      "c",
+      "m",
+      "a",
+      "a",
+      "n"
+    ],
+    "solutions": {
+      "3": [
+        "can",
+        "man",
+        "mas",
+        "nas",
+        "cas",
+        "mac",
+        "sac",
+        "ans",
+        "cam",
+        "nit"
+      ],
+      "4": [
+        "cans",
+        "cana",
+        "mans",
+        "mana",
         "masa",
+        "nasa",
         "casa",
         "macs",
         "maca",
         "saca"
       ],
       "5": [
-        "marcs",
-        "marca",
-        "masar",
-        "casar",
-        "macar",
-        "sacar"
+        "camin",
+        "manta",
+        "santa",
+        "cants",
+        "matin"
       ],
       "6": [
-        "macars",
         "macats",
-        "arcats"
+        "camins",
+        "mantis",
+        "matins",
+        "mantic"
       ],
       "7": [
-        "marcats"
+        "mantics"
       ]
     }
   },
   {
-    "baseWord": "maneres",
+    "baseWord": "cantinar",
+    "baseLetters": [
+      "n",
+      "a",
+      "t",
+      "r",
+      "c",
+      "n",
+      "i",
+      "a"
+    ],
+    "solutions": {
+      "3": [
+        "can",
+        "car",
+        "arc",
+        "nit",
+        "tan",
+        "tic"
+      ],
+      "4": [
+        "cana",
+        "cara",
+        "arca",
+        "tina",
+        "cant"
+      ],
+      "5": [
+        "tinar"
+      ],
+      "6": [
+        "cantar"
+      ],
+      "7": [
+        "cantina"
+      ]
+    }
+  },
+  {
+    "baseWord": "matinars",
+    "baseLetters": [
+      "i",
+      "a",
+      "s",
+      "t",
+      "r",
+      "a",
+      "m",
+      "n"
+    ],
     "solutions": {
       "3": [
         "mar",
@@ -51,44 +217,263 @@
         "ras",
         "mas",
         "nas",
-        "ans"
+        "ans",
+        "nit",
+        "nim",
+        "mai",
+        "mis"
       ],
       "4": [
         "mars",
-        "mans"
+        "mans",
+        "mana",
+        "rasa",
+        "masa",
+        "nasa",
+        "ansa",
+        "nits",
+        "mina",
+        "tina"
       ],
       "5": [
-        "manes",
-        "maner"
+        "masar",
+        "nasar",
+        "ansar",
+        "tinar",
+        "manta",
+        "santa",
+        "matin"
       ],
       "6": [
-        "maners"
+        "mantis",
+        "matins",
+        "tinars",
+        "mantar",
+        "santar"
       ],
       "7": [
-        "maneres"
+        "mantars",
+        "matinar"
       ]
     }
   },
   {
-    "baseWord": "pareres",
+    "baseWord": "matinals",
+    "baseLetters": [
+      "t",
+      "a",
+      "a",
+      "m",
+      "l",
+      "n",
+      "s",
+      "i"
+    ],
     "solutions": {
       "3": [
-        "par",
-        "ras",
-        "pas"
+        "sal",
+        "man",
+        "mas",
+        "nas",
+        "ans",
+        "nit",
+        "nim",
+        "mai",
+        "mis",
+        "sin"
       ],
       "4": [
-        "pars"
+        "sala",
+        "mans",
+        "mana",
+        "masa",
+        "nasa",
+        "ansa",
+        "nits",
+        "mina",
+        "tina"
       ],
       "5": [
-        "pares",
-        "parer"
+        "manta",
+        "santa",
+        "matin"
       ],
       "6": [
-        "parers"
+        "mantis",
+        "matins"
       ],
       "7": [
-        "pareres"
+        "matinal"
+      ]
+    }
+  },
+  {
+    "baseWord": "caminants",
+    "baseLetters": [
+      "s",
+      "i",
+      "t",
+      "a",
+      "n",
+      "a",
+      "m",
+      "c",
+      "n"
+    ],
+    "solutions": {
+      "3": [
+        "can",
+        "man",
+        "mas",
+        "nas",
+        "cas",
+        "mac",
+        "sac",
+        "ans",
+        "cam",
+        "nit"
+      ],
+      "4": [
+        "cans",
+        "cana",
+        "mans",
+        "mana",
+        "masa",
+        "nasa",
+        "casa",
+        "macs",
+        "maca",
+        "saca"
+      ],
+      "5": [
+        "camin",
+        "manta",
+        "santa",
+        "cants",
+        "matin"
+      ],
+      "6": [
+        "macats",
+        "camins",
+        "mantis",
+        "matins",
+        "mantic"
+      ],
+      "7": [
+        "cantina",
+        "mantics"
+      ]
+    }
+  },
+  {
+    "baseWord": "cantinars",
+    "baseLetters": [
+      "n",
+      "a",
+      "n",
+      "c",
+      "s",
+      "r",
+      "t",
+      "i",
+      "a"
+    ],
+    "solutions": {
+      "3": [
+        "can",
+        "car",
+        "ras",
+        "nas",
+        "cas",
+        "sac",
+        "arc",
+        "ans",
+        "nit",
+        "sin"
+      ],
+      "4": [
+        "cans",
+        "cana",
+        "cars",
+        "cara",
+        "rasa",
+        "nasa",
+        "casa",
+        "saca",
+        "arcs",
+        "arca"
+      ],
+      "5": [
+        "nasar",
+        "casar",
+        "sacar",
+        "ansar",
+        "tinar",
+        "santa",
+        "cants"
+      ],
+      "6": [
+        "arcats",
+        "tinars",
+        "santar",
+        "cantar"
+      ],
+      "7": [
+        "cantina",
+        "cantars"
+      ]
+    }
+  },
+  {
+    "baseWord": "cantinats",
+    "baseLetters": [
+      "a",
+      "s",
+      "c",
+      "i",
+      "t",
+      "n",
+      "t",
+      "a",
+      "n"
+    ],
+    "solutions": {
+      "3": [
+        "can",
+        "nas",
+        "cas",
+        "sac",
+        "ans",
+        "nit",
+        "sin",
+        "tan",
+        "tic"
+      ],
+      "4": [
+        "cans",
+        "cana",
+        "nasa",
+        "casa",
+        "saca",
+        "ansa",
+        "nits",
+        "tina",
+        "tant",
+        "cant"
+      ],
+      "5": [
+        "santa",
+        "tants",
+        "tanta",
+        "cants"
+      ],
+      "6": [
+        "tinats",
+        "tantas"
+      ],
+      "7": [
+        "cantina",
+        "cantats"
       ]
     }
   }

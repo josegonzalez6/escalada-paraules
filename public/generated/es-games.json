@@ -1,81 +1,255 @@
 [
   {
-    "baseWord": "soleras",
-    "solutions": {
-      "3": [
-        "sol",
-        "sal",
-        "res",
-        "ras"
-      ],
-      "4": [
-        "sole",
-        "resa"
-      ],
-      "5": [
-        "soler",
-        "resal"
-      ],
-      "6": [
-        "solera"
-      ],
-      "7": [
-        "soleras"
-      ]
-    }
-  },
-  {
-    "baseWord": "caparas",
+    "baseWord": "paradeos",
+    "baseLetters": [
+      "e",
+      "s",
+      "o",
+      "a",
+      "d",
+      "a",
+      "r",
+      "p"
+    ],
     "solutions": {
       "3": [
         "par",
-        "cas",
+        "dos",
+        "res",
+        "red",
         "ras"
       ],
       "4": [
-        "capa",
         "para",
-        "casa",
+        "dosa",
+        "resa",
+        "reda",
         "rasa"
       ],
       "5": [
-        "capas",
-        "capar",
-        "casar"
+        "redas"
       ],
       "6": [
-        "capara"
+        "parade"
       ],
       "7": [
-        "caparas"
+        "paradeo"
       ]
     }
   },
   {
-    "baseWord": "camaras",
+    "baseWord": "riojanas",
+    "baseLetters": [
+      "s",
+      "i",
+      "a",
+      "a",
+      "n",
+      "j",
+      "r",
+      "o"
+    ],
     "solutions": {
       "3": [
-        "mar",
+        "rio",
+        "nas",
+        "ras"
+      ],
+      "4": [
+        "rion",
+        "nasa",
+        "rasa"
+      ],
+      "5": [
+        "riona",
+        "nasar"
+      ],
+      "6": [
+        "rionas"
+      ],
+      "7": [
+        "riojana"
+      ]
+    }
+  },
+  {
+    "baseWord": "matinals",
+    "baseLetters": [
+      "a",
+      "i",
+      "m",
+      "a",
+      "t",
+      "n",
+      "s",
+      "l"
+    ],
+    "solutions": {
+      "3": [
+        "sal",
+        "mal",
+        "mas",
+        "nas",
+        "nit",
+        "tan"
+      ],
+      "4": [
+        "sala",
+        "mala",
+        "masa",
+        "nasa",
+        "mina"
+      ],
+      "5": [
+        "malas",
+        "minas",
+        "manta",
+        "santa"
+      ],
+      "6": [
+        "mantis",
+        "mantas"
+      ],
+      "7": [
+        "matinal"
+      ]
+    }
+  },
+  {
+    "baseWord": "matinales",
+    "baseLetters": [
+      "s",
+      "l",
+      "i",
+      "m",
+      "t",
+      "n",
+      "e",
+      "a",
+      "a"
+    ],
+    "solutions": {
+      "3": [
+        "sal",
+        "mal",
+        "mas",
+        "nas",
+        "nit",
+        "tan"
+      ],
+      "4": [
+        "sala",
+        "mala",
+        "masa",
+        "nasa",
+        "mina"
+      ],
+      "5": [
+        "malas",
+        "minas",
+        "manta",
+        "santa"
+      ],
+      "6": [
+        "mantis",
+        "mantas"
+      ],
+      "7": [
+        "matinal"
+      ]
+    }
+  },
+  {
+    "baseWord": "caminantes",
+    "baseLetters": [
+      "n",
+      "m",
+      "a",
+      "a",
+      "c",
+      "s",
+      "e",
+      "n",
+      "i",
+      "t"
+    ],
+    "solutions": {
+      "3": [
         "mas",
         "cas",
-        "ras"
+        "nas",
+        "cam",
+        "nit",
+        "tan",
+        "tic"
       ],
       "4": [
         "cama",
         "masa",
         "casa",
-        "rasa"
+        "nasa",
+        "cima",
+        "mina",
+        "cant"
       ],
       "5": [
         "camas",
-        "masar",
-        "casar"
+        "minas",
+        "manta",
+        "santa"
       ],
       "6": [
-        "camara"
+        "mantis",
+        "mantas"
       ],
       "7": [
-        "camaras"
+        "cantina"
+      ]
+    }
+  },
+  {
+    "baseWord": "salmantino",
+    "baseLetters": [
+      "n",
+      "l",
+      "o",
+      "a",
+      "t",
+      "i",
+      "a",
+      "n",
+      "s",
+      "m"
+    ],
+    "solutions": {
+      "3": [
+        "sol",
+        "sal",
+        "mal",
+        "mas",
+        "nas",
+        "nit",
+        "tan"
+      ],
+      "4": [
+        "sala",
+        "mala",
+        "masa",
+        "nasa",
+        "mina"
+      ],
+      "5": [
+        "malas",
+        "minas",
+        "manta",
+        "santa"
+      ],
+      "6": [
+        "mantis",
+        "mantas"
+      ],
+      "7": [
+        "matinal"
       ]
     }
   }

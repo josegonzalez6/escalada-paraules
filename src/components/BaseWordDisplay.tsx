@@ -1,16 +1,17 @@
 import styles from './BaseWordDisplay.module.css'
 
 interface Props {
-  word: string
+  letters: string[]
+  label: string
 }
 
-export function BaseWordDisplay({ word }: Props) {
-  const letters = word.toUpperCase().split('')
+export function BaseWordDisplay({ letters, label }: Props) {
   return (
     <div className={styles.wrapper}>
+      <p className={styles.label}>{label}</p>
       <div className={styles.tiles}>
         {letters.map((l, i) => (
-          <div key={i} className={styles.tile}>{l}</div>
+          <div key={i} className={styles.tile}>{l.toUpperCase()}</div>
         ))}
       </div>
     </div>

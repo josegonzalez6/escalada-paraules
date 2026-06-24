@@ -17,6 +17,7 @@ export function useGame(lang: Language) {
   const [dictionary, setDictionary] = useState<Set<string>>(new Set())
   const [games, setGames] = useState<GameEntry[]>([])
   const [validationResult, setValidationResult] = useState<ValidationResult | null>(null)
+  const [timeUsed, setTimeUsed] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -44,7 +45,9 @@ export function useGame(lang: Language) {
       currentGame.solutions
     )
     setValidationResult(result)
-    saveResult(lang, result.success, GAME_DURATION - timeLeftRef.current)
+    const used = GAME_DURATION - timeLeftRef.current
+    setTimeUsed(used)
+    saveResult(lang, result.score, used)
   }, [lang, stopTimer])
 
   const startTimer = useCallback(() => {
@@ -75,6 +78,7 @@ export function useGame(lang: Language) {
     setInputs(fresh)
     setTimeLeft(GAME_DURATION)
     setValidationResult(null)
+    setTimeUsed(0)
     setPhase('playing')
     startTimer()
   }, [stopTimer, startTimer])
@@ -126,6 +130,7 @@ export function useGame(lang: Language) {
   return {
     phase,
     timeLeft,
+    timeUsed,
     inputs,
     game,
     validationResult,

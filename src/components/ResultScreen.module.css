@@ -5,19 +5,83 @@
   gap: 1.25rem;
 }
 
-.title {
-  font-size: 1.5rem;
-  font-weight: 800;
+/* Bloc de puntuació N/5 */
+.scoreBlock {
   text-align: center;
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 1.25rem 1rem;
+  border: 2px solid #e2e8f0;
 }
 
-.titleOk { color: #22c55e; }
-.titleFail { color: #ef4444; }
+.scoreBlockPerfect {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
 
+.scoreLabel {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #94a3b8;
+  margin-bottom: 0.25rem;
+}
+
+.scoreBig {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.1rem;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.scoreNum {
+  font-size: 4rem;
+  font-weight: 900;
+  color: #6366f1;
+  letter-spacing: -0.04em;
+}
+
+.scoreNumPerfect {
+  color: #22c55e;
+}
+
+.scoreDen {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.scoreTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.timeRow {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.timeLabel { }
+
+.timeValue {
+  color: #22c55e;
+  font-size: 1rem;
+}
+
+/* Seccions */
 .section {}
 
 .sectionTitle {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -25,6 +89,7 @@
   margin-bottom: 0.5rem;
 }
 
+/* Errors */
 .errorItem {
   display: flex;
   flex-direction: column;
@@ -39,6 +104,7 @@
 .errorWord { font-size: 1rem; font-weight: 700; color: #ef4444; }
 .errorReason { font-size: 0.8rem; color: #64748b; }
 
+/* Solucions */
 .solution {
   display: flex;
   flex-direction: column;
@@ -49,22 +115,38 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: #f8fafc;
   border-radius: 8px;
   padding: 0.5rem 0.75rem;
+}
+
+.solutionOk {
+  background: #f0fdf4;
+}
+
+.solutionFailed {
+  background: #fef2f2;
 }
 
 .solutionLen {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #6366f1;
-  color: white;
   font-size: 0.75rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+}
+
+.solutionLenOk {
+  background: #22c55e;
+  color: white;
+}
+
+.solutionLenFailed {
+  background: #ef4444;
+  color: white;
 }
 
 .solutionWord {
@@ -81,6 +163,7 @@
   font-weight: 500;
 }
 
+/* Estadístiques */
 .stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

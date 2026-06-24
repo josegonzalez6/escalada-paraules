@@ -6,7 +6,8 @@ export type GamePhase = 'playing' | 'finished'
 export type GameInputs = [string, string, string, string, string]
 
 export interface GameEntry {
-  baseWord: string
+  baseWord: string       // paraula base de 8-10 lletres (conjunt de lletres disponibles)
+  baseLetters: string[]  // lletres individuals de baseWord, per mostrar a la UI
   solutions: {
     '3': string[]
     '4': string[]
@@ -17,8 +18,8 @@ export interface GameEntry {
 }
 
 export interface ValidationResult {
-  success: boolean
-  errors: StepError[]
+  score: number          // 0-5: quantes paraules eren correctes
+  errors: StepError[]   // errors per cada longitud que ha fallat
   solutions: GameEntry['solutions']
 }
 
@@ -38,8 +39,8 @@ export type ErrorReason =
 
 export interface Stats {
   played: number
-  won: number
-  bestTime: number | null
-  currentStreak: number
+  perfect: number        // partides amb 5/5
+  bestTime: number | null // només per 5/5
+  currentStreak: number  // ratxa de 5/5 consecutius
   bestStreak: number
 }

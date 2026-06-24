@@ -18,7 +18,7 @@ const T = {
     lang: 'Idioma',
     loading: 'Carregant...',
     error: 'Error en carregar les dades.',
-    baseLabel: 'Paraula base — forma paraules de 3 a 7 lletres',
+    baseLabel: 'Lletres disponibles',
   },
   es: {
     validate: 'Validar escalada',
@@ -26,7 +26,7 @@ const T = {
     lang: 'Idioma',
     loading: 'Cargando...',
     error: 'Error al cargar los datos.',
-    baseLabel: 'Palabra base — forma palabras de 3 a 7 letras',
+    baseLabel: 'Letras disponibles',
   },
 }
 
@@ -38,7 +38,7 @@ interface Props {
 
 export function Game({ lang, onChangeLang, devMode }: Props) {
   const {
-    phase, timeLeft, inputs, game, validationResult, loading, error,
+    phase, timeLeft, timeUsed, inputs, game, validationResult, loading, error,
     gameCount, dictionary, handleInput, handleValidate, handleNewGame,
   } = useGame(lang)
 
@@ -59,7 +59,6 @@ export function Game({ lang, onChangeLang, devMode }: Props) {
 
   if (!game) return null
 
-  // Mapa d'errors per longitud de paraula
   const errorMap: Record<number, string> = {}
   if (validationResult) {
     for (const e of validationResult.errors) {
@@ -79,14 +78,14 @@ export function Game({ lang, onChangeLang, devMode }: Props) {
           result={validationResult}
           lang={lang}
           stats={loadStats(lang)}
+          timeUsed={timeUsed}
           onNewGame={handleNewGame}
           onChangeLang={onChangeLang}
         />
       ) : (
         <>
           <div className={styles.baseSection}>
-            <p className={styles.baseLabel}>{t.baseLabel}</p>
-            <BaseWordDisplay word={game.baseWord} />
+            <BaseWordDisplay letters={game.baseLetters} label={t.baseLabel} />
           </div>
 
           <div className={styles.timerWrapper}>

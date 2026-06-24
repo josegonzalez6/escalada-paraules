@@ -37,7 +37,9 @@ export function validateCompleteAttempt(
     }
   }
 
-  return { success: errors.length === 0, errors, solutions }
+  const score = 5 - errors.length
+
+  return { score, errors, solutions }
 }
 
 export function reasonText(reason: ErrorReason, lang: Language): string {
@@ -55,8 +57,8 @@ export function reasonText(reason: ErrorReason, lang: Language): string {
       es: 'Palabra no encontrada en el diccionario',
     },
     letters_not_in_base: {
-      ca: 'Usa lletres que no estan a la paraula base',
-      es: 'Usa letras que no están en la palabra base',
+      ca: 'Usa lletres que no estan disponibles',
+      es: 'Usa letras que no están disponibles',
     },
     duplicate: {
       ca: 'Paraula repetida',

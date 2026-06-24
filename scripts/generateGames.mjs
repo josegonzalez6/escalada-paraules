@@ -2,11 +2,21 @@
 // Executa amb: node scripts/generateGames.mjs
 //
 // Format de sortida (ca-games.json / es-games.json):
-// [{ baseWord, solutions: { "3": [...], "4": [...], "5": [...], "6": [...], "7": [...] } }]
+// [{
+//   baseWord: "caminants",          <- paraula base de 8-10 lletres (NO és la resposta de 7)
+//   baseLetters: ["c","a","m",...], <- lletres disponibles (desordenades)
+//   solutions: {
+//     "3": ["nas","cam",...],
+//     "4": ["cama","cims",...],
+//     "5": ["canta",...],
+//     "6": ["camins",...],
+//     "7": ["cantina",...]
+//   }
+// }]
 //
-// Mecànica: el sistema dona una paraula base de 7 lletres. El jugador
-// ha de trobar paraules de 3, 4, 5, 6 i 7 lletres usant ÚNICAMENT les
-// lletres de la paraula base (sense superar la freqüència de cada lletra).
+// La paraula base de 8-10 lletres NO s'inclou automàticament com a solució.
+// Totes les solucions han de ser paraules de 3-7 lletres formables amb les
+// lletres de la base, sense superar la freqüència de cap lletra.
 
 import { readFileSync, writeFileSync, mkdirSync } from 'fs'
 import { join, dirname } from 'path'
@@ -17,6 +27,8 @@ const root = join(__dirname, '..')
 
 const MAX_GAMES = 500
 const MAX_SOLUTIONS_PER_LEN = 10
+const MIN_BASE_LEN = 8
+const MAX_BASE_LEN = 10
 
 function normalize(word) {
   return word
@@ -27,15 +39,24 @@ function normalize(word) {
     .replace(/[^a-z]/g, '')
 }
 
+function shuffle(arr) {
+  const a = [...arr]
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+
 function loadDict(lang) {
   const path = join(root, 'public', 'dictionaries', `${lang}.txt`)
   const raw = readFileSync(path, 'utf-8')
   const byLen = {}
-  for (let i = 3; i <= 7; i++) byLen[i] = new Set()
+  for (let i = 3; i <= MAX_BASE_LEN; i++) byLen[i] = new Set()
 
   for (const line of raw.split('\n')) {
     const w = normalize(line.trim())
-    if (w.length >= 3 && w.length <= 7) {
+    if (w.length >= 3 && w.length <= MAX_BASE_LEN && byLen[w.length]) {
       byLen[w.length].add(w)
     }
   }
@@ -58,9 +79,14 @@ function canBeFormedFromBase(candidate, baseCounts) {
 
 function buildGames(byLen) {
   const games = []
-  const bases = [...byLen[7]]
 
-  for (const baseWord of bases) {
+  // Candidats a paraula base: paraules de 8-10 lletres
+  const baseCandidates = []
+  for (let len = MIN_BASE_LEN; len <= MAX_BASE_LEN; len++) {
+    if (byLen[len]) baseCandidates.push(...byLen[len])
+  }
+
+  for (const baseWord of baseCandidates) {
     if (games.length >= MAX_GAMES) break
 
     const baseCounts = getLetterCounts(baseWord)
@@ -68,6 +94,7 @@ function buildGames(byLen) {
 
     for (let len = 3; len <= 7; len++) {
       const key = String(len)
+      if (!byLen[len]) continue
       for (const word of byLen[len]) {
         if (solutions[key].length >= MAX_SOLUTIONS_PER_LEN) break
         if (canBeFormedFromBase(word, baseCounts)) {
@@ -76,17 +103,14 @@ function buildGames(byLen) {
       }
     }
 
-    // La paraula base sempre és una solució vàlida de 7 lletres
-    if (!solutions['7'].includes(baseWord)) {
-      solutions['7'].unshift(baseWord)
-    }
-
     const allLengthsCovered = [3, 4, 5, 6, 7].every(
       len => solutions[String(len)].length > 0
     )
 
     if (allLengthsCovered) {
-      games.push({ baseWord, solutions })
+      // Desordenem les lletres de la base per no revelar la paraula
+      const baseLetters = shuffle(baseWord.split(''))
+      games.push({ baseWord, baseLetters, solutions })
     }
   }
 
@@ -97,14 +121,21 @@ for (const lang of ['ca', 'es']) {
   console.log(`\nProcessant ${lang}...`)
   try {
     const byLen = loadDict(lang)
-    const total = Object.values(byLen).reduce((s, set) => s + set.size, 0)
-    console.log(`  Paraules carregades: ${total}`)
-    for (let i = 3; i <= 7; i++) {
-      console.log(`    ${i} lletres: ${byLen[i].size}`)
+    let total = 0
+    for (let i = 3; i <= MAX_BASE_LEN; i++) {
+      const n = byLen[i]?.size ?? 0
+      if (n > 0) console.log(`    ${i} lletres: ${n}`)
+      total += n
     }
+    console.log(`  Total paraules: ${total}`)
 
     const games = buildGames(byLen)
     console.log(`  Partides vàlides: ${games.length}`)
+
+    if (games.length === 0) {
+      console.log(`  ⚠️  Cap partida generada. Cal un diccionari amb paraules de 8-10 lletres.`)
+      console.log(`  ⚠️  Consulta README.md → "Diccionaris complets".`)
+    }
 
     const outDir = join(root, 'public', 'generated')
     mkdirSync(outDir, { recursive: true })
