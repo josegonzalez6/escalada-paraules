@@ -291,3 +291,26 @@
   flex-basis: 100%;
   margin-left: calc(24px + 1rem);
 }
+.examplesRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+}
+
+.examplesLen {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  white-space: nowrap;
+  min-width: 4.5rem;
+}
+
+.examplesWords {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1e293b;
+  letter-spacing: 0.03em;
+}

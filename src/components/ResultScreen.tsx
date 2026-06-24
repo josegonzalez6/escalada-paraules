@@ -104,18 +104,20 @@ export function ResultScreen({
         })}
       </div>
 
-      {solutions && (
+      {solutions && errors.size > 0 && (
         <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>{tr.solutionTitle}</h3>
-          {LENGTHS.map(len => {
-            const words = solutions[String(len) as keyof typeof solutions]
-            const example = words[0] ?? '—'
-            const failed = errors.has(len)
+          <h3 className={styles.sectionTitle}>{tr.possibleWordsTitle}</h3>
+          {LENGTHS.filter(len => errors.has(len)).map(len => {
+            const words = solutions[String(len) as keyof typeof solutions] ?? []
+            const examples = words.slice(0, 3)
             return (
-              <div key={len} className={`${styles.solutionRow} ${failed ? styles.solutionFailed : styles.solutionOk}`}>
-                <span className={`${styles.solutionLen} ${failed ? styles.solutionLenFailed : styles.solutionLenOk}`}>{len}</span>
-                <span className={styles.solutionWord}>{example.toUpperCase()}</span>
-                {words.length > 1 && <span className={styles.solutionAlt}>+{words.length - 1}</span>}
+              <div key={len} className={styles.examplesRow}>
+                <span className={styles.examplesLen}>{tr.possibleWordsForLength(len)}:</span>
+                <span className={styles.examplesWords}>
+                  {examples.length > 0
+                    ? examples.map(w => w.toUpperCase()).join(', ')
+                    : tr.noExamplesAvailable}
+                </span>
               </div>
             )
           })}

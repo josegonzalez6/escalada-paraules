@@ -277,3 +277,75 @@ describe('Textos del botó d\'inici per idioma', () => {
     expect(translations.es.startGameHint).toContain('COMENZAR')
   })
 })
+
+describe('Exemples de paraules possibles a la pantalla de resultat', () => {
+  const mockSolutions = {
+    '3': ['mar', 'ram', 'arm', 'ara', 'rma'],
+    '4': ['arma', 'rama', 'mara'],
+    '5': ['armat', 'trama'],
+    '6': ['armats'],
+    '7': ['tramats'],
+  }
+
+  function getExamples(solutions: Record<string, string[]>, errors: Set<number>, maxPerLength = 3) {
+    const result: Record<number, string[]> = {}
+    for (const len of [3, 4, 5, 6, 7]) {
+      if (!errors.has(len)) continue
+      result[len] = (solutions[String(len)] ?? []).slice(0, maxPerLength)
+    }
+    return result
+  }
+
+  it('si score és 5/5, no es mostren exemples (errors buit)', () => {
+    const examples = getExamples(mockSolutions, new Set())
+    expect(Object.keys(examples).length).toBe(0)
+  })
+
+  it('si score és 3/5, mostra exemples només de les files incorrectes', () => {
+    const errors = new Set([3, 5])
+    const examples = getExamples(mockSolutions, errors)
+    expect(3 in examples).toBe(true)
+    expect(5 in examples).toBe(true)
+    expect(4 in examples).toBe(false)
+    expect(6 in examples).toBe(false)
+    expect(7 in examples).toBe(false)
+  })
+
+  it('mostra màxim 3 exemples per longitud', () => {
+    const errors = new Set([3])
+    const examples = getExamples(mockSolutions, errors)
+    expect(examples[3].length).toBeLessThanOrEqual(3)
+    expect(examples[3].length).toBe(3)
+  })
+
+  it('si hi ha menys de 3 solucions, mostra les que hi ha', () => {
+    const errors = new Set([5])
+    const examples = getExamples(mockSolutions, errors)
+    expect(examples[5].length).toBe(2)
+  })
+
+  it('els exemples venen de solutions, no inventats', () => {
+    const errors = new Set([3])
+    const examples = getExamples(mockSolutions, errors)
+    for (const w of examples[3]) {
+      expect(mockSolutions['3']).toContain(w)
+    }
+  })
+
+  it('si no hi ha solucions per una longitud, retorna array buit', () => {
+    const errors = new Set([3])
+    const examples = getExamples({}, errors)
+    expect(examples[3]).toEqual([])
+  })
+
+  it('textos en català i castellà', () => {
+    const tr = {
+      ca: { possibleWordsTitle: 'Paraules possibles', possibleWordsForLength: (n: number) => `${n} lletres` },
+      es: { possibleWordsTitle: 'Palabras posibles', possibleWordsForLength: (n: number) => `${n} letras` },
+    }
+    expect(tr.ca.possibleWordsTitle).toBe('Paraules possibles')
+    expect(tr.es.possibleWordsTitle).toBe('Palabras posibles')
+    expect(tr.ca.possibleWordsForLength(3)).toBe('3 lletres')
+    expect(tr.es.possibleWordsForLength(5)).toBe('5 letras')
+  })
+})

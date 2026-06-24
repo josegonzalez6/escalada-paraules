@@ -54,6 +54,11 @@ const translations = {
     resetDate: "Reiniciar aquesta data",
     backToGame: "← Tornar al joc",
 
+    // Exemples de paraules possibles
+    possibleWordsTitle: "Paraules possibles",
+    possibleWordsForLength: (length: number) => `${length} lletres`,
+    noExamplesAvailable: "No hi ha exemples disponibles.",
+
     // Share text (built in buildShareText)
     shareHeader: "L'Escalada CAT",
     sharePerfect: (time: string) => `He completat l'escala en ${time}. A veure quant tardes tu:`,
@@ -112,6 +117,11 @@ const translations = {
     resetToday: "Reiniciar escalera de hoy",
     resetDate: "Reiniciar esta fecha",
     backToGame: "← Volver al juego",
+
+    // Exemples de paraules possibles
+    possibleWordsTitle: "Palabras posibles",
+    possibleWordsForLength: (length: number) => `${length} letras`,
+    noExamplesAvailable: "No hay ejemplos disponibles.",
 
     // Share text
     shareHeader: "La Escalera ES",
