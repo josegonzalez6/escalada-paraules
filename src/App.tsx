@@ -2,18 +2,20 @@ import { useState, useEffect } from 'react'
 import { Game } from './components/Game'
 import { ArchiveView } from './components/ArchiveView'
 import { AdminPage } from './pages/AdminPage'
+import { PrivacyPage } from './pages/PrivacyPage'
 import type { Language } from './types'
 import { loadLangPref, saveLangPref } from './utils/langPrefs'
 import { getMadridDateStr } from './utils/daily'
 import styles from './App.module.css'
 
-type AppView = 'game' | 'archive'
+type AppView = 'game' | 'archive' | 'privacy' | 'privacy'
 
 const DEV_MODE = false
 
 function Router() {
   const hash = window.location.hash
   if (hash === '#/admin') return <div className={styles.appShell}><AdminPage /></div>
+  if (hash === '#/privacy') return <div className={styles.appShell}><PrivacyPage onBack={() => { window.location.hash = '#/'; }} /></div>
   return <AppShell />
 }
 
